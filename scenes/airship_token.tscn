@@ -1,0 +1,219 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/airship_token.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/generated/ship_blue.png" id="2_blue"]
+
+[sub_resource type="StyleBoxFlat" id="HumanHaloStyle"]
+bg_color = Color(0.10, 0.70, 1.0, 0.10)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.80, 0.98, 1.0, 0.95)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="StyleBoxFlat" id="HumanInnerStyle"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.08, 0.68, 1.0, 1)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="StyleBoxFlat" id="OpponentRingStyle"]
+bg_color = Color(0.02, 0.02, 0.018, 0.22)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.75, 0.75, 0.75, 0.72)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="StyleBoxFlat" id="BadgeStyle"]
+bg_color = Color(0.015, 0.075, 0.11, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.96, 1.0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="CargoStyle"]
+bg_color = Color(0.92, 0.62, 0.10, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.10, 0.03, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="HPBack"]
+bg_color = Color(0.06, 0.06, 0.06, 0.94)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="HPFill"]
+bg_color = Color(0.25, 0.95, 0.40, 0.98)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="AirshipToken" type="Control"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("1_script")
+player_id = 1
+facing = 2
+body_color = Color(0.32, 0.72, 1, 1)
+hp = 3
+highlight_human_player = true
+
+[node name="OpponentRing" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.92
+anchor_bottom = 0.92
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("OpponentRingStyle")
+
+[node name="HumanHalo" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.03
+anchor_top = 0.03
+anchor_right = 0.97
+anchor_bottom = 0.97
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("HumanHaloStyle")
+
+[node name="HumanInner" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.13
+anchor_top = 0.13
+anchor_right = 0.87
+anchor_bottom = 0.87
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("HumanInnerStyle")
+
+[node name="SpriteHolder" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ShipSprite" type="TextureRect" parent="SpriteHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.15
+anchor_top = 0.15
+anchor_right = 0.85
+anchor_bottom = 0.85
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_blue")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="HumanBadge" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.23
+anchor_right = 0.77
+offset_top = 2.0
+offset_bottom = 20.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("BadgeStyle")
+
+[node name="Label" type="Label" parent="HumanBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "SEN"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="CargoMarker" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.68
+anchor_top = 0.61
+anchor_right = 0.88
+anchor_bottom = 0.81
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CargoStyle")
+
+[node name="Label" type="Label" parent="CargoMarker"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.18, 0.10, 0.03, 1)
+theme_override_font_sizes/font_size = 10
+text = "K"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="HPBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.14
+anchor_top = 0.84
+anchor_right = 0.86
+anchor_bottom = 0.84
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 0
+min_value = 0.0
+max_value = 3.0
+step = 1.0
+value = 3.0
+show_percentage = false
+theme_override_styles/background = SubResource("HPBack")
+theme_override_styles/fill = SubResource("HPFill")
+mouse_filter = 2
