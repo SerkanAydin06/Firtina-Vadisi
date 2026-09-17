@@ -64,7 +64,7 @@ func _cache_scene_nodes() -> void:
 	contract_nodes.clear()
 	delivery_nodes.clear()
 	pad_nodes.clear()
-	for child in $GridCells.get_children():
+	for child in $GridLayer.get_children():
 		if child is Panel:
 			grid_nodes.append(child)
 		elif child is ColorRect:
@@ -76,22 +76,22 @@ func _cache_scene_nodes() -> void:
 				horizontal_grid_lines.append(line)
 	vertical_grid_lines.sort_custom(func(a: ColorRect, b: ColorRect) -> bool: return str(a.name) < str(b.name))
 	horizontal_grid_lines.sort_custom(func(a: ColorRect, b: ColorRect) -> bool: return str(a.name) < str(b.name))
-	for child in $Rocks.get_children():
+	for child in $RocksLayer.get_children():
 		if child is Panel:
 			rock_nodes.append(child)
-	for child in $Contracts.get_children():
+	for child in $ContractsLayer.get_children():
 		if child is Panel:
 			contract_nodes.append(child)
-	for child in $Deliveries.get_children():
+	for child in $DeliveriesLayer.get_children():
 		if child is Panel:
 			delivery_nodes.append(child)
-	for child in $StartPads.get_children():
+	for child in $StartPadsLayer.get_children():
 		if child is Panel:
 			pad_nodes.append(child)
 
 func _cache_ship_tokens() -> void:
 	tokens.clear()
-	for child in $Ships.get_children():
+	for child in $ShipsLayer.get_children():
 		if child is AirshipToken:
 			var token: AirshipToken = child
 			tokens[token.player_id] = token
