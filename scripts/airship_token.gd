@@ -36,7 +36,7 @@ const SHIP_TEXTURES := {
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	clip_contents = true
+	clip_contents = false
 	_sync_visuals()
 	_sync_geometry()
 
@@ -62,7 +62,7 @@ func _sync_visuals() -> void:
 	var opponent_ring: Panel = get_node_or_null("OpponentRing") as Panel
 	var badge: Panel = get_node_or_null("HumanBadge") as Panel
 	var cargo_marker: Panel = get_node_or_null("CargoMarker") as Panel
-	var hp_bar: ProgressBar = get_node_or_null("HPBar") as ProgressBar
+	var hp_fill: Panel = get_node_or_null("HPBar/Fill") as Panel
 	var is_human_ship: bool = highlight_human_player and player_id == 1
 
 	if sprite != null:
@@ -80,8 +80,10 @@ func _sync_visuals() -> void:
 		opponent_ring.modulate = body_color.lightened(0.12)
 	if cargo_marker != null:
 		cargo_marker.visible = has_cargo
-	if hp_bar != null:
-		hp_bar.value = hp
+	if hp_fill != null:
+		var hp_ratio: float = clampf(float(hp) / 3.0, 0.0, 1.0)
+		hp_fill.anchor_right = hp_ratio
+		hp_fill.offset_right = 0.0
 
 func _sync_geometry() -> void:
 	if not is_inside_tree():
