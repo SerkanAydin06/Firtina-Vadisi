@@ -65,6 +65,11 @@ corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="HPBack"]
 bg_color = Color(0.06, 0.06, 0.06, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.02, 0.02, 0.02, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -72,17 +77,17 @@ corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="HPFill"]
 bg_color = Color(0.25, 0.95, 0.40, 0.98)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="AirshipToken" type="Control"]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
-clip_contents = true
+clip_contents = false
 script = ExtResource("1_script")
 player_id = 1
 facing = 2
@@ -93,10 +98,10 @@ highlight_human_player = true
 [node name="OpponentRing" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.08
-anchor_top = 0.08
-anchor_right = 0.92
-anchor_bottom = 0.92
+anchor_left = 0.09
+anchor_top = 0.09
+anchor_right = 0.91
+anchor_bottom = 0.91
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -105,10 +110,10 @@ theme_override_styles/panel = SubResource("OpponentRingStyle")
 [node name="HumanHalo" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.03
-anchor_top = 0.03
-anchor_right = 0.97
-anchor_bottom = 0.97
+anchor_left = 0.04
+anchor_top = 0.04
+anchor_right = 0.96
+anchor_bottom = 0.96
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -117,10 +122,10 @@ theme_override_styles/panel = SubResource("HumanHaloStyle")
 [node name="HumanInner" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.13
-anchor_top = 0.13
-anchor_right = 0.87
-anchor_bottom = 0.87
+anchor_left = 0.14
+anchor_top = 0.14
+anchor_right = 0.86
+anchor_bottom = 0.86
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -138,10 +143,10 @@ mouse_filter = 2
 [node name="ShipSprite" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.15
-anchor_top = 0.15
-anchor_right = 0.85
-anchor_bottom = 0.85
+anchor_left = 0.16
+anchor_top = 0.16
+anchor_right = 0.84
+anchor_bottom = 0.78
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_blue")
@@ -152,10 +157,10 @@ mouse_filter = 2
 [node name="HumanBadge" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 10
-anchor_left = 0.23
-anchor_right = 0.77
-offset_top = 2.0
-offset_bottom = 20.0
+anchor_left = 0.25
+anchor_right = 0.75
+offset_top = 4.0
+offset_bottom = 21.0
 grow_horizontal = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("BadgeStyle")
@@ -168,7 +173,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.95, 1, 1, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "SEN"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -178,10 +183,10 @@ mouse_filter = 2
 visible = false
 layout_mode = 1
 anchors_preset = 0
-anchor_left = 0.68
-anchor_top = 0.61
+anchor_left = 0.69
+anchor_top = 0.58
 anchor_right = 0.88
-anchor_bottom = 0.81
+anchor_bottom = 0.77
 mouse_filter = 2
 theme_override_styles/panel = SubResource("CargoStyle")
 
@@ -193,27 +198,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.18, 0.10, 0.03, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "K"
 horizontal_alignment = 1
 vertical_alignment = 1
 mouse_filter = 2
 
-[node name="HPBar" type="ProgressBar" parent="."]
+[node name="HPBar" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 12
-anchor_left = 0.14
-anchor_top = 0.84
-anchor_right = 0.86
-anchor_bottom = 0.84
-offset_bottom = 7.0
-grow_horizontal = 2
-grow_vertical = 0
-min_value = 0.0
-max_value = 3.0
-step = 1.0
-value = 3.0
-show_percentage = false
-theme_override_styles/background = SubResource("HPBack")
-theme_override_styles/fill = SubResource("HPFill")
+anchors_preset = 0
+anchor_left = 0.16
+anchor_top = 0.82
+anchor_right = 0.84
+anchor_bottom = 0.82
+offset_bottom = 8.0
 mouse_filter = 2
+
+[node name="Background" type="Panel" parent="HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("HPBack")
+
+[node name="Fill" type="Panel" parent="HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("HPFill")
