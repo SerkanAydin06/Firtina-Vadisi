@@ -4,11 +4,12 @@ extends "res://scripts/board.gd"
 @export var show_editor_preview: bool = true
 @export_range(0.65, 0.95, 0.01) var token_fill: float = 0.80
 @export_range(0.45, 0.80, 0.01) var rock_fill: float = 0.58
+@export_range(0.05, 0.55, 0.01) var grid_alpha: float = 0.28
 
 const PREVIEW_STARTS: Array[Vector2i] = [
-	Vector2i(1,1), Vector2i(9,1), Vector2i(1,7), Vector2i(9,7)
+	Vector2i(0,0), Vector2i(10,0), Vector2i(0,8), Vector2i(10,8)
 ]
-const PREVIEW_FACINGS: Array[int] = [2, 2, 0, 0]
+const PREVIEW_FACINGS: Array[int] = [2, 3, 1, 0]
 const PREVIEW_ROCKS: Array[Vector2i] = [
 	Vector2i(3,1), Vector2i(7,1), Vector2i(3,7), Vector2i(7,7),
 	Vector2i(2,3), Vector2i(8,3), Vector2i(2,5), Vector2i(8,5),
@@ -46,8 +47,19 @@ func _ready() -> void:
 	call_deferred("fit_board")
 
 func _draw() -> void:
-	# Tüm görünür board elemanları board.tscn içinde gerçek node'lardır.
-	pass
+	# Kareler yalnızca hareket mesafesini okumak için rehberdir.
+	# Satranç efekti oluşturmamak için hücrelerin içini boyamıyoruz.
+	if grid_size.x <= 0 or grid_size.y <= 0:
+		return
+	var line_color := Color(0.70, 0.57, 0.37, grid_alpha)
+	var border_color := Color(0.83, 0.66, 0.38, minf(grid_alpha + 0.20, 0.70))
+	for x in range(grid_size.x + 1):
+		var px: float = inner_origin.x + float(x) * cell_step.x
+		draw_line(Vector2(px, inner_origin.y), Vector2(px, inner_origin.y + inner_size.y), line_color, 1.0, true)
+	for y in range(grid_size.y + 1):
+		var py: float = inner_origin.y + float(y) * cell_step.y
+		draw_line(Vector2(inner_origin.x, py), Vector2(inner_origin.x + inner_size.x, py), line_color, 1.0, true)
+	draw_rect(Rect2(inner_origin, inner_size), border_color, false, 2.0)
 
 func _cache_scene_nodes() -> void:
 	rock_nodes.clear()
@@ -84,8 +96,8 @@ func configure(new_grid_size: Vector2i, new_rocks: Array[Vector2i], pickups: Dic
 func fit_board() -> void:
 	if size.x <= 1.0 or size.y <= 1.0:
 		return
-	inner_origin = Vector2(24.0, 24.0)
-	inner_size = Vector2(maxf(1.0, size.x - 48.0), maxf(1.0, size.y - 48.0))
+	inner_origin = Vector2(12.0, 12.0)
+	inner_size = Vector2(maxf(1.0, size.x - 24.0), maxf(1.0, size.y - 24.0))
 	cell_step = Vector2(inner_size.x / float(grid_size.x), inner_size.y / float(grid_size.y))
 	cell_size = minf(cell_step.x, cell_step.y)
 	grid_origin = inner_origin
@@ -94,6 +106,7 @@ func fit_board() -> void:
 	_layout_contracts()
 	_layout_deliveries()
 	_layout_ships()
+	queue_redraw()
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
