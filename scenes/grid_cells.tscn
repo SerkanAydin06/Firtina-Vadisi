@@ -1,12 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[sub_resource type="StyleBoxFlat" id="CellStyle"]
-bg_color = Color(0.20, 0.145, 0.095, 0.06)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.92, 0.72, 0.42, 0.68)
+[ext_resource type="PackedScene" path="res://scenes/grid_cell.tscn" id="1_cell"]
 
 [node name="GridCells" type="Control"]
 layout_mode = 3
@@ -17,497 +11,409 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Cell01" type="Panel" parent="."]
+[node name="Cell01" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell02" type="Panel" parent="."]
+[node name="Cell02" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell03" type="Panel" parent="."]
+[node name="Cell03" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell04" type="Panel" parent="."]
+[node name="Cell04" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell05" type="Panel" parent="."]
+[node name="Cell05" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell06" type="Panel" parent="."]
+[node name="Cell06" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell07" type="Panel" parent="."]
+[node name="Cell07" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell08" type="Panel" parent="."]
+[node name="Cell08" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell09" type="Panel" parent="."]
+[node name="Cell09" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell10" type="Panel" parent="."]
+[node name="Cell10" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell11" type="Panel" parent="."]
+[node name="Cell11" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell12" type="Panel" parent="."]
+[node name="Cell12" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell13" type="Panel" parent="."]
+[node name="Cell13" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell14" type="Panel" parent="."]
+[node name="Cell14" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell15" type="Panel" parent="."]
+[node name="Cell15" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell16" type="Panel" parent="."]
+[node name="Cell16" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell17" type="Panel" parent="."]
+[node name="Cell17" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell18" type="Panel" parent="."]
+[node name="Cell18" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell19" type="Panel" parent="."]
+[node name="Cell19" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell20" type="Panel" parent="."]
+[node name="Cell20" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell21" type="Panel" parent="."]
+[node name="Cell21" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell22" type="Panel" parent="."]
+[node name="Cell22" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell23" type="Panel" parent="."]
+[node name="Cell23" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell24" type="Panel" parent="."]
+[node name="Cell24" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell25" type="Panel" parent="."]
+[node name="Cell25" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell26" type="Panel" parent="."]
+[node name="Cell26" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell27" type="Panel" parent="."]
+[node name="Cell27" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell28" type="Panel" parent="."]
+[node name="Cell28" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell29" type="Panel" parent="."]
+[node name="Cell29" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell30" type="Panel" parent="."]
+[node name="Cell30" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell31" type="Panel" parent="."]
+[node name="Cell31" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell32" type="Panel" parent="."]
+[node name="Cell32" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell33" type="Panel" parent="."]
+[node name="Cell33" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell34" type="Panel" parent="."]
+[node name="Cell34" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell35" type="Panel" parent="."]
+[node name="Cell35" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell36" type="Panel" parent="."]
+[node name="Cell36" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell37" type="Panel" parent="."]
+[node name="Cell37" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell38" type="Panel" parent="."]
+[node name="Cell38" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell39" type="Panel" parent="."]
+[node name="Cell39" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell40" type="Panel" parent="."]
+[node name="Cell40" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell41" type="Panel" parent="."]
+[node name="Cell41" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell42" type="Panel" parent="."]
+[node name="Cell42" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell43" type="Panel" parent="."]
+[node name="Cell43" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell44" type="Panel" parent="."]
+[node name="Cell44" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell45" type="Panel" parent="."]
+[node name="Cell45" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell46" type="Panel" parent="."]
+[node name="Cell46" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell47" type="Panel" parent="."]
+[node name="Cell47" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell48" type="Panel" parent="."]
+[node name="Cell48" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell49" type="Panel" parent="."]
+[node name="Cell49" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell50" type="Panel" parent="."]
+[node name="Cell50" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell51" type="Panel" parent="."]
+[node name="Cell51" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell52" type="Panel" parent="."]
+[node name="Cell52" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell53" type="Panel" parent="."]
+[node name="Cell53" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell54" type="Panel" parent="."]
+[node name="Cell54" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell55" type="Panel" parent="."]
+[node name="Cell55" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell56" type="Panel" parent="."]
+[node name="Cell56" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell57" type="Panel" parent="."]
+[node name="Cell57" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell58" type="Panel" parent="."]
+[node name="Cell58" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell59" type="Panel" parent="."]
+[node name="Cell59" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell60" type="Panel" parent="."]
+[node name="Cell60" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell61" type="Panel" parent="."]
+[node name="Cell61" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell62" type="Panel" parent="."]
+[node name="Cell62" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell63" type="Panel" parent="."]
+[node name="Cell63" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell64" type="Panel" parent="."]
+[node name="Cell64" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell65" type="Panel" parent="."]
+[node name="Cell65" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell66" type="Panel" parent="."]
+[node name="Cell66" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell67" type="Panel" parent="."]
+[node name="Cell67" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell68" type="Panel" parent="."]
+[node name="Cell68" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell69" type="Panel" parent="."]
+[node name="Cell69" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell70" type="Panel" parent="."]
+[node name="Cell70" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell71" type="Panel" parent="."]
+[node name="Cell71" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell72" type="Panel" parent="."]
+[node name="Cell72" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell73" type="Panel" parent="."]
+[node name="Cell73" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell74" type="Panel" parent="."]
+[node name="Cell74" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell75" type="Panel" parent="."]
+[node name="Cell75" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell76" type="Panel" parent="."]
+[node name="Cell76" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
 
-[node name="Cell77" type="Panel" parent="."]
+[node name="Cell77" parent="." instance=ExtResource("1_cell")]
 layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell78" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell79" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell80" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell81" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell82" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell83" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell84" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell85" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell86" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell87" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell88" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell89" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell90" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell91" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell92" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell93" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell94" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell95" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell96" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell97" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell98" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
+
+[node name="Cell99" parent="." instance=ExtResource("1_cell")]
+layout_mode = 0
 
-[node name="Cell78" type="Panel" parent="."]
+[node name="V00" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell79" type="Panel" parent="."]
+[node name="V01" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell80" type="Panel" parent="."]
+[node name="V02" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell81" type="Panel" parent="."]
+[node name="V03" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell82" type="Panel" parent="."]
+[node name="V04" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell83" type="Panel" parent="."]
+[node name="V05" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell84" type="Panel" parent="."]
+[node name="V06" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell85" type="Panel" parent="."]
+[node name="V07" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell86" type="Panel" parent="."]
+[node name="V08" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell87" type="Panel" parent="."]
+[node name="V09" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell88" type="Panel" parent="."]
+[node name="V10" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell89" type="Panel" parent="."]
+[node name="V11" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell90" type="Panel" parent="."]
+[node name="H00" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell91" type="Panel" parent="."]
+[node name="H01" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell92" type="Panel" parent="."]
+[node name="H02" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell93" type="Panel" parent="."]
+[node name="H03" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell94" type="Panel" parent="."]
+[node name="H04" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell95" type="Panel" parent="."]
+[node name="H05" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell96" type="Panel" parent="."]
+[node name="H06" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell97" type="Panel" parent="."]
+[node name="H07" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell98" type="Panel" parent="."]
+[node name="H08" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
 
-[node name="Cell99" type="Panel" parent="."]
+[node name="H09" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+color = Color(0.62, 0.46, 0.27, 1)
