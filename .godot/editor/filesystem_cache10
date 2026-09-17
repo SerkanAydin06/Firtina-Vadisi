@@ -1,5 +1,5 @@
 78098b89c88a74ebe8c20117b8754620
-::res://::1789645102
+::res://::1789648053
 default_bus_layout.tres::AudioBusLayout::-1::1789640033::0::1::::<><><>0<>0<><>::
 README.md::TextFile::-1::1789640033::0::1::::<><><>0<>0<><>::
 ::res://assets/::1789640033
@@ -25,11 +25,12 @@ ship_red.png::CompressedTexture2D::8305535944819168189::1789640033::1789643342::
 ship_yellow.png::CompressedTexture2D::909290216943262208::1789640033::1789643342::1::::<><><>0<>0<>6084198fc7444be20af297d2524c7c0f<>res://.godot/imported/ship_yellow.png-84939aa892f29b534701830cbb6d72d3.ctex::
 start_hover.png::CompressedTexture2D::3478447254818657200::1789640033::1789643341::1::::<><><>0<>0<>63a4fe339f06da1dbe0396ebe65d3cd7<>res://.godot/imported/start_hover.png-57a5e0246e3a72e2e89c851c0518f969.ctex::
 start_normal.png::CompressedTexture2D::2106916441932163101::1789640033::1789643341::1::::<><><>0<>0<>f5fb022662fda9292a6e0c98a9430a2b<>res://.godot/imported/start_normal.png-f75faed3da0c82b5091b4307a0a171db.ctex::
-::res://scenes/::1789642898
-main.tscn::PackedScene::-1::1789642898::0::1::::<><><>0<>0<><>::res://scripts/main_ui.gd<>res://scripts/board_topdown.gd<>res://assets/generated/menu_background.png<>res://assets/generated/logo.png<>res://assets/generated/start_normal.png<>res://assets/generated/start_hover.png<>res://assets/generated/settings_normal.png<>res://assets/generated/settings_hover.png<>res://assets/generated/exit_normal.png<>res://assets/generated/exit_hover.png<>res://assets/generated/cmd_forward1.png<>res://assets/generated/cmd_forward2.png<>res://assets/generated/cmd_left.png<>res://assets/generated/cmd_right.png<>res://assets/generated/cmd_hook.png<>res://assets/generated/cmd_anchor.png
-::res://scripts/::1789645062
-airship_token.gd::GDScript::5029083313573424534::1789642462::0::1::::AirshipToken<>Control<><>0<>1<><>::
+::res://scenes/::1789646692
+board.tscn::PackedScene::-1::1789646692::0::1::::<><><>0<>0<><>::res://scripts/board_topdown.gd<>res://scripts/airship_token.gd
+main.tscn::PackedScene::-1::1789646692::0::1::::<><><>0<>0<><>::res://scripts/main_ui.gd<>res://scenes/board.tscn<>res://assets/generated/menu_background.png<>res://assets/generated/logo.png<>res://assets/generated/start_normal.png<>res://assets/generated/start_hover.png<>res://assets/generated/settings_normal.png<>res://assets/generated/settings_hover.png<>res://assets/generated/exit_normal.png<>res://assets/generated/exit_hover.png<>res://assets/generated/cmd_forward1.png<>res://assets/generated/cmd_forward2.png<>res://assets/generated/cmd_left.png<>res://assets/generated/cmd_right.png<>res://assets/generated/cmd_hook.png<>res://assets/generated/cmd_anchor.png
+::res://scripts/::1789648034
+airship_token.gd::GDScript::5029083313573424534::1789648034::0::1::::AirshipToken<>Control<><>0<>1<><>::
 board.gd::GDScript::4618633276004174046::1789642462::0::1::::StormBoard<>Control<><>0<>1<><>::
-board_topdown.gd::GDScript::4656157389810337447::1789645062::0::1::::<>Control<><>0<>1<><>::
+board_topdown.gd::GDScript::4656157389810337447::1789647528::0::1::::<>Control<><>0<>1<><>::
 main.gd::GDScript::3539413506230509523::1789640033::0::1::::<>Control<><>0<>0<><>::
-main_ui.gd::GDScript::8759346077010174495::1789645062::0::1::::<>Control<><>0<>0<><>::
+main_ui.gd::GDScript::8759346077010174495::1789647211::0::1::::<>Control<><>0<>0<><>::
