@@ -4,8 +4,6 @@ extends "res://scripts/board.gd"
 @export var show_editor_preview: bool = true
 @export_range(0.65, 0.95, 0.01) var token_fill: float = 0.80
 @export_range(0.45, 0.80, 0.01) var rock_fill: float = 0.58
-@export_range(0.20, 0.90, 0.01) var grid_alpha: float = 0.62
-@export_range(1.0, 4.0, 0.25) var grid_line_width: float = 2.0
 
 const PREVIEW_STARTS: Array[Vector2i] = [
 	Vector2i(0,0), Vector2i(10,0), Vector2i(0,8), Vector2i(10,8)
@@ -32,13 +30,13 @@ const PREVIEW_DELIVERIES := {
 var cell_step: Vector2 = Vector2(100.0, 80.0)
 var inner_origin: Vector2 = Vector2.ZERO
 var inner_size: Vector2 = Vector2.ZERO
+var grid_nodes: Array[Panel] = []
 var rock_nodes: Array[Panel] = []
 var contract_nodes: Array[Panel] = []
 var delivery_nodes: Array[Panel] = []
 var pad_nodes: Array[Panel] = []
 
 func _ready() -> void:
-	$ArenaBackground.show_behind_parent = true
 	_cache_scene_nodes()
 	_cache_ship_tokens()
 	if Engine.is_editor_hint() and show_editor_preview:
@@ -46,26 +44,25 @@ func _ready() -> void:
 		rocks = PREVIEW_ROCKS.duplicate()
 		pickup_cells = PREVIEW_PICKUPS.duplicate(true)
 		delivery_cells = PREVIEW_DELIVERIES.duplicate(true)
+		for i in range(PREVIEW_FACINGS.size()):
+			var token: AirshipToken = tokens.get(i + 1, null)
+			if token != null:
+				token.facing = PREVIEW_FACINGS[i]
 	call_deferred("fit_board")
 
 func _draw() -> void:
-	if grid_size.x <= 0 or grid_size.y <= 0:
-		return
-	var line_color := Color(0.92, 0.72, 0.42, grid_alpha)
-	var border_color := Color(1.0, 0.79, 0.44, minf(grid_alpha + 0.18, 0.95))
-	for x in range(grid_size.x + 1):
-		var px: float = inner_origin.x + float(x) * cell_step.x
-		draw_line(Vector2(px, inner_origin.y), Vector2(px, inner_origin.y + inner_size.y), line_color, grid_line_width, true)
-	for y in range(grid_size.y + 1):
-		var py: float = inner_origin.y + float(y) * cell_step.y
-		draw_line(Vector2(inner_origin.x, py), Vector2(inner_origin.x + inner_size.x, py), line_color, grid_line_width, true)
-	draw_rect(Rect2(inner_origin, inner_size), border_color, false, 3.0)
+	# Bilerek boş: görünür bütün board elemanları .tscn node'larıdır.
+	pass
 
 func _cache_scene_nodes() -> void:
+	grid_nodes.clear()
 	rock_nodes.clear()
 	contract_nodes.clear()
 	delivery_nodes.clear()
 	pad_nodes.clear()
+	for child in $GridCells.get_children():
+		if child is Panel:
+			grid_nodes.append(child)
 	for child in $Rocks.get_children():
 		if child is Panel:
 			rock_nodes.append(child)
@@ -101,12 +98,24 @@ func fit_board() -> void:
 	cell_step = Vector2(inner_size.x / float(grid_size.x), inner_size.y / float(grid_size.y))
 	cell_size = minf(cell_step.x, cell_step.y)
 	grid_origin = inner_origin
+	_layout_grid_cells()
 	_layout_start_pads()
 	_layout_rocks()
 	_layout_contracts()
 	_layout_deliveries()
 	_layout_ships()
-	queue_redraw()
+
+func _layout_grid_cells() -> void:
+	for i in range(grid_nodes.size()):
+		var cell_node: Panel = grid_nodes[i]
+		var x: int = i % grid_size.x
+		var y: int = i / grid_size.x
+		if y >= grid_size.y:
+			cell_node.visible = false
+			continue
+		cell_node.visible = true
+		cell_node.position = cell_to_pixel(Vector2i(x, y))
+		cell_node.size = cell_step
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
