@@ -2,61 +2,116 @@
 extends "res://scripts/board.gd"
 
 @export var show_editor_preview: bool = true
+@export_range(0.65, 0.95, 0.01) var token_fill: float = 0.80
+@export_range(0.45, 0.80, 0.01) var rock_fill: float = 0.58
 
 const PREVIEW_STARTS: Array[Vector2i] = [
 	Vector2i(1,1), Vector2i(9,1), Vector2i(1,7), Vector2i(9,7)
 ]
 const PREVIEW_FACINGS: Array[int] = [2, 2, 0, 0]
+const PREVIEW_ROCKS: Array[Vector2i] = [
+	Vector2i(3,1), Vector2i(7,1), Vector2i(3,7), Vector2i(7,7),
+	Vector2i(2,3), Vector2i(8,3), Vector2i(2,5), Vector2i(8,5),
+	Vector2i(5,2), Vector2i(5,6), Vector2i(3,4), Vector2i(7,4)
+]
+const PREVIEW_PICKUPS := {
+	Vector2i(4,3): {"name":"Kaçak Baharat", "short":"Baharat", "dest":Vector2i(9,6), "dest_name":"Bakır İskele", "value":5},
+	Vector2i(6,3): {"name":"Fırtına Kristali", "short":"Kristal", "dest":Vector2i(1,6), "dest_name":"Sis İskelesi", "value":5},
+	Vector2i(4,5): {"name":"Silah Sandığı", "short":"Silah", "dest":Vector2i(9,2), "dest_name":"Fırtına İskelesi", "value":5},
+	Vector2i(6,5): {"name":"Kaçak İlaç", "short":"İlaç", "dest":Vector2i(1,2), "dest_name":"Kızıl İskele", "value":5}
+}
+const PREVIEW_DELIVERIES := {
+	Vector2i(9,6): "Bakır İskele",
+	Vector2i(1,6): "Sis İskelesi",
+	Vector2i(9,2): "Fırtına İskelesi",
+	Vector2i(1,2): "Kızıl İskele"
+}
+
+var cell_step: Vector2 = Vector2(100.0, 80.0)
+var inner_origin: Vector2 = Vector2.ZERO
+var inner_size: Vector2 = Vector2.ZERO
+var rock_nodes: Array[Panel] = []
+var contract_nodes: Array[Panel] = []
+var delivery_nodes: Array[Panel] = []
+var pad_nodes: Array[Panel] = []
 
 func _ready() -> void:
+	_cache_scene_nodes()
 	if Engine.is_editor_hint() and show_editor_preview:
 		grid_size = Vector2i(11, 9)
-		rocks = [
-			Vector2i(3,1), Vector2i(7,1), Vector2i(3,7), Vector2i(7,7),
-			Vector2i(2,3), Vector2i(8,3), Vector2i(2,5), Vector2i(8,5),
-			Vector2i(5,2), Vector2i(5,6), Vector2i(3,4), Vector2i(7,4)
-		]
-		pickup_cells = {
-			Vector2i(4,3): {"name":"Kaçak Baharat", "short":"Baharat", "dest":Vector2i(9,6), "target_name":"Bakır İskele", "target_short":"BAKIR", "value":5},
-			Vector2i(6,3): {"name":"Fırtına Kristali", "short":"Kristal", "dest":Vector2i(1,6), "target_name":"Sis İskelesi", "target_short":"SİS", "value":5},
-			Vector2i(4,5): {"name":"Silah Sandığı", "short":"Silah", "dest":Vector2i(9,2), "target_name":"Fırtına İskelesi", "target_short":"FIRTINA", "value":5},
-			Vector2i(6,5): {"name":"Kaçak İlaç", "short":"İlaç", "dest":Vector2i(1,2), "target_name":"Kızıl İskele", "target_short":"KIZIL", "value":5}
-		}
-		delivery_cells = {
-			Vector2i(9,6): "BAKIR", Vector2i(1,6): "SİS",
-			Vector2i(9,2): "FIRTINA", Vector2i(1,2): "KIZIL"
-		}
+		rocks = PREVIEW_ROCKS.duplicate()
+		pickup_cells = PREVIEW_PICKUPS.duplicate(true)
+		delivery_cells = PREVIEW_DELIVERIES.duplicate(true)
+		_cache_ship_tokens()
 		call_deferred("fit_board")
-		queue_redraw()
+	else:
+		_cache_ship_tokens()
+
+func _cache_scene_nodes() -> void:
+	rock_nodes.clear()
+	contract_nodes.clear()
+	delivery_nodes.clear()
+	pad_nodes.clear()
+	for child in $Rocks.get_children():
+		if child is Panel:
+			rock_nodes.append(child)
+	for child in $Contracts.get_children():
+		if child is Panel:
+			contract_nodes.append(child)
+	for child in $Deliveries.get_children():
+		if child is Panel:
+			delivery_nodes.append(child)
+	for child in $StartPads.get_children():
+		if child is Panel:
+			pad_nodes.append(child)
+
+func _cache_ship_tokens() -> void:
+	tokens.clear()
+	for child in $Ships.get_children():
+		if child is AirshipToken:
+			var token: AirshipToken = child
+			tokens[token.player_id] = token
+
+func configure(new_grid_size: Vector2i, new_rocks: Array[Vector2i], pickups: Dictionary, deliveries: Dictionary) -> void:
+	grid_size = new_grid_size
+	rocks = new_rocks
+	pickup_cells = pickups
+	delivery_cells = deliveries
+	fit_board()
 
 func fit_board() -> void:
-	var usable: Vector2 = size - Vector2(46.0, 46.0)
-	cell_size = floor(minf(usable.x / float(grid_size.x), usable.y / float(grid_size.y)))
-	var grid_pixels: Vector2 = Vector2(grid_size) * cell_size
-	grid_origin = (size - grid_pixels) * 0.5
-	for id in tokens:
-		var token: AirshipToken = tokens[id]
-		var token_cell: Vector2i = Vector2i(token.get_meta("grid_cell", Vector2i.ZERO))
-		token.size = Vector2(cell_size, cell_size)
-		token.position = cell_to_pixel(token_cell)
-	queue_redraw()
+	if size.x <= 1.0 or size.y <= 1.0:
+		return
+	inner_origin = Vector2(24.0, 24.0)
+	inner_size = Vector2(maxf(1.0, size.x - 48.0), maxf(1.0, size.y - 48.0))
+	cell_step = Vector2(inner_size.x / float(grid_size.x), inner_size.y / float(grid_size.y))
+	cell_size = minf(cell_step.x, cell_step.y)
+	grid_origin = inner_origin
+	_layout_start_pads()
+	_layout_rocks()
+	_layout_contracts()
+	_layout_deliveries()
+	_layout_ships()
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
-	var token: AirshipToken = AirshipToken.new()
+	if not tokens.has(id):
+		_cache_ship_tokens()
+	if not tokens.has(id):
+		return
+	var token: AirshipToken = tokens[id]
 	token.setup(id, color)
-	token.size = Vector2(cell_size, cell_size)
+	token.visible = true
 	token.set_meta("grid_cell", cell)
-	add_child(token)
-	tokens[id] = token
-	token.position = cell_to_pixel(cell)
+	_position_token(token, cell)
 
-func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool, animate: bool = true) -> Tween:
+func update_ship(id: int, cell: Vector2i, new_facing: int, new_hp: int, has_cargo: bool, animate: bool = true) -> Tween:
 	if not tokens.has(id):
 		return null
 	var token: AirshipToken = tokens[id]
-	token.set_state(facing, hp, has_cargo)
+	token.visible = true
+	token.set_state(new_facing, new_hp, has_cargo)
 	token.set_meta("grid_cell", cell)
-	var target: Vector2 = cell_to_pixel(cell)
+	var target: Vector2 = _token_position(cell, token)
 	if not animate:
 		token.position = target
 		return null
@@ -65,120 +120,116 @@ func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool,
 	tween.tween_property(token, "position", target, 0.22)
 	return tween
 
-func _draw() -> void:
-	var grid_pixels: Vector2 = Vector2(grid_size) * cell_size
-	var board_rect: Rect2 = Rect2(grid_origin, grid_pixels)
-	var surround: Rect2 = board_rect.grow(24.0)
+func cell_to_pixel(cell: Vector2i) -> Vector2:
+	return inner_origin + Vector2(float(cell.x) * cell_step.x, float(cell.y) * cell_step.y)
 
-	# Tek parça, üstten görünen kanyon arenası.
-	draw_rect(surround.grow(10.0), Color(0.032, 0.024, 0.019, 1.0), true)
-	draw_rect(surround, Color(0.17, 0.09, 0.052, 1.0), true)
-	draw_rect(board_rect.grow(5.0), Color(0.36, 0.275, 0.205, 1.0), true)
-	draw_rect(board_rect.grow(5.0), Color(0.66, 0.43, 0.18, 0.72), false, 2.0)
+func cell_center(cell: Vector2i) -> Vector2:
+	return cell_to_pixel(cell) + cell_step * 0.5
 
-	for y in range(grid_size.y):
-		for x in range(grid_size.x):
-			var cell: Vector2i = Vector2i(x, y)
-			var rect: Rect2 = Rect2(cell_to_pixel(cell), Vector2(cell_size, cell_size))
-			var variation_seed: int = (x * 17 + y * 31 + x * y * 3) % 9
-			var variation: float = (float(variation_seed) - 4.0) * 0.005
-			var floor_color: Color = Color(0.33 + variation, 0.285 + variation, 0.215 + variation * 0.7, 1.0)
-			draw_rect(rect, floor_color, true)
-			_draw_floor_detail(rect, x, y)
+func _position_token(token: AirshipToken, cell: Vector2i) -> void:
+	var extent: float = minf(cell_step.x, cell_step.y) * token_fill
+	token.size = Vector2(extent, extent)
+	token.position = cell_center(cell) - token.size * 0.5
 
-	# Hücre çizgileri sadece hareketi okumaya yarayan çok hafif rehberler.
-	for y in range(1, grid_size.y):
-		var y_pos: float = grid_origin.y + float(y) * cell_size
-		draw_line(Vector2(grid_origin.x, y_pos), Vector2(grid_origin.x + grid_pixels.x, y_pos), Color(0.08, 0.065, 0.05, 0.20), 1.0)
-	for x in range(1, grid_size.x):
-		var x_pos: float = grid_origin.x + float(x) * cell_size
-		draw_line(Vector2(x_pos, grid_origin.y), Vector2(x_pos, grid_origin.y + grid_pixels.y), Color(0.08, 0.065, 0.05, 0.20), 1.0)
+func _token_position(cell: Vector2i, token: AirshipToken) -> Vector2:
+	var extent: float = minf(cell_step.x, cell_step.y) * token_fill
+	token.size = Vector2(extent, extent)
+	return cell_center(cell) - token.size * 0.5
 
-	_draw_start_pads()
+func _layout_ships() -> void:
+	for id in tokens:
+		var token: AirshipToken = tokens[id]
+		var fallback_index: int = clampi(int(id) - 1, 0, PREVIEW_STARTS.size() - 1)
+		var cell: Vector2i = Vector2i(token.get_meta("grid_cell", PREVIEW_STARTS[fallback_index]))
+		_position_token(token, cell)
 
-	for rock in rocks:
-		_draw_rock(rock)
+func _layout_start_pads() -> void:
+	var extent: float = minf(cell_step.x, cell_step.y) * 0.72
+	for i in range(pad_nodes.size()):
+		var pad: Panel = pad_nodes[i]
+		if i >= PREVIEW_STARTS.size():
+			pad.visible = false
+			continue
+		pad.visible = true
+		pad.size = Vector2(extent, extent)
+		pad.position = cell_center(PREVIEW_STARTS[i]) - pad.size * 0.5
 
-	for cell in pickup_cells:
-		_draw_contract(cell, pickup_cells[cell])
+func _layout_rocks() -> void:
+	var extent: float = minf(cell_step.x, cell_step.y) * rock_fill
+	for i in range(rock_nodes.size()):
+		var rock_node: Panel = rock_nodes[i]
+		if i >= rocks.size():
+			rock_node.visible = false
+			continue
+		rock_node.visible = true
+		rock_node.size = Vector2(extent * 1.12, extent)
+		rock_node.position = cell_center(rocks[i]) - rock_node.size * 0.5
 
-	for cell in delivery_cells:
-		_draw_delivery(cell, str(delivery_cells[cell]))
+func _layout_contracts() -> void:
+	var cells: Array[Vector2i] = _sorted_cells(pickup_cells)
+	var width: float = minf(cell_step.x * 0.90, 112.0)
+	var height: float = minf(cell_step.y * 0.72, 58.0)
+	for i in range(contract_nodes.size()):
+		var node: Panel = contract_nodes[i]
+		if i >= cells.size():
+			node.visible = false
+			continue
+		var cell: Vector2i = cells[i]
+		var contract: Dictionary = pickup_cells[cell]
+		node.visible = true
+		node.size = Vector2(width, height)
+		node.position = cell_center(cell) - node.size * 0.5
+		var name_label: Label = node.get_node("Name") as Label
+		var reward_label: Label = node.get_node("Reward") as Label
+		var target_label: Label = node.get_node("Target") as Label
+		name_label.text = str(contract.get("short", contract.get("name", "Kargo"))).to_upper()
+		reward_label.text = "+%d ALTIN" % int(contract.get("value", 0))
+		target_label.text = "→ %s" % str(contract.get("dest_name", "Teslimat"))
+		_fit_contract_text(node)
 
-	if Engine.is_editor_hint() and show_editor_preview:
-		_draw_preview_ship(PREVIEW_STARTS[0], 1, PREVIEW_FACINGS[0], Color(0.32,0.72,1.0))
-		_draw_preview_ship(PREVIEW_STARTS[1], 2, PREVIEW_FACINGS[1], Color(0.95,0.30,0.30))
-		_draw_preview_ship(PREVIEW_STARTS[2], 3, PREVIEW_FACINGS[2], Color(0.42,0.90,0.55))
-		_draw_preview_ship(PREVIEW_STARTS[3], 4, PREVIEW_FACINGS[3], Color(0.98,0.82,0.30))
+func _fit_contract_text(node: Panel) -> void:
+	var width: float = node.size.x
+	for label_name in ["Name", "Reward", "Target"]:
+		var label: Label = node.get_node(label_name) as Label
+		label.offset_left = 3.0
+		label.offset_right = width - 3.0
+	if node.has_node("Name"):
+		(node.get_node("Name") as Label).offset_bottom = 19.0
+	if node.has_node("Reward"):
+		var reward: Label = node.get_node("Reward") as Label
+		reward.offset_top = 18.0
+		reward.offset_bottom = 36.0
+	if node.has_node("Target"):
+		var target: Label = node.get_node("Target") as Label
+		target.offset_top = 35.0
+		target.offset_bottom = node.size.y - 2.0
 
-func _draw_floor_detail(rect: Rect2, x: int, y: int) -> void:
-	var seed_value: int = (x * 43 + y * 67 + x * y * 11) % 100
-	var center: Vector2 = rect.position + rect.size * 0.5
-	if seed_value % 3 == 0:
-		var p1: Vector2 = center + Vector2(-cell_size * 0.22, -cell_size * 0.08)
-		var p2: Vector2 = center + Vector2(cell_size * 0.03, cell_size * 0.04)
-		var p3: Vector2 = center + Vector2(cell_size * 0.20, -cell_size * 0.02)
-		draw_polyline(PackedVector2Array([p1, p2, p3]), Color(0.16, 0.12, 0.085, 0.28), 1.2)
-	if seed_value % 4 == 0:
-		draw_circle(center + Vector2(cell_size * 0.20, cell_size * 0.18), cell_size * 0.025, Color(0.55, 0.39, 0.19, 0.32))
-	if seed_value % 5 == 0:
-		draw_line(rect.position + Vector2(8.0, rect.size.y - 10.0), rect.position + Vector2(22.0, rect.size.y - 16.0), Color(0.65,0.49,0.27,0.20), 1.0)
+func _layout_deliveries() -> void:
+	var cells: Array[Vector2i] = _sorted_cells(delivery_cells)
+	var extent: float = minf(cell_step.x, cell_step.y) * 0.66
+	for i in range(delivery_nodes.size()):
+		var node: Panel = delivery_nodes[i]
+		if i >= cells.size():
+			node.visible = false
+			continue
+		var cell: Vector2i = cells[i]
+		node.visible = true
+		node.size = Vector2(extent * 1.28, extent)
+		node.position = cell_center(cell) - node.size * 0.5
+		var label: Label = node.get_node("Label") as Label
+		label.text = str(delivery_cells[cell]).to_upper().replace(" ", "\n", 1)
 
-func _draw_start_pads() -> void:
-	for cell in PREVIEW_STARTS:
-		var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
-		draw_circle(center, cell_size * 0.32, Color(0.20, 0.14, 0.08, 0.22))
-		draw_arc(center, cell_size * 0.34, 0.0, TAU, 28, Color(0.76, 0.58, 0.27, 0.22), 2.0, true)
+func _sorted_cells(source: Dictionary) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	for key in source.keys():
+		result.append(Vector2i(key))
+	result.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		if a.y == b.y:
+			return a.x < b.x
+		return a.y < b.y
+	)
+	return result
 
-func _draw_rock(cell: Vector2i) -> void:
-	var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
-	var radius: float = cell_size * 0.28
-	draw_circle(center + Vector2(3.0, 5.0), radius * 1.10, Color(0.04, 0.03, 0.025, 0.48))
-	draw_circle(center, radius, Color(0.30, 0.22, 0.16, 1.0))
-	draw_circle(center - Vector2(radius * 0.20, radius * 0.20), radius * 0.62, Color(0.46, 0.35, 0.24, 1.0))
-	draw_circle(center + Vector2(radius * 0.30, radius * 0.10), radius * 0.42, Color(0.21, 0.16, 0.12, 1.0))
-	draw_arc(center, radius * 0.80, 0.25, 4.9, 18, Color(0.68, 0.50, 0.31, 0.50), 2.0, true)
-
-func _draw_contract(cell: Vector2i, contract_value: Variant) -> void:
-	if not (contract_value is Dictionary):
-		return
-	var contract: Dictionary = contract_value
-	var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
-	var half: float = cell_size * 0.17
-	var crate: Rect2 = Rect2(center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
-	draw_circle(center, cell_size * 0.37, Color(0.95, 0.58, 0.08, 0.13))
-	draw_arc(center, cell_size * 0.35, 0.0, TAU, 24, Color(1.0, 0.70, 0.18, 0.55), 2.0, true)
-	draw_rect(crate, Color(0.52, 0.28, 0.08, 1.0), true)
-	draw_rect(crate, Color(1.0, 0.70, 0.17, 0.96), false, 2.5)
-	draw_line(crate.position, crate.end, Color(0.94, 0.72, 0.31, 0.75), 1.8)
-	draw_line(Vector2(crate.end.x, crate.position.y), Vector2(crate.position.x, crate.end.y), Color(0.94, 0.72, 0.31, 0.75), 1.8)
-
-	var short_name: String = str(contract.get("short", contract.get("name", "Kargo")))
-	var value: int = int(contract.get("value", 0))
-	var target_short: String = str(contract.get("target_short", "İSKELE"))
-	var info: String = "%s  %dA" % [short_name, value]
-	var route: String = "→ %s" % target_short
-	draw_string(ThemeDB.fallback_font, center + Vector2(-cell_size * 0.42, -cell_size * 0.31), info, HORIZONTAL_ALIGNMENT_CENTER, cell_size * 0.84, 10, Color(1.0, 0.90, 0.64))
-	draw_string(ThemeDB.fallback_font, center + Vector2(-cell_size * 0.34, cell_size * 0.38), route, HORIZONTAL_ALIGNMENT_CENTER, cell_size * 0.68, 10, Color(1.0, 0.77, 0.28))
-
-func _draw_delivery(cell: Vector2i, label_text: String) -> void:
-	var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
-	draw_circle(center, cell_size * 0.30, Color(0.045, 0.16, 0.17, 0.76))
-	draw_arc(center, cell_size * 0.30, 0.0, TAU, 24, Color(0.34, 0.94, 0.88, 0.95), 3.0, true)
-	draw_circle(center, cell_size * 0.20, Color(0.08, 0.25, 0.25, 0.72))
-	draw_string(ThemeDB.fallback_font, center + Vector2(-cell_size * 0.11, cell_size * 0.10), "H", HORIZONTAL_ALIGNMENT_LEFT, -1.0, int(cell_size * 0.30), Color(0.78, 1.0, 0.96))
-	draw_string(ThemeDB.fallback_font, center + Vector2(-cell_size * 0.33, cell_size * 0.39), label_text, HORIZONTAL_ALIGNMENT_CENTER, cell_size * 0.66, 9, Color(0.57, 0.95, 0.90, 0.82))
-
-func _draw_preview_ship(cell: Vector2i, ship_id: int, ship_facing: int, ring_color: Color) -> void:
-	var texture: Texture2D = AirshipToken.SHIP_TEXTURES.get(ship_id, null)
-	if texture == null:
-		return
-	var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
-	var tex_size: Vector2 = texture.get_size()
-	var target_h: float = cell_size * 0.88
-	var preview_scale: float = target_h / tex_size.y
-	var target_size: Vector2 = tex_size * preview_scale
-	draw_arc(center, cell_size * 0.38, 0.0, TAU, 28, ring_color, 3.0, true)
-	draw_set_transform(center, deg_to_rad(float(ship_facing) * 90.0), Vector2.ONE)
-	draw_texture_rect(texture, Rect2(-target_size * 0.5, target_size), false)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED and is_inside_tree():
+		call_deferred("fit_board")
