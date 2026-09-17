@@ -5,6 +5,7 @@ var queue_numbers: Array[Label] = []
 var pilot_labels: Array[Label] = []
 
 func build_shell() -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	background_rect = $Background as TextureRect
 
 func build_menu() -> void:
