@@ -1,4 +1,30 @@
+@tool
 extends "res://scripts/board.gd"
+
+@export var show_editor_preview: bool = true
+
+func _ready() -> void:
+	if Engine.is_editor_hint() and show_editor_preview:
+		grid_size = Vector2i(11, 9)
+		rocks = [
+			Vector2i(4,1), Vector2i(5,1), Vector2i(7,1),
+			Vector2i(2,2), Vector2i(7,2), Vector2i(8,2),
+			Vector2i(2,3), Vector2i(5,3), Vector2i(8,3),
+			Vector2i(4,4), Vector2i(8,4), Vector2i(1,5),
+			Vector2i(4,5), Vector2i(6,5), Vector2i(1,6),
+			Vector2i(6,6), Vector2i(9,6), Vector2i(3,7),
+			Vector2i(4,7), Vector2i(9,7)
+		]
+		pickup_cells = {
+			Vector2i(0,4): {"name":"Kaçak Baharat", "dest":Vector2i(10,4), "value":4},
+			Vector2i(5,8): {"name":"Fırtına Kristali", "dest":Vector2i(5,0), "value":5}
+		}
+		delivery_cells = {
+			Vector2i(10,4): "Doğu İskele",
+			Vector2i(5,0): "Kuzey Kulesi"
+		}
+		call_deferred("fit_board")
+		queue_redraw()
 
 func fit_board() -> void:
 	var usable: Vector2 = size - Vector2(110.0, 92.0)
@@ -50,8 +76,8 @@ func _draw() -> void:
 		for x in range(grid_size.x):
 			var cell: Vector2i = Vector2i(x, y)
 			var rect: Rect2 = Rect2(cell_to_pixel(cell), Vector2(cell_size, cell_size))
-			var base: float = 0.27 if (x + y) % 2 == 0 else 0.245
-			draw_rect(rect, Color(base + 0.055, base + 0.035, base, 1.0), true)
+			var base_value: float = 0.27 if (x + y) % 2 == 0 else 0.245
+			draw_rect(rect, Color(base_value + 0.055, base_value + 0.035, base_value, 1.0), true)
 			draw_rect(rect, Color(0.78, 0.71, 0.59, 0.26), false, 1.2)
 			draw_rect(rect.grow(-5.0), Color(0.09, 0.08, 0.07, 0.10), false, 1.0)
 
