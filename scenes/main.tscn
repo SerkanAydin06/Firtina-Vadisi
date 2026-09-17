@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://scripts/main_ui.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/board_topdown.gd" id="2_board"]
@@ -16,8 +16,6 @@
 [ext_resource type="Texture2D" path="res://assets/generated/cmd_right.png" id="14_right"]
 [ext_resource type="Texture2D" path="res://assets/generated/cmd_hook.png" id="15_hook"]
 [ext_resource type="Texture2D" path="res://assets/generated/cmd_anchor.png" id="16_anchor"]
-[ext_resource type="Texture2D" path="res://assets/generated/ship_blue.png" id="17_ship_blue"]
-[ext_resource type="Texture2D" path="res://assets/generated/ship_red.png" id="18_ship_red"]
 
 [sub_resource type="StyleBoxFlat" id="PanelOuter"]
 bg_color = Color(0.05, 0.047, 0.043, 0.98)
@@ -307,6 +305,7 @@ theme_override_colors/default_color = Color(0.92, 0.87, 0.77, 1)
 theme_override_font_sizes/normal_font_size = 17
 bbcode_enabled = true
 scroll_active = true
+scroll_following = true
 
 [node name="RightPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
@@ -351,26 +350,26 @@ layout_mode = 0
 offset_left = 14.0
 offset_top = 92.0
 offset_right = 556.0
-offset_bottom = 230.0
+offset_bottom = 220.0
 theme_override_styles/panel = SubResource("PanelInner")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 180.0
-offset_bottom = 36.0
+offset_bottom = 33.0
 theme_override_font_sizes/font_size = 20
 text = "RÜZGÂR"
 
 [node name="WindLabel" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 40.0
+offset_top = 34.0
 offset_right = 528.0
-offset_bottom = 85.0
+offset_bottom = 76.0
 theme_override_colors/font_color = Color(0.52, 0.84, 1, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 29
 text = "DOĞU →"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -378,9 +377,9 @@ vertical_alignment = 1
 [node name="Hint" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 20.0
-offset_top = 90.0
+offset_top = 80.0
 offset_right = 522.0
-offset_bottom = 124.0
+offset_bottom = 116.0
 theme_override_font_sizes/font_size = 14
 text = "Her komuttan sonra zeplinler 1 hücre sürüklenir."
 horizontal_alignment = 1
@@ -389,17 +388,17 @@ vertical_alignment = 1
 [node name="ProgramPanel" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 240.0
+offset_top = 230.0
 offset_right = 556.0
-offset_bottom = 455.0
+offset_bottom = 425.0
 theme_override_styles/panel = SubResource("PanelInner")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/ProgramPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 520.0
-offset_bottom = 36.0
+offset_bottom = 34.0
 theme_override_font_sizes/font_size = 20
 text = "3 KOMUT PROGRAMLA"
 horizontal_alignment = 1
@@ -408,22 +407,22 @@ horizontal_alignment = 1
 visible = false
 layout_mode = 0
 offset_left = 10.0
-offset_top = 38.0
+offset_top = 36.0
 offset_right = 530.0
-offset_bottom = 48.0
+offset_bottom = 44.0
 text = ""
 
 [node name="CommandBox" type="HBoxContainer" parent="GameLayer/RightPanel/ProgramPanel"]
 layout_mode = 0
-offset_left = 22.0
-offset_top = 45.0
-offset_right = 520.0
-offset_bottom = 202.0
+offset_left = 25.0
+offset_top = 40.0
+offset_right = 517.0
+offset_bottom = 188.0
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Slot1" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -442,7 +441,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Slot2" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -461,7 +460,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Slot3" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -482,27 +481,28 @@ stretch_mode = 5
 [node name="CardsPanel" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 465.0
+offset_top = 435.0
 offset_right = 556.0
-offset_bottom = 849.0
+offset_bottom = 875.0
 theme_override_styles/panel = SubResource("PanelInner")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 8.0
+offset_top = 7.0
 offset_right = 520.0
-offset_bottom = 36.0
+offset_bottom = 34.0
 theme_override_font_sizes/font_size = 20
 text = "KOMUT KARTLARI"
 horizontal_alignment = 1
 
 [node name="Forward1" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
 layout_mode = 0
 offset_left = 22.0
-offset_top = 48.0
-offset_right = 180.0
-offset_bottom = 206.0
+offset_top = 44.0
+offset_right = 167.0
+offset_bottom = 189.0
 texture_normal = ExtResource("11_f1")
 texture_pressed = ExtResource("11_f1")
 texture_hover = ExtResource("11_f1")
@@ -510,12 +510,25 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "İleri 1"
 
-[node name="Forward2" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+[node name="Forward1Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 48.0
-offset_right = 350.0
-offset_bottom = 206.0
+offset_left = 18.0
+offset_top = 191.0
+offset_right = 171.0
+offset_bottom = 219.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "1 kare ileri gider."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Forward2" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
+layout_mode = 0
+offset_left = 198.0
+offset_top = 44.0
+offset_right = 343.0
+offset_bottom = 189.0
 texture_normal = ExtResource("12_f2")
 texture_pressed = ExtResource("12_f2")
 texture_hover = ExtResource("12_f2")
@@ -523,12 +536,25 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "İleri 2"
 
-[node name="Left" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+[node name="Forward2Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
-offset_left = 362.0
-offset_top = 48.0
-offset_right = 520.0
-offset_bottom = 206.0
+offset_left = 194.0
+offset_top = 191.0
+offset_right = 347.0
+offset_bottom = 219.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "2 kare ileri gider."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Left" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
+layout_mode = 0
+offset_left = 374.0
+offset_top = 44.0
+offset_right = 519.0
+offset_bottom = 189.0
 texture_normal = ExtResource("13_left")
 texture_pressed = ExtResource("13_left")
 texture_hover = ExtResource("13_left")
@@ -536,12 +562,25 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "Sola Dön"
 
+[node name="LeftDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 191.0
+offset_right = 523.0
+offset_bottom = 219.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "90° sola döner."
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Right" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
 layout_mode = 0
 offset_left = 22.0
-offset_top = 216.0
-offset_right = 180.0
-offset_bottom = 374.0
+offset_top = 228.0
+offset_right = 167.0
+offset_bottom = 373.0
 texture_normal = ExtResource("14_right")
 texture_pressed = ExtResource("14_right")
 texture_hover = ExtResource("14_right")
@@ -549,12 +588,25 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "Sağa Dön"
 
-[node name="Hook" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+[node name="RightDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 216.0
-offset_right = 350.0
-offset_bottom = 374.0
+offset_left = 18.0
+offset_top = 375.0
+offset_right = 171.0
+offset_bottom = 407.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "90° sağa döner."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hook" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
+layout_mode = 0
+offset_left = 198.0
+offset_top = 228.0
+offset_right = 343.0
+offset_bottom = 373.0
 texture_normal = ExtResource("15_hook")
 texture_pressed = ExtResource("15_hook")
 texture_hover = ExtResource("15_hook")
@@ -562,12 +614,26 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "Kanca"
 
-[node name="Anchor" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+[node name="HookDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
-offset_left = 362.0
-offset_top = 216.0
-offset_right = 520.0
-offset_bottom = 374.0
+offset_left = 194.0
+offset_top = 375.0
+offset_right = 347.0
+offset_bottom = 407.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "Öndeki hedefi 1 kare çeker."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Anchor" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
+clip_contents = true
+layout_mode = 0
+offset_left = 374.0
+offset_top = 228.0
+offset_right = 519.0
+offset_bottom = 373.0
 texture_normal = ExtResource("16_anchor")
 texture_pressed = ExtResource("16_anchor")
 texture_hover = ExtResource("16_anchor")
@@ -575,12 +641,25 @@ ignore_texture_size = true
 stretch_mode = 5
 tooltip_text = "Çapa"
 
+[node name="AnchorDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 375.0
+offset_right = 523.0
+offset_bottom = 407.0
+theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
+theme_override_font_sizes/font_size = 12
+text = "Tur sonuna dek rüzgârı engeller."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
 [node name="ClearButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 859.0
+offset_top = 885.0
 offset_right = 278.0
-offset_bottom = 917.0
+offset_bottom = 943.0
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("RedButton")
 text = "TEMİZLE"
@@ -588,9 +667,9 @@ text = "TEMİZLE"
 [node name="ExecuteButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
-offset_top = 859.0
+offset_top = 885.0
 offset_right = 556.0
-offset_bottom = 917.0
+offset_bottom = 943.0
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("GreenButton")
 disabled = true
@@ -599,15 +678,15 @@ text = "PROGRAMI AÇ ▶"
 [node name="RestartButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 972.0
+offset_top = 992.0
 offset_right = 278.0
-offset_bottom = 1020.0
+offset_bottom = 1040.0
 text = "Yeni Oyun"
 
 [node name="MenuButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
-offset_top = 972.0
+offset_top = 992.0
 offset_right = 556.0
-offset_bottom = 1020.0
+offset_bottom = 1040.0
 text = "Ana Menü"
