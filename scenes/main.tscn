@@ -223,7 +223,7 @@ custom_minimum_size = Vector2(1300, 795)
 layout_mode = 2
 script = ExtResource("2_board")
 
-[node name="PilotsPanel" type="PanelContainer" parent="GameLayer"]
+[node name="PilotsPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 833.0
@@ -280,7 +280,7 @@ theme_override_font_sizes/font_size = 18
 text = "Gece Rüzgârı | ❤ 3 | Altın 0 | Kargo: Boş"
 vertical_alignment = 1
 
-[node name="LogPanel" type="PanelContainer" parent="GameLayer"]
+[node name="LogPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
 offset_left = 568.0
 offset_top = 833.0
@@ -308,7 +308,7 @@ theme_override_font_sizes/normal_font_size = 17
 bbcode_enabled = true
 scroll_active = true
 
-[node name="RightPanel" type="PanelContainer" parent="GameLayer"]
+[node name="RightPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
 offset_left = 1340.0
 offset_top = 10.0
@@ -316,7 +316,7 @@ offset_right = 1910.0
 offset_bottom = 1070.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
-[node name="TopHUD" type="PanelContainer" parent="GameLayer/RightPanel"]
+[node name="TopHUD" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 14.0
@@ -346,7 +346,7 @@ text = "Hedef 12 Altın"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="WindPanel" type="PanelContainer" parent="GameLayer/RightPanel"]
+[node name="WindPanel" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 92.0
@@ -386,12 +386,12 @@ text = "Her komuttan sonra zeplinler 1 hücre sürüklenir."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ProgramPanel" type="PanelContainer" parent="GameLayer/RightPanel"]
+[node name="ProgramPanel" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 240.0
 offset_right = 556.0
-offset_bottom = 438.0
+offset_bottom = 455.0
 theme_override_styles/panel = SubResource("PanelInner")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/ProgramPanel"]
@@ -418,12 +418,12 @@ layout_mode = 0
 offset_left = 22.0
 offset_top = 45.0
 offset_right = 520.0
-offset_bottom = 188.0
+offset_bottom = 202.0
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Slot1" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 135)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -442,7 +442,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Slot2" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 135)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -461,7 +461,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Slot3" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
-custom_minimum_size = Vector2(150, 135)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
 
@@ -479,12 +479,12 @@ layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CardsPanel" type="PanelContainer" parent="GameLayer/RightPanel"]
+[node name="CardsPanel" type="Panel" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 448.0
+offset_top = 465.0
 offset_right = 556.0
-offset_bottom = 832.0
+offset_bottom = 849.0
 theme_override_styles/panel = SubResource("PanelInner")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
@@ -578,9 +578,9 @@ tooltip_text = "Çapa"
 [node name="ClearButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 842.0
+offset_top = 859.0
 offset_right = 278.0
-offset_bottom = 900.0
+offset_bottom = 917.0
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("RedButton")
 text = "TEMİZLE"
@@ -588,9 +588,9 @@ text = "TEMİZLE"
 [node name="ExecuteButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
-offset_top = 842.0
+offset_top = 859.0
 offset_right = 556.0
-offset_bottom = 900.0
+offset_bottom = 917.0
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("GreenButton")
 disabled = true
@@ -599,15 +599,15 @@ text = "PROGRAMI AÇ ▶"
 [node name="RestartButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 962.0
+offset_top = 972.0
 offset_right = 278.0
-offset_bottom = 1010.0
+offset_bottom = 1020.0
 text = "Yeni Oyun"
 
 [node name="MenuButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
-offset_top = 962.0
+offset_top = 972.0
 offset_right = 556.0
-offset_bottom = 1010.0
+offset_bottom = 1020.0
 text = "Ana Menü"
