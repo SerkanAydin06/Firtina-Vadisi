@@ -31,6 +31,8 @@ var cell_step: Vector2 = Vector2(100.0, 80.0)
 var inner_origin: Vector2 = Vector2.ZERO
 var inner_size: Vector2 = Vector2.ZERO
 var grid_nodes: Array[Panel] = []
+var vertical_grid_lines: Array[ColorRect] = []
+var horizontal_grid_lines: Array[ColorRect] = []
 var rock_nodes: Array[Panel] = []
 var contract_nodes: Array[Panel] = []
 var delivery_nodes: Array[Panel] = []
@@ -56,6 +58,8 @@ func _draw() -> void:
 
 func _cache_scene_nodes() -> void:
 	grid_nodes.clear()
+	vertical_grid_lines.clear()
+	horizontal_grid_lines.clear()
 	rock_nodes.clear()
 	contract_nodes.clear()
 	delivery_nodes.clear()
@@ -63,6 +67,15 @@ func _cache_scene_nodes() -> void:
 	for child in $GridCells.get_children():
 		if child is Panel:
 			grid_nodes.append(child)
+		elif child is ColorRect:
+			var line: ColorRect = child
+			var line_name: String = str(line.name)
+			if line_name.begins_with("V"):
+				vertical_grid_lines.append(line)
+			elif line_name.begins_with("H"):
+				horizontal_grid_lines.append(line)
+	vertical_grid_lines.sort_custom(func(a: ColorRect, b: ColorRect) -> bool: return str(a.name) < str(b.name))
+	horizontal_grid_lines.sort_custom(func(a: ColorRect, b: ColorRect) -> bool: return str(a.name) < str(b.name))
 	for child in $Rocks.get_children():
 		if child is Panel:
 			rock_nodes.append(child)
@@ -106,6 +119,8 @@ func fit_board() -> void:
 	_layout_ships()
 
 func _layout_grid_cells() -> void:
+	if grid_size.x <= 0 or grid_size.y <= 0:
+		return
 	for i in range(grid_nodes.size()):
 		var cell_node: Panel = grid_nodes[i]
 		var x: int = i % grid_size.x
@@ -113,9 +128,34 @@ func _layout_grid_cells() -> void:
 		if y >= grid_size.y:
 			cell_node.visible = false
 			continue
+		var left: float = roundf(inner_origin.x + inner_size.x * float(x) / float(grid_size.x))
+		var right: float = roundf(inner_origin.x + inner_size.x * float(x + 1) / float(grid_size.x))
+		var top: float = roundf(inner_origin.y + inner_size.y * float(y) / float(grid_size.y))
+		var bottom: float = roundf(inner_origin.y + inner_size.y * float(y + 1) / float(grid_size.y))
 		cell_node.visible = true
-		cell_node.position = cell_to_pixel(Vector2i(x, y))
-		cell_node.size = cell_step
+		cell_node.position = Vector2(left, top)
+		cell_node.size = Vector2(right - left, bottom - top)
+
+	const LINE_WIDTH: float = 2.0
+	for i in range(vertical_grid_lines.size()):
+		var line: ColorRect = vertical_grid_lines[i]
+		if i > grid_size.x:
+			line.visible = false
+			continue
+		var px: float = roundf(inner_origin.x + inner_size.x * float(i) / float(grid_size.x))
+		line.visible = true
+		line.position = Vector2(px - LINE_WIDTH * 0.5, roundf(inner_origin.y))
+		line.size = Vector2(LINE_WIDTH, roundf(inner_size.y))
+
+	for i in range(horizontal_grid_lines.size()):
+		var line: ColorRect = horizontal_grid_lines[i]
+		if i > grid_size.y:
+			line.visible = false
+			continue
+		var py: float = roundf(inner_origin.y + inner_size.y * float(i) / float(grid_size.y))
+		line.visible = true
+		line.position = Vector2(roundf(inner_origin.x), py - LINE_WIDTH * 0.5)
+		line.size = Vector2(roundf(inner_size.x), LINE_WIDTH)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
