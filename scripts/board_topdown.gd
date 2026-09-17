@@ -4,7 +4,8 @@ extends "res://scripts/board.gd"
 @export var show_editor_preview: bool = true
 @export_range(0.65, 0.95, 0.01) var token_fill: float = 0.80
 @export_range(0.45, 0.80, 0.01) var rock_fill: float = 0.58
-@export_range(0.05, 0.55, 0.01) var grid_alpha: float = 0.28
+@export_range(0.20, 0.90, 0.01) var grid_alpha: float = 0.62
+@export_range(1.0, 4.0, 0.25) var grid_line_width: float = 2.0
 
 const PREVIEW_STARTS: Array[Vector2i] = [
 	Vector2i(0,0), Vector2i(10,0), Vector2i(0,8), Vector2i(10,8)
@@ -47,19 +48,17 @@ func _ready() -> void:
 	call_deferred("fit_board")
 
 func _draw() -> void:
-	# Kareler yalnızca hareket mesafesini okumak için rehberdir.
-	# Satranç efekti oluşturmamak için hücrelerin içini boyamıyoruz.
 	if grid_size.x <= 0 or grid_size.y <= 0:
 		return
-	var line_color := Color(0.70, 0.57, 0.37, grid_alpha)
-	var border_color := Color(0.83, 0.66, 0.38, minf(grid_alpha + 0.20, 0.70))
+	var line_color := Color(0.92, 0.72, 0.42, grid_alpha)
+	var border_color := Color(1.0, 0.79, 0.44, minf(grid_alpha + 0.18, 0.95))
 	for x in range(grid_size.x + 1):
 		var px: float = inner_origin.x + float(x) * cell_step.x
-		draw_line(Vector2(px, inner_origin.y), Vector2(px, inner_origin.y + inner_size.y), line_color, 1.0, true)
+		draw_line(Vector2(px, inner_origin.y), Vector2(px, inner_origin.y + inner_size.y), line_color, grid_line_width, true)
 	for y in range(grid_size.y + 1):
 		var py: float = inner_origin.y + float(y) * cell_step.y
-		draw_line(Vector2(inner_origin.x, py), Vector2(inner_origin.x + inner_size.x, py), line_color, 1.0, true)
-	draw_rect(Rect2(inner_origin, inner_size), border_color, false, 2.0)
+		draw_line(Vector2(inner_origin.x, py), Vector2(inner_origin.x + inner_size.x, py), line_color, grid_line_width, true)
+	draw_rect(Rect2(inner_origin, inner_size), border_color, false, 3.0)
 
 func _cache_scene_nodes() -> void:
 	rock_nodes.clear()
