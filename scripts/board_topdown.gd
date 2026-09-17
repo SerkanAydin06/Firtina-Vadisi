@@ -45,7 +45,7 @@ func _ready() -> void:
 		pickup_cells = PREVIEW_PICKUPS.duplicate(true)
 		delivery_cells = PREVIEW_DELIVERIES.duplicate(true)
 		for i in range(PREVIEW_FACINGS.size()):
-			var token: AirshipToken = tokens.get(i + 1, null)
+			var token: AirshipToken = tokens.get(i + 1, null) as AirshipToken
 			if token != null:
 				token.facing = PREVIEW_FACINGS[i]
 	call_deferred("fit_board")
@@ -109,7 +109,7 @@ func _layout_grid_cells() -> void:
 	for i in range(grid_nodes.size()):
 		var cell_node: Panel = grid_nodes[i]
 		var x: int = i % grid_size.x
-		var y: int = i / grid_size.x
+		var y: int = floori(float(i) / float(grid_size.x))
 		if y >= grid_size.y:
 			cell_node.visible = false
 			continue
