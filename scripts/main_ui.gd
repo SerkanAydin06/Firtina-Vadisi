@@ -25,6 +25,7 @@ func build_game_ui() -> void:
 	info_label = $GameLayer/LogPanel/InfoLabel as RichTextLabel
 	clear_button = $GameLayer/RightPanel/ClearButton as Button
 	execute_button = $GameLayer/RightPanel/ExecuteButton as Button
+	info_label.scroll_following = true
 
 	queue_textures = [
 		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Texture as TextureRect,
@@ -84,3 +85,17 @@ func refresh_ui() -> void:
 		var cargo_text: String = "Boş" if ship.cargo.is_empty() else str(ship.cargo.name)
 		pilot_label.text = "%s   |   ❤ %d   |   Altın %d   |   Kargo: %s" % [ship.name, ship.hp, ship.coins, cargo_text]
 		pilot_label.add_theme_color_override("font_color", ship.color.lightened(0.15))
+
+func log_clear() -> void:
+	info_label.clear()
+	info_label.scroll_to_line(0)
+
+func log_line(text: String) -> void:
+	info_label.append_text(text + "\n")
+	call_deferred("_scroll_log_to_bottom")
+
+func _scroll_log_to_bottom() -> void:
+	if not is_instance_valid(info_label):
+		return
+	var last_line: int = maxi(0, info_label.get_line_count() - 1)
+	info_label.scroll_to_line(last_line)
