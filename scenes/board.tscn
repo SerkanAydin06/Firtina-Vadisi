@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/board_topdown.gd" id="1_board"]
-[ext_resource type="Script" path="res://scripts/airship_token.gd" id="2_ship"]
+[ext_resource type="PackedScene" path="res://scenes/grid_cells.tscn" id="2_grid"]
+[ext_resource type="PackedScene" path="res://scenes/airship_token.tscn" id="3_ship"]
 
 [sub_resource type="StyleBoxFlat" id="ArenaStyle"]
 bg_color = Color(0.18, 0.13, 0.085, 1)
@@ -91,13 +92,21 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("ArenaStyle")
 
+[node name="GridCells" parent="." instance=ExtResource("2_grid")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="TopRidge" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 22.0
+offset_bottom = 12.0
 grow_horizontal = 2
-color = Color(0.08, 0.048, 0.028, 0.92)
+color = Color(0.08, 0.048, 0.028, 0.86)
 mouse_filter = 2
 
 [node name="BottomRidge" type="ColorRect" parent="."]
@@ -106,19 +115,19 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -22.0
+offset_top = -12.0
 grow_horizontal = 2
 grow_vertical = 0
-color = Color(0.08, 0.048, 0.028, 0.92)
+color = Color(0.08, 0.048, 0.028, 0.86)
 mouse_filter = 2
 
 [node name="LeftRidge" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 20.0
+offset_right = 12.0
 grow_vertical = 2
-color = Color(0.09, 0.052, 0.03, 0.92)
+color = Color(0.09, 0.052, 0.03, 0.86)
 mouse_filter = 2
 
 [node name="RightRidge" type="ColorRect" parent="."]
@@ -127,10 +136,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -20.0
+offset_left = -12.0
 grow_horizontal = 0
 grow_vertical = 2
-color = Color(0.09, 0.052, 0.03, 0.92)
+color = Color(0.09, 0.052, 0.03, 0.86)
 mouse_filter = 2
 
 [node name="StartPads" type="Control" parent="."]
@@ -427,30 +436,30 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Ship1" type="Control" parent="Ships"]
+[node name="Ship1" parent="Ships" instance=ExtResource("3_ship")]
 layout_mode = 0
-script = ExtResource("2_ship")
 player_id = 1
 facing = 2
 body_color = Color(0.32, 0.72, 1, 1)
+highlight_human_player = true
 
-[node name="Ship2" type="Control" parent="Ships"]
+[node name="Ship2" parent="Ships" instance=ExtResource("3_ship")]
 layout_mode = 0
-script = ExtResource("2_ship")
 player_id = 2
-facing = 2
+facing = 3
 body_color = Color(0.95, 0.30, 0.30, 1)
+highlight_human_player = true
 
-[node name="Ship3" type="Control" parent="Ships"]
+[node name="Ship3" parent="Ships" instance=ExtResource("3_ship")]
 layout_mode = 0
-script = ExtResource("2_ship")
 player_id = 3
-facing = 0
+facing = 1
 body_color = Color(0.42, 0.90, 0.55, 1)
+highlight_human_player = true
 
-[node name="Ship4" type="Control" parent="Ships"]
+[node name="Ship4" parent="Ships" instance=ExtResource("3_ship")]
 layout_mode = 0
-script = ExtResource("2_ship")
 player_id = 4
 facing = 0
 body_color = Color(0.98, 0.82, 0.30, 1)
+highlight_human_player = true
