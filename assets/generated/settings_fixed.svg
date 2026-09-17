@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="90" viewBox="0 0 520 90">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#35322d"/>
+      <stop offset="1" stop-color="#171716"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8b5d1f"/>
+      <stop offset="0.5" stop-color="#e4b85c"/>
+      <stop offset="1" stop-color="#8b5d1f"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="504" height="74" rx="8" fill="url(#bg)" stroke="#4a3218" stroke-width="8"/>
+  <rect x="12" y="12" width="496" height="66" rx="6" fill="none" stroke="url(#gold)" stroke-width="3"/>
+  <circle cx="28" cy="45" r="8" fill="#171716" stroke="#d2a74f" stroke-width="3"/>
+  <circle cx="492" cy="45" r="8" fill="#171716" stroke="#d2a74f" stroke-width="3"/>
+  <g transform="translate(78 45)" stroke="#d9c08c" stroke-width="5" fill="none" stroke-linecap="round">
+    <circle r="14"/>
+    <circle r="5" fill="#d9c08c" stroke="none"/>
+    <path d="M0-25v8 M0 17v8 M-25 0h8 M17 0h8 M-18-18l6 6 M12 12l6 6 M18-18l-6 6 M-12 12l-6 6"/>
+  </g>
+  <text x="300" y="57" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="34" fill="#e4c997" stroke="#23170a" stroke-width="1">Ayarlar</text>
+</svg>
