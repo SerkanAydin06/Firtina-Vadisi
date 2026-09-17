@@ -1,0 +1,513 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="StyleBoxFlat" id="CellStyle"]
+bg_color = Color(0.20, 0.145, 0.095, 0.06)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.72, 0.42, 0.68)
+
+[node name="GridCells" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Cell01" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell02" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell03" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell04" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell05" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell06" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell07" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell08" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell09" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell10" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell11" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell12" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell13" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell14" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell15" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell16" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell17" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell18" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell19" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell20" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell21" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell22" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell23" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell24" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell25" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell26" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell27" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell28" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell29" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell30" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell31" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell32" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell33" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell34" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell35" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell36" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell37" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell38" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell39" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell40" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell41" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell42" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell43" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell44" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell45" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell46" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell47" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell48" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell49" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell50" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell51" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell52" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell53" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell54" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell55" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell56" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell57" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell58" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell59" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell60" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell61" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell62" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell63" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell64" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell65" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell66" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell67" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell68" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell69" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell70" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell71" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell72" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell73" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell74" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell75" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell76" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell77" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell78" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell79" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell80" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell81" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell82" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell83" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell84" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell85" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell86" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell87" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell88" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell89" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell90" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell91" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell92" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell93" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell94" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell95" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell96" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell97" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell98" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
+
+[node name="Cell99" type="Panel" parent="."]
+layout_mode = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CellStyle")
