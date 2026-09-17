@@ -92,7 +92,8 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("ArenaStyle")
 
-[node name="GridCells" parent="." instance=ExtResource("2_grid")]
+[node name="GridLayer" parent="." instance=ExtResource("2_grid")]
+editor_description = "Tam board boyutundaki görünmez grid taşıyıcısı. Hücreler ve çizgiler bunun altındadır."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -142,7 +143,8 @@ grow_vertical = 2
 color = Color(0.09, 0.052, 0.03, 0.86)
 mouse_filter = 2
 
-[node name="StartPads" type="Control" parent="."]
+[node name="StartPadsLayer" type="Control" parent="."]
+editor_description = "Tam board boyutundaki görünmez başlangıç pedi taşıyıcısı. Pad1-Pad4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -151,23 +153,24 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Pad1" type="Panel" parent="StartPads"]
+[node name="Pad1" type="Panel" parent="StartPadsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad2" type="Panel" parent="StartPads"]
+[node name="Pad2" type="Panel" parent="StartPadsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad3" type="Panel" parent="StartPads"]
+[node name="Pad3" type="Panel" parent="StartPadsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad4" type="Panel" parent="StartPads"]
+[node name="Pad4" type="Panel" parent="StartPadsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Rocks" type="Control" parent="."]
+[node name="RocksLayer" type="Control" parent="."]
+editor_description = "Tam board boyutundaki görünmez kaya taşıyıcısı. Rock1-Rock12 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -176,44 +179,45 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Rock1" type="Panel" parent="Rocks"]
+[node name="Rock1" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock2" type="Panel" parent="Rocks"]
+[node name="Rock2" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock3" type="Panel" parent="Rocks"]
+[node name="Rock3" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock4" type="Panel" parent="Rocks"]
+[node name="Rock4" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock5" type="Panel" parent="Rocks"]
+[node name="Rock5" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock6" type="Panel" parent="Rocks"]
+[node name="Rock6" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock7" type="Panel" parent="Rocks"]
+[node name="Rock7" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock8" type="Panel" parent="Rocks"]
+[node name="Rock8" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock9" type="Panel" parent="Rocks"]
+[node name="Rock9" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock10" type="Panel" parent="Rocks"]
+[node name="Rock10" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock11" type="Panel" parent="Rocks"]
+[node name="Rock11" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock12" type="Panel" parent="Rocks"]
+[node name="Rock12" type="Panel" parent="RocksLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("RockStyle")
 
-[node name="Deliveries" type="Control" parent="."]
+[node name="DeliveriesLayer" type="Control" parent="."]
+editor_description = "Tam board boyutundaki görünmez teslimat taşıyıcısı. Delivery1-Delivery4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -222,10 +226,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Delivery1" type="Panel" parent="Deliveries"]
+[node name="Delivery1" type="Panel" parent="DeliveriesLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="Deliveries/Delivery1"]
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -238,10 +242,10 @@ text = "BAKIR\nİSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery2" type="Panel" parent="Deliveries"]
+[node name="Delivery2" type="Panel" parent="DeliveriesLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="Deliveries/Delivery2"]
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -254,10 +258,10 @@ text = "SİS\nİSKELESİ"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery3" type="Panel" parent="Deliveries"]
+[node name="Delivery3" type="Panel" parent="DeliveriesLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="Deliveries/Delivery3"]
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery3"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -270,10 +274,10 @@ text = "FIRTINA\nİSKELESİ"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery4" type="Panel" parent="Deliveries"]
+[node name="Delivery4" type="Panel" parent="DeliveriesLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="Deliveries/Delivery4"]
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery4"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -286,7 +290,8 @@ text = "KIZIL\nİSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Contracts" type="Control" parent="."]
+[node name="ContractsLayer" type="Control" parent="."]
+editor_description = "Tam board boyutundaki görünmez kontrat taşıyıcısı. Contract1-Contract4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -295,10 +300,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Contract1" type="Panel" parent="Contracts"]
+[node name="Contract1" type="Panel" parent="ContractsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="Contracts/Contract1"]
+[node name="Name" type="Label" parent="ContractsLayer/Contract1"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 3.0
@@ -307,7 +312,7 @@ offset_bottom = 21.0
 theme_override_font_sizes/font_size = 11
 text = "BAHARAT"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="Contracts/Contract1"]
+[node name="Reward" type="Label" parent="ContractsLayer/Contract1"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 20.0
@@ -317,7 +322,7 @@ theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="Contracts/Contract1"]
+[node name="Target" type="Label" parent="ContractsLayer/Contract1"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 37.0
@@ -328,10 +333,10 @@ theme_override_font_sizes/font_size = 10
 text = "→ Bakır İskele"
 horizontal_alignment = 1
 
-[node name="Contract2" type="Panel" parent="Contracts"]
+[node name="Contract2" type="Panel" parent="ContractsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="Contracts/Contract2"]
+[node name="Name" type="Label" parent="ContractsLayer/Contract2"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 3.0
@@ -340,7 +345,7 @@ offset_bottom = 21.0
 theme_override_font_sizes/font_size = 11
 text = "KRİSTAL"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="Contracts/Contract2"]
+[node name="Reward" type="Label" parent="ContractsLayer/Contract2"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 20.0
@@ -350,7 +355,7 @@ theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="Contracts/Contract2"]
+[node name="Target" type="Label" parent="ContractsLayer/Contract2"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 37.0
@@ -361,10 +366,10 @@ theme_override_font_sizes/font_size = 10
 text = "→ Sis İskelesi"
 horizontal_alignment = 1
 
-[node name="Contract3" type="Panel" parent="Contracts"]
+[node name="Contract3" type="Panel" parent="ContractsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="Contracts/Contract3"]
+[node name="Name" type="Label" parent="ContractsLayer/Contract3"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 3.0
@@ -373,7 +378,7 @@ offset_bottom = 21.0
 theme_override_font_sizes/font_size = 11
 text = "SİLAH"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="Contracts/Contract3"]
+[node name="Reward" type="Label" parent="ContractsLayer/Contract3"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 20.0
@@ -383,7 +388,7 @@ theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="Contracts/Contract3"]
+[node name="Target" type="Label" parent="ContractsLayer/Contract3"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 37.0
@@ -394,10 +399,10 @@ theme_override_font_sizes/font_size = 10
 text = "→ Fırtına İskelesi"
 horizontal_alignment = 1
 
-[node name="Contract4" type="Panel" parent="Contracts"]
+[node name="Contract4" type="Panel" parent="ContractsLayer"]
 layout_mode = 0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="Contracts/Contract4"]
+[node name="Name" type="Label" parent="ContractsLayer/Contract4"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 3.0
@@ -406,7 +411,7 @@ offset_bottom = 21.0
 theme_override_font_sizes/font_size = 11
 text = "İLAÇ"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="Contracts/Contract4"]
+[node name="Reward" type="Label" parent="ContractsLayer/Contract4"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 20.0
@@ -416,7 +421,7 @@ theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="Contracts/Contract4"]
+[node name="Target" type="Label" parent="ContractsLayer/Contract4"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 37.0
@@ -427,7 +432,8 @@ theme_override_font_sizes/font_size = 10
 text = "→ Kızıl İskele"
 horizontal_alignment = 1
 
-[node name="Ships" type="Control" parent="."]
+[node name="ShipsLayer" type="Control" parent="."]
+editor_description = "Tam board boyutundaki görünmez gemi taşıyıcısı. Ship1-Ship4 kendi hücre ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -436,28 +442,28 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Ship1" parent="Ships" instance=ExtResource("3_ship")]
+[node name="Ship1" parent="ShipsLayer" instance=ExtResource("3_ship")]
 layout_mode = 0
 player_id = 1
 facing = 2
 body_color = Color(0.32, 0.72, 1, 1)
 highlight_human_player = true
 
-[node name="Ship2" parent="Ships" instance=ExtResource("3_ship")]
+[node name="Ship2" parent="ShipsLayer" instance=ExtResource("3_ship")]
 layout_mode = 0
 player_id = 2
 facing = 3
 body_color = Color(0.95, 0.30, 0.30, 1)
 highlight_human_player = true
 
-[node name="Ship3" parent="Ships" instance=ExtResource("3_ship")]
+[node name="Ship3" parent="ShipsLayer" instance=ExtResource("3_ship")]
 layout_mode = 0
 player_id = 3
 facing = 1
 body_color = Color(0.42, 0.90, 0.55, 1)
 highlight_human_player = true
 
-[node name="Ship4" parent="Ships" instance=ExtResource("3_ship")]
+[node name="Ship4" parent="ShipsLayer" instance=ExtResource("3_ship")]
 layout_mode = 0
 player_id = 4
 facing = 0
