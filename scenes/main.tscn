@@ -1,7 +1,7 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/main_ui.gd" id="1_main"]
-[ext_resource type="Script" path="res://scripts/board_topdown.gd" id="2_board"]
+[ext_resource type="PackedScene" path="res://scenes/board.tscn" id="2_board"]
 [ext_resource type="Texture2D" path="res://assets/generated/menu_background.png" id="3_menu_bg"]
 [ext_resource type="Texture2D" path="res://assets/generated/logo.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/generated/start_normal.png" id="5_start"]
@@ -23,7 +23,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.7, 0.48, 0.2, 1)
+border_color = Color(0.70, 0.48, 0.20, 1)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
@@ -59,7 +59,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.7, 0.22, 0.16, 1)
+border_color = Color(0.70, 0.22, 0.16, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -71,11 +71,28 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.28, 0.7, 0.27, 1)
+border_color = Color(0.28, 0.70, 0.27, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="TableHeader"]
+bg_color = Color(0.11, 0.09, 0.065, 1)
+border_width_bottom = 2
+border_color = Color(0.52, 0.37, 0.18, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="TableRowA"]
+bg_color = Color(0.058, 0.06, 0.062, 0.94)
+border_width_bottom = 1
+border_color = Color(0.24, 0.21, 0.16, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="TableRowB"]
+bg_color = Color(0.072, 0.072, 0.07, 0.94)
+border_width_bottom = 1
+border_color = Color(0.24, 0.21, 0.16, 0.8)
 
 [node name="FirtinaVadisi" type="Control"]
 layout_mode = 3
@@ -181,11 +198,10 @@ offset_top = 805.0
 offset_right = 1260.0
 offset_bottom = 1015.0
 theme_override_styles/panel = SubResource("PanelOuter")
-
 [node name="Text" type="Label" parent="MenuLayer/SettingsPopup"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "AYARLAR / BİLGİ\n\nÇözünürlük: 1920 × 1080\nOyun içi arayüz ve kartlar sahne üzerinden düzenlenir."
+text = "AYARLAR / BİLGİ\n\nÇözünürlük: 1920 × 1080\nTüm görünür oyun arayüzü sahne üzerinden düzenlenir."
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -208,7 +224,7 @@ grow_vertical = 2
 color = Color(0.022, 0.024, 0.028, 1)
 mouse_filter = 2
 
-[node name="BoardFrame" type="PanelContainer" parent="GameLayer"]
+[node name="BoardFrame" type="Panel" parent="GameLayer"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 10.0
@@ -216,93 +232,284 @@ offset_right = 1330.0
 offset_bottom = 825.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
-[node name="Board" type="Control" parent="GameLayer/BoardFrame"]
-custom_minimum_size = Vector2(1300, 795)
-layout_mode = 2
-script = ExtResource("2_board")
+[node name="Board" parent="GameLayer/BoardFrame" instance=ExtResource("2_board")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = -7.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PilotsPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 833.0
-offset_right = 560.0
+offset_right = 802.0
 offset_bottom = 1070.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
 [node name="Title" type="Label" parent="GameLayer/PilotsPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 8.0
-offset_right = 180.0
-offset_bottom = 40.0
-theme_override_font_sizes/font_size = 21
+offset_top = 7.0
+offset_right = 300.0
+offset_bottom = 35.0
+theme_override_colors/font_color = Color(1, 0.84, 0.48, 1)
+theme_override_font_sizes/font_size = 19
 text = "PİLOTLAR"
 
-[node name="PilotRows" type="VBoxContainer" parent="GameLayer/PilotsPanel"]
+[node name="Header" type="Panel" parent="GameLayer/PilotsPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 44.0
-offset_right = 536.0
-offset_bottom = 222.0
-theme_override_constants/separation = 5
-
-[node name="Pilot1" type="Label" parent="GameLayer/PilotsPanel/PilotRows"]
-custom_minimum_size = Vector2(0, 39)
+offset_top = 38.0
+offset_right = 778.0
+offset_bottom = 72.0
+theme_override_styles/panel = SubResource("TableHeader")
+[node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Header"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+[node name="Name" type="Label" parent="GameLayer/PilotsPanel/Header/Columns"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "Sen | ❤ 3 | Altın 0 | Kargo: Boş"
+theme_override_colors/font_color = Color(0.88, 0.80, 0.66, 1)
+theme_override_font_sizes/font_size = 14
+text = "İSİM"
+vertical_alignment = 1
+[node name="HP" type="Label" parent="GameLayer/PilotsPanel/Header/Columns"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.80, 0.66, 1)
+theme_override_font_sizes/font_size = 14
+text = "CAN"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Header/Columns"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.80, 0.66, 1)
+theme_override_font_sizes/font_size = 14
+text = "ALTIN"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Header/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.80, 0.66, 1)
+theme_override_font_sizes/font_size = 14
+text = "KARGO / HEDEF"
 vertical_alignment = 1
 
-[node name="Pilot2" type="Label" parent="GameLayer/PilotsPanel/PilotRows"]
-custom_minimum_size = Vector2(0, 39)
+[node name="Pilot1" type="Panel" parent="GameLayer/PilotsPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 75.0
+offset_right = 778.0
+offset_bottom = 111.0
+theme_override_styles/panel = SubResource("TableRowA")
+[node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+[node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
-theme_override_font_sizes/font_size = 18
-text = "Kızıl Korsan | ❤ 3 | Altın 0 | Kargo: Boş"
+theme_override_font_sizes/font_size = 15
+text = "Sen"
+vertical_alignment = 1
+[node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "3 / 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "—"
 vertical_alignment = 1
 
-[node name="Pilot3" type="Label" parent="GameLayer/PilotsPanel/PilotRows"]
-custom_minimum_size = Vector2(0, 39)
+[node name="Pilot2" type="Panel" parent="GameLayer/PilotsPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 113.0
+offset_right = 778.0
+offset_bottom = 149.0
+theme_override_styles/panel = SubResource("TableRowB")
+[node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+[node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 1, 0.6, 1)
-theme_override_font_sizes/font_size = 18
-text = "Bakır Martı | ❤ 3 | Altın 0 | Kargo: Boş"
+theme_override_font_sizes/font_size = 15
+text = "Kızıl Korsan"
+vertical_alignment = 1
+[node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "3 / 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "—"
 vertical_alignment = 1
 
-[node name="Pilot4" type="Label" parent="GameLayer/PilotsPanel/PilotRows"]
-custom_minimum_size = Vector2(0, 39)
+[node name="Pilot3" type="Panel" parent="GameLayer/PilotsPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 151.0
+offset_right = 778.0
+offset_bottom = 187.0
+theme_override_styles/panel = SubResource("TableRowA")
+[node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+[node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.86, 0.38, 1)
-theme_override_font_sizes/font_size = 18
-text = "Gece Rüzgârı | ❤ 3 | Altın 0 | Kargo: Boş"
+theme_override_font_sizes/font_size = 15
+text = "Bakır Martı"
+vertical_alignment = 1
+[node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "3 / 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "—"
+vertical_alignment = 1
+
+[node name="Pilot4" type="Panel" parent="GameLayer/PilotsPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 189.0
+offset_right = 778.0
+offset_bottom = 225.0
+theme_override_styles/panel = SubResource("TableRowB")
+[node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+[node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Gece Rüzgârı"
+vertical_alignment = 1
+[node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "3 / 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns"]
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+[node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "—"
 vertical_alignment = 1
 
 [node name="LogPanel" type="Panel" parent="GameLayer"]
 layout_mode = 0
-offset_left = 568.0
+offset_left = 810.0
 offset_top = 833.0
 offset_right = 1330.0
 offset_bottom = 1070.0
 theme_override_styles/panel = SubResource("PanelOuter")
-
 [node name="Title" type="Label" parent="GameLayer/LogPanel"]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 8.0
-offset_right = 260.0
-offset_bottom = 40.0
-theme_override_font_sizes/font_size = 21
+offset_right = 280.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(1, 0.84, 0.48, 1)
+theme_override_font_sizes/font_size = 19
 text = "UÇUŞ GÜNLÜĞÜ"
-
 [node name="InfoLabel" type="RichTextLabel" parent="GameLayer/LogPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 44.0
-offset_right = 748.0
+offset_top = 42.0
+offset_right = 506.0
 offset_bottom = 222.0
 theme_override_colors/default_color = Color(0.92, 0.87, 0.77, 1)
-theme_override_font_sizes/normal_font_size = 17
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = true
 scroll_following = true
@@ -322,7 +529,6 @@ offset_top = 14.0
 offset_right = 556.0
 offset_bottom = 82.0
 theme_override_styles/panel = SubResource("PanelInner")
-
 [node name="RoundLabel" type="Label" parent="GameLayer/RightPanel/TopHUD"]
 layout_mode = 0
 offset_left = 16.0
@@ -332,7 +538,6 @@ offset_bottom = 57.0
 theme_override_font_sizes/font_size = 25
 text = "Tur 1"
 vertical_alignment = 1
-
 [node name="GoalLabel" type="Label" parent="GameLayer/RightPanel/TopHUD"]
 layout_mode = 0
 offset_left = 280.0
@@ -352,7 +557,6 @@ offset_top = 92.0
 offset_right = 556.0
 offset_bottom = 220.0
 theme_override_styles/panel = SubResource("PanelInner")
-
 [node name="Title" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 14.0
@@ -361,7 +565,6 @@ offset_right = 180.0
 offset_bottom = 33.0
 theme_override_font_sizes/font_size = 20
 text = "RÜZGÂR"
-
 [node name="WindLabel" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 14.0
@@ -373,15 +576,14 @@ theme_override_font_sizes/font_size = 29
 text = "DOĞU →"
 horizontal_alignment = 1
 vertical_alignment = 1
-
 [node name="Hint" type="Label" parent="GameLayer/RightPanel/WindPanel"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 80.0
 offset_right = 522.0
-offset_bottom = 116.0
-theme_override_font_sizes/font_size = 14
-text = "Her komuttan sonra zeplinler 1 hücre sürüklenir."
+offset_bottom = 115.0
+theme_override_font_sizes/font_size = 13
+text = "Her komuttan sonra tüm zeplinler rüzgârla sürüklenir."
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -392,40 +594,34 @@ offset_top = 230.0
 offset_right = 556.0
 offset_bottom = 425.0
 theme_override_styles/panel = SubResource("PanelInner")
-
 [node name="Title" type="Label" parent="GameLayer/RightPanel/ProgramPanel"]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 7.0
 offset_right = 520.0
-offset_bottom = 34.0
+offset_bottom = 33.0
 theme_override_font_sizes/font_size = 20
 text = "3 KOMUT PROGRAMLA"
 horizontal_alignment = 1
-
 [node name="QueueSummary" type="Label" parent="GameLayer/RightPanel/ProgramPanel"]
 visible = false
 layout_mode = 0
 offset_left = 10.0
-offset_top = 36.0
+offset_top = 34.0
 offset_right = 530.0
 offset_bottom = 44.0
-text = ""
-
 [node name="CommandBox" type="HBoxContainer" parent="GameLayer/RightPanel/ProgramPanel"]
 layout_mode = 0
-offset_left = 25.0
-offset_top = 40.0
-offset_right = 517.0
-offset_bottom = 188.0
-theme_override_constants/separation = 12
+offset_left = 31.0
+offset_top = 39.0
+offset_right = 511.0
+offset_bottom = 184.0
+theme_override_constants/separation = 15
 alignment = 1
-
 [node name="Slot1" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
 custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
-
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
@@ -433,18 +629,15 @@ theme_override_font_sizes/font_size = 34
 text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
-
 [node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1"]
 visible = false
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
-
 [node name="Slot2" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
 custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
-
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
@@ -452,18 +645,15 @@ theme_override_font_sizes/font_size = 34
 text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
-
 [node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2"]
 visible = false
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
-
 [node name="Slot3" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox"]
 custom_minimum_size = Vector2(145, 145)
 layout_mode = 2
 theme_override_styles/panel = SubResource("SlotStyle")
-
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
@@ -471,7 +661,6 @@ theme_override_font_sizes/font_size = 34
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
-
 [node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3"]
 visible = false
 layout_mode = 2
@@ -485,7 +674,6 @@ offset_top = 435.0
 offset_right = 556.0
 offset_bottom = 875.0
 theme_override_styles/panel = SubResource("PanelInner")
-
 [node name="Title" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 14.0
@@ -508,8 +696,6 @@ texture_pressed = ExtResource("11_f1")
 texture_hover = ExtResource("11_f1")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "İleri 1"
-
 [node name="Forward1Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 18.0
@@ -518,7 +704,7 @@ offset_right = 171.0
 offset_bottom = 219.0
 theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
 theme_override_font_sizes/font_size = 12
-text = "1 kare ileri gider."
+text = "1 hücre ileri gider."
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -534,8 +720,6 @@ texture_pressed = ExtResource("12_f2")
 texture_hover = ExtResource("12_f2")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "İleri 2"
-
 [node name="Forward2Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 194.0
@@ -544,7 +728,7 @@ offset_right = 347.0
 offset_bottom = 219.0
 theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
 theme_override_font_sizes/font_size = 12
-text = "2 kare ileri gider."
+text = "2 hücre ileri gider."
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -560,8 +744,6 @@ texture_pressed = ExtResource("13_left")
 texture_hover = ExtResource("13_left")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "Sola Dön"
-
 [node name="LeftDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 370.0
@@ -586,8 +768,6 @@ texture_pressed = ExtResource("14_right")
 texture_hover = ExtResource("14_right")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "Sağa Dön"
-
 [node name="RightDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 18.0
@@ -612,8 +792,6 @@ texture_pressed = ExtResource("15_hook")
 texture_hover = ExtResource("15_hook")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "Kanca"
-
 [node name="HookDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 194.0
@@ -622,10 +800,9 @@ offset_right = 347.0
 offset_bottom = 407.0
 theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
 theme_override_font_sizes/font_size = 12
-text = "Öndeki hedefi 1 kare çeker."
+text = "Öndeki zeplini çeker."
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="Anchor" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" groups=["command_buttons"]]
 clip_contents = true
@@ -639,8 +816,6 @@ texture_pressed = ExtResource("16_anchor")
 texture_hover = ExtResource("16_anchor")
 ignore_texture_size = true
 stretch_mode = 5
-tooltip_text = "Çapa"
-
 [node name="AnchorDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel"]
 layout_mode = 0
 offset_left = 370.0
@@ -649,10 +824,9 @@ offset_right = 523.0
 offset_bottom = 407.0
 theme_override_colors/font_color = Color(0.82, 0.78, 0.69, 1)
 theme_override_font_sizes/font_size = 12
-text = "Tur sonuna dek rüzgârı engeller."
+text = "Bir rüzgâr itişini engeller."
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="ClearButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
@@ -663,7 +837,6 @@ offset_bottom = 943.0
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("RedButton")
 text = "TEMİZLE"
-
 [node name="ExecuteButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
@@ -674,19 +847,17 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("GreenButton")
 disabled = true
 text = "PROGRAMI AÇ ▶"
-
 [node name="RestartButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 992.0
+offset_top = 972.0
 offset_right = 278.0
-offset_bottom = 1040.0
+offset_bottom = 1020.0
 text = "Yeni Oyun"
-
 [node name="MenuButton" type="Button" parent="GameLayer/RightPanel"]
 layout_mode = 0
 offset_left = 292.0
-offset_top = 992.0
+offset_top = 972.0
 offset_right = 556.0
-offset_bottom = 1040.0
+offset_bottom = 1020.0
 text = "Ana Menü"
