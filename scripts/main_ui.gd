@@ -10,6 +10,12 @@ const CONTRACT_SOURCES: Array[Vector2i] = [
 const CONTRACT_DESTINATIONS: Array[Vector2i] = [
 	Vector2i(9, 6), Vector2i(1, 6), Vector2i(9, 2), Vector2i(1, 2)
 ]
+const DELIVERY_NAMES: Array[String] = [
+	"Bakır İskele", "Sis İskelesi", "Fırtına İskelesi", "Kızıl İskele"
+]
+const DELIVERY_SHORT_NAMES: Array[String] = [
+	"BAKIR", "SİS", "FIRTINA", "KIZIL"
+]
 const CONTRACT_NAMES: Array[String] = [
 	"Kaçak Baharat", "Fırtına Kristali", "Silah Sandığı", "Kaçak İlaç",
 	"Bakır Parçalar", "Sis Özü", "Motor Çekirdeği", "Yasak Haritalar"
@@ -96,10 +102,10 @@ func setup_game() -> void:
 		Vector2i(5,2), Vector2i(5,6), Vector2i(3,4), Vector2i(7,4)
 	]
 	deliveries = {
-		CONTRACT_DESTINATIONS[0]: "Teslimat D1",
-		CONTRACT_DESTINATIONS[1]: "Teslimat D2",
-		CONTRACT_DESTINATIONS[2]: "Teslimat D3",
-		CONTRACT_DESTINATIONS[3]: "Teslimat D4"
+		CONTRACT_DESTINATIONS[0]: DELIVERY_SHORT_NAMES[0],
+		CONTRACT_DESTINATIONS[1]: DELIVERY_SHORT_NAMES[1],
+		CONTRACT_DESTINATIONS[2]: DELIVERY_SHORT_NAMES[2],
+		CONTRACT_DESTINATIONS[3]: DELIVERY_SHORT_NAMES[3]
 	}
 	_reset_contracts()
 
@@ -123,7 +129,7 @@ func setup_game() -> void:
 	log_clear()
 	log_line("[b]Oyun başladı.[/b] Dört pilot simetrik ve eşit koşullarda başlıyor.")
 	log_line("Ortadaki kontratlar ortaktır. Bir kontratı ilk alan pilot o kargoyu kapar.")
-	log_line("Her kontratta kargo adı, 5 altın ödül ve hedef hücre haritada yazılıdır.")
+	log_line("Her kontratta kargo adı, 5 altın ödül ve isimli teslimat noktası gösterilir.")
 
 func _reset_contracts() -> void:
 	pickups = {}
@@ -140,6 +146,8 @@ func _spawn_contract_at(source: Vector2i) -> void:
 		"short": CONTRACT_SHORT_NAMES[name_index],
 		"dest": CONTRACT_DESTINATIONS[source_index],
 		"source": source,
+		"target_name": DELIVERY_NAMES[source_index],
+		"target_short": DELIVERY_SHORT_NAMES[source_index],
 		"value": CONTRACT_VALUE
 	}
 	pickups[source] = contract
@@ -157,7 +165,7 @@ func check_all_cargo() -> void:
 			pickups.erase(ship.pos)
 			changed_contracts = true
 			log_line("[color=yellow]%s kontratı kaptı: %s → %s (+%d altın).[/color]" % [
-				ship.name, claimed.name, _cell_name(Vector2i(claimed.dest)), int(claimed.value)
+				ship.name, claimed.name, str(claimed.target_name), int(claimed.value)
 			])
 		elif not ship.cargo.is_empty() and ship.pos == ship.cargo.dest:
 			var value: int = int(ship.cargo.value)
@@ -225,17 +233,14 @@ func refresh_ui() -> void:
 		var cargo_target: String = "—"
 		if not ship.cargo.is_empty():
 			cargo_name = str(ship.cargo.get("short", ship.cargo.name))
-			cargo_target = _cell_name(Vector2i(ship.cargo.dest))
+			cargo_target = str(ship.cargo.get("target_name", "Teslimat"))
 		var name_column: String = str(ship.name).rpad(16, " ")
 		var hp_column: String = str(ship.hp).lpad(3, " ")
 		var gold_column: String = str(ship.coins).lpad(5, " ")
-		var cargo_column: String = (cargo_name + " → " + cargo_target).rpad(17, " ")
+		var cargo_column: String = (cargo_name + " → " + cargo_target).rpad(24, " ")
 		pilot_label.text = "%s | %s | %s | %s" % [name_column, hp_column, gold_column, cargo_column]
-		pilot_label.add_theme_font_size_override("font_size", 15)
+		pilot_label.add_theme_font_size_override("font_size", 14)
 		pilot_label.add_theme_color_override("font_color", ship.color.lightened(0.15))
-
-func _cell_name(cell: Vector2i) -> String:
-	return "%s%d" % [String.chr(65 + cell.x), cell.y + 1]
 
 func log_clear() -> void:
 	info_label.clear()
