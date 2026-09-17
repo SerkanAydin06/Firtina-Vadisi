@@ -38,6 +38,7 @@ var delivery_nodes: Array[Panel] = []
 var pad_nodes: Array[Panel] = []
 
 func _ready() -> void:
+	$ArenaBackground.show_behind_parent = true
 	_cache_scene_nodes()
 	_cache_ship_tokens()
 	if Engine.is_editor_hint() and show_editor_preview:
