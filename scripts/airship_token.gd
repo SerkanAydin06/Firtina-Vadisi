@@ -1,3 +1,4 @@
+@tool
 extends Control
 class_name AirshipToken
 
@@ -36,8 +37,8 @@ func _draw() -> void:
 	if texture != null:
 		var tex_size: Vector2 = texture.get_size()
 		var target_h: float = s * 0.92
-		var scale: float = target_h / tex_size.y
-		var target_size: Vector2 = tex_size * scale
+		var draw_scale: float = target_h / tex_size.y
+		var target_size: Vector2 = tex_size * draw_scale
 		var angle: float = deg_to_rad(float(facing) * 90.0)
 		draw_set_transform(center, angle, Vector2.ONE)
 		draw_texture_rect(texture, Rect2(-target_size * 0.5, target_size), false)
