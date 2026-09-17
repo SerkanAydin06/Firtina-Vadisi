@@ -118,3 +118,23 @@ func _draw() -> void:
 		draw_circle(center, cell_size * 0.29, Color(0.07, 0.18, 0.19, 0.76))
 		draw_arc(center, cell_size * 0.29, 0.0, TAU, 24, Color(0.36, 0.92, 0.87, 0.95), 3.0, true)
 		draw_string(ThemeDB.fallback_font, center + Vector2(-cell_size * 0.11, cell_size * 0.12), "H", HORIZONTAL_ALIGNMENT_LEFT, -1.0, int(cell_size * 0.34), Color(0.75, 1.0, 0.96))
+
+	if Engine.is_editor_hint() and show_editor_preview:
+		_draw_preview_ship(Vector2i(1,4), 1, 1, Color(0.32,0.72,1.0))
+		_draw_preview_ship(Vector2i(9,4), 2, 3, Color(0.95,0.30,0.30))
+		_draw_preview_ship(Vector2i(5,7), 3, 0, Color(0.42,0.90,0.55))
+		_draw_preview_ship(Vector2i(5,2), 4, 2, Color(0.98,0.82,0.30))
+
+func _draw_preview_ship(cell: Vector2i, ship_id: int, ship_facing: int, ring_color: Color) -> void:
+	var texture: Texture2D = AirshipToken.SHIP_TEXTURES.get(ship_id, null)
+	if texture == null:
+		return
+	var center: Vector2 = cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5
+	var tex_size: Vector2 = texture.get_size()
+	var target_h: float = cell_size * 0.88
+	var preview_scale: float = target_h / tex_size.y
+	var target_size: Vector2 = tex_size * preview_scale
+	draw_arc(center, cell_size * 0.38, 0.0, TAU, 28, ring_color, 3.0, true)
+	draw_set_transform(center, deg_to_rad(float(ship_facing) * 90.0), Vector2.ONE)
+	draw_texture_rect(texture, Rect2(-target_size * 0.5, target_size), false)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
