@@ -1,9 +1,9 @@
 extends "res://scripts/main.gd"
 
 const START_CELLS: Array[Vector2i] = [
-	Vector2i(1, 1), Vector2i(9, 1), Vector2i(1, 7), Vector2i(9, 7)
+	Vector2i(0, 0), Vector2i(10, 0), Vector2i(0, 8), Vector2i(10, 8)
 ]
-const START_FACINGS: Array[int] = [2, 2, 0, 0]
+const START_FACINGS: Array[int] = [2, 3, 1, 0]
 const CONTRACT_SOURCES: Array[Vector2i] = [
 	Vector2i(4, 3), Vector2i(6, 3), Vector2i(4, 5), Vector2i(6, 5)
 ]
@@ -147,9 +147,9 @@ func setup_game() -> void:
 	new_wind()
 	refresh_ui()
 	log_clear()
-	log_line("[b]Oyun başladı.[/b] Dört pilot simetrik ve eşit koşullarda başlıyor.")
+	log_line("[b]Oyun başladı.[/b] Dört pilot dört gerçek köşe hücresinde, eşit koşullarda başlıyor.")
+	log_line("İnce kare çizgileri hareket mesafesini saymak içindir; koordinat harfleri/rakamları kullanılmaz.")
 	log_line("Ortadaki kontratlar ortaktır. İlk ulaşan pilot kontratı kapar.")
-	log_line("Kargo kartında ödül ve teslimat iskelesi açıkça gösterilir.")
 
 func _reset_contracts() -> void:
 	pickups = {}
