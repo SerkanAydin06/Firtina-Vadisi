@@ -37,15 +37,17 @@ var pad_nodes: Array[Panel] = []
 
 func _ready() -> void:
 	_cache_scene_nodes()
+	_cache_ship_tokens()
 	if Engine.is_editor_hint() and show_editor_preview:
 		grid_size = Vector2i(11, 9)
 		rocks = PREVIEW_ROCKS.duplicate()
 		pickup_cells = PREVIEW_PICKUPS.duplicate(true)
 		delivery_cells = PREVIEW_DELIVERIES.duplicate(true)
-		_cache_ship_tokens()
-		call_deferred("fit_board")
-	else:
-		_cache_ship_tokens()
+	call_deferred("fit_board")
+
+func _draw() -> void:
+	# Tüm görünür board elemanları board.tscn içinde gerçek node'lardır.
+	pass
 
 func _cache_scene_nodes() -> void:
 	rock_nodes.clear()
@@ -193,16 +195,15 @@ func _fit_contract_text(node: Panel) -> void:
 		var label: Label = node.get_node(label_name) as Label
 		label.offset_left = 3.0
 		label.offset_right = width - 3.0
-	if node.has_node("Name"):
-		(node.get_node("Name") as Label).offset_bottom = 19.0
-	if node.has_node("Reward"):
-		var reward: Label = node.get_node("Reward") as Label
-		reward.offset_top = 18.0
-		reward.offset_bottom = 36.0
-	if node.has_node("Target"):
-		var target: Label = node.get_node("Target") as Label
-		target.offset_top = 35.0
-		target.offset_bottom = node.size.y - 2.0
+	var name_label: Label = node.get_node("Name") as Label
+	name_label.offset_top = 2.0
+	name_label.offset_bottom = 19.0
+	var reward: Label = node.get_node("Reward") as Label
+	reward.offset_top = 18.0
+	reward.offset_bottom = 36.0
+	var target: Label = node.get_node("Target") as Label
+	target.offset_top = 35.0
+	target.offset_bottom = node.size.y - 2.0
 
 func _layout_deliveries() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(delivery_cells)
@@ -217,7 +218,7 @@ func _layout_deliveries() -> void:
 		node.size = Vector2(extent * 1.28, extent)
 		node.position = cell_center(cell) - node.size * 0.5
 		var label: Label = node.get_node("Label") as Label
-		label.text = str(delivery_cells[cell]).to_upper().replace(" ", "\n", 1)
+		label.text = str(delivery_cells[cell]).to_upper().replace(" ", "\n")
 
 func _sorted_cells(source: Dictionary) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
