@@ -10,11 +10,8 @@ const CONTRACT_SOURCES: Array[Vector2i] = [
 const CONTRACT_DESTINATIONS: Array[Vector2i] = [
 	Vector2i(9, 6), Vector2i(1, 6), Vector2i(9, 2), Vector2i(1, 2)
 ]
-const DELIVERY_NAMES: Array[String] = [
+const DESTINATION_NAMES: Array[String] = [
 	"Bakır İskele", "Sis İskelesi", "Fırtına İskelesi", "Kızıl İskele"
-]
-const DELIVERY_SHORT_NAMES: Array[String] = [
-	"BAKIR", "SİS", "FIRTINA", "KIZIL"
 ]
 const CONTRACT_NAMES: Array[String] = [
 	"Kaçak Baharat", "Fırtına Kristali", "Silah Sandığı", "Kaçak İlaç",
@@ -27,7 +24,11 @@ const CONTRACT_VALUE: int = 5
 
 var queue_textures: Array[TextureRect] = []
 var queue_numbers: Array[Label] = []
-var pilot_labels: Array[Label] = []
+var pilot_rows: Array[Panel] = []
+var pilot_name_labels: Array[Label] = []
+var pilot_hp_labels: Array[Label] = []
+var pilot_gold_labels: Array[Label] = []
+var pilot_cargo_labels: Array[Label] = []
 var contract_serial: int = 0
 
 func build_shell() -> void:
@@ -48,7 +49,6 @@ func build_game_ui() -> void:
 	wind_label = $GameLayer/RightPanel/WindPanel/WindLabel as Label
 	queue_label = $GameLayer/RightPanel/ProgramPanel/QueueSummary as Label
 	command_box = $GameLayer/RightPanel/ProgramPanel/CommandBox as HBoxContainer
-	score_box = $GameLayer/PilotsPanel/PilotRows as VBoxContainer
 	info_label = $GameLayer/LogPanel/InfoLabel as RichTextLabel
 	clear_button = $GameLayer/RightPanel/ClearButton as Button
 	execute_button = $GameLayer/RightPanel/ExecuteButton as Button
@@ -64,17 +64,37 @@ func build_game_ui() -> void:
 		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2/Number as Label,
 		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3/Number as Label
 	]
-	pilot_labels = [
-		$GameLayer/PilotsPanel/PilotRows/Pilot1 as Label,
-		$GameLayer/PilotsPanel/PilotRows/Pilot2 as Label,
-		$GameLayer/PilotsPanel/PilotRows/Pilot3 as Label,
-		$GameLayer/PilotsPanel/PilotRows/Pilot4 as Label
-	]
 
-	var pilot_header: Label = $GameLayer/PilotsPanel/Title as Label
-	pilot_header.text = "İSİM                 CAN   ALTIN   KARGO / HEDEF"
-	pilot_header.offset_right = 536.0
-	pilot_header.add_theme_font_size_override("font_size", 15)
+	pilot_rows = [
+		$GameLayer/PilotsPanel/Pilot1 as Panel,
+		$GameLayer/PilotsPanel/Pilot2 as Panel,
+		$GameLayer/PilotsPanel/Pilot3 as Panel,
+		$GameLayer/PilotsPanel/Pilot4 as Panel
+	]
+	pilot_name_labels = [
+		$GameLayer/PilotsPanel/Pilot1/Columns/Name as Label,
+		$GameLayer/PilotsPanel/Pilot2/Columns/Name as Label,
+		$GameLayer/PilotsPanel/Pilot3/Columns/Name as Label,
+		$GameLayer/PilotsPanel/Pilot4/Columns/Name as Label
+	]
+	pilot_hp_labels = [
+		$GameLayer/PilotsPanel/Pilot1/Columns/HP as Label,
+		$GameLayer/PilotsPanel/Pilot2/Columns/HP as Label,
+		$GameLayer/PilotsPanel/Pilot3/Columns/HP as Label,
+		$GameLayer/PilotsPanel/Pilot4/Columns/HP as Label
+	]
+	pilot_gold_labels = [
+		$GameLayer/PilotsPanel/Pilot1/Columns/Gold as Label,
+		$GameLayer/PilotsPanel/Pilot2/Columns/Gold as Label,
+		$GameLayer/PilotsPanel/Pilot3/Columns/Gold as Label,
+		$GameLayer/PilotsPanel/Pilot4/Columns/Gold as Label
+	]
+	pilot_cargo_labels = [
+		$GameLayer/PilotsPanel/Pilot1/Columns/Cargo as Label,
+		$GameLayer/PilotsPanel/Pilot2/Columns/Cargo as Label,
+		$GameLayer/PilotsPanel/Pilot3/Columns/Cargo as Label,
+		$GameLayer/PilotsPanel/Pilot4/Columns/Cargo as Label
+	]
 
 	$GameLayer/RightPanel/CardsPanel/Forward1.pressed.connect(_on_command_pressed.bind(CMD_FORWARD_1))
 	$GameLayer/RightPanel/CardsPanel/Forward2.pressed.connect(_on_command_pressed.bind(CMD_FORWARD_2))
@@ -102,17 +122,17 @@ func setup_game() -> void:
 		Vector2i(5,2), Vector2i(5,6), Vector2i(3,4), Vector2i(7,4)
 	]
 	deliveries = {
-		CONTRACT_DESTINATIONS[0]: DELIVERY_SHORT_NAMES[0],
-		CONTRACT_DESTINATIONS[1]: DELIVERY_SHORT_NAMES[1],
-		CONTRACT_DESTINATIONS[2]: DELIVERY_SHORT_NAMES[2],
-		CONTRACT_DESTINATIONS[3]: DELIVERY_SHORT_NAMES[3]
+		CONTRACT_DESTINATIONS[0]: DESTINATION_NAMES[0],
+		CONTRACT_DESTINATIONS[1]: DESTINATION_NAMES[1],
+		CONTRACT_DESTINATIONS[2]: DESTINATION_NAMES[2],
+		CONTRACT_DESTINATIONS[3]: DESTINATION_NAMES[3]
 	}
 	_reset_contracts()
-
-	for child in board.get_children():
-		child.queue_free()
-	board.tokens.clear()
 	board.configure(GRID_SIZE, rocks, pickups, deliveries)
+
+	for id in board.tokens:
+		var token: AirshipToken = board.tokens[id]
+		token.visible = false
 
 	ships.append(make_ship(1, "Sen", START_CELLS[0], START_FACINGS[0], true, Color(0.32,0.72,1.0)))
 	ships.append(make_ship(2, "Kızıl Korsan", START_CELLS[1], START_FACINGS[1], false, Color(0.95,0.30,0.30)))
@@ -128,8 +148,8 @@ func setup_game() -> void:
 	refresh_ui()
 	log_clear()
 	log_line("[b]Oyun başladı.[/b] Dört pilot simetrik ve eşit koşullarda başlıyor.")
-	log_line("Ortadaki kontratlar ortaktır. Bir kontratı ilk alan pilot o kargoyu kapar.")
-	log_line("Her kontratta kargo adı, 5 altın ödül ve isimli teslimat noktası gösterilir.")
+	log_line("Ortadaki kontratlar ortaktır. İlk ulaşan pilot kontratı kapar.")
+	log_line("Kargo kartında ödül ve teslimat iskelesi açıkça gösterilir.")
 
 func _reset_contracts() -> void:
 	pickups = {}
@@ -141,16 +161,14 @@ func _spawn_contract_at(source: Vector2i) -> void:
 	if source_index < 0:
 		return
 	var name_index: int = contract_serial % CONTRACT_NAMES.size()
-	var contract: Dictionary = {
+	pickups[source] = {
 		"name": CONTRACT_NAMES[name_index],
 		"short": CONTRACT_SHORT_NAMES[name_index],
 		"dest": CONTRACT_DESTINATIONS[source_index],
+		"dest_name": DESTINATION_NAMES[source_index],
 		"source": source,
-		"target_name": DELIVERY_NAMES[source_index],
-		"target_short": DELIVERY_SHORT_NAMES[source_index],
 		"value": CONTRACT_VALUE
 	}
-	pickups[source] = contract
 	contract_serial += 1
 
 func check_all_cargo() -> void:
@@ -165,7 +183,7 @@ func check_all_cargo() -> void:
 			pickups.erase(ship.pos)
 			changed_contracts = true
 			log_line("[color=yellow]%s kontratı kaptı: %s → %s (+%d altın).[/color]" % [
-				ship.name, claimed.name, str(claimed.target_name), int(claimed.value)
+				ship.name, claimed.name, claimed.dest_name, int(claimed.value)
 			])
 		elif not ship.cargo.is_empty() and ship.pos == ship.cargo.dest:
 			var value: int = int(ship.cargo.value)
@@ -179,7 +197,6 @@ func check_all_cargo() -> void:
 
 	for source in respawn_sources:
 		_spawn_contract_at(source)
-
 	if changed_contracts:
 		board.configure(GRID_SIZE, rocks, pickups, deliveries)
 
@@ -187,7 +204,7 @@ func respawn_ship(ship: Dictionary) -> void:
 	if not ship.cargo.is_empty():
 		var dropped_source: Vector2i = Vector2i(ship.cargo.source)
 		if not pickups.has(dropped_source):
-			_spawn_contract_at(dropped_source)
+			pickups[dropped_source] = ship.cargo.duplicate(true)
 			board.configure(GRID_SIZE, rocks, pickups, deliveries)
 	ship.hp = MAX_HP
 	ship.cargo = {}
@@ -222,25 +239,27 @@ func refresh_ui() -> void:
 			slot_texture.visible = false
 			slot_number.visible = true
 
-	for i in range(pilot_labels.size()):
-		var pilot_label: Label = pilot_labels[i]
+	for i in range(pilot_rows.size()):
 		if i >= ships.size():
-			pilot_label.visible = false
+			pilot_rows[i].visible = false
 			continue
-		pilot_label.visible = true
+		pilot_rows[i].visible = true
 		var ship: Dictionary = ships[i]
-		var cargo_name: String = "—"
-		var cargo_target: String = "—"
-		if not ship.cargo.is_empty():
-			cargo_name = str(ship.cargo.get("short", ship.cargo.name))
-			cargo_target = str(ship.cargo.get("target_name", "Teslimat"))
-		var name_column: String = str(ship.name).rpad(16, " ")
-		var hp_column: String = str(ship.hp).lpad(3, " ")
-		var gold_column: String = str(ship.coins).lpad(5, " ")
-		var cargo_column: String = (cargo_name + " → " + cargo_target).rpad(24, " ")
-		pilot_label.text = "%s | %s | %s | %s" % [name_column, hp_column, gold_column, cargo_column]
-		pilot_label.add_theme_font_size_override("font_size", 14)
-		pilot_label.add_theme_color_override("font_color", ship.color.lightened(0.15))
+		pilot_name_labels[i].text = str(ship.name)
+		pilot_hp_labels[i].text = "%d / %d" % [int(ship.hp), MAX_HP]
+		pilot_gold_labels[i].text = str(ship.coins)
+		if ship.cargo.is_empty():
+			pilot_cargo_labels[i].text = "—"
+		else:
+			pilot_cargo_labels[i].text = "%s  →  %s" % [
+				str(ship.cargo.get("short", ship.cargo.name)),
+				str(ship.cargo.get("dest_name", "Teslimat"))
+			]
+		var row_color: Color = ship.color.lightened(0.14)
+		pilot_name_labels[i].add_theme_color_override("font_color", row_color)
+		pilot_hp_labels[i].add_theme_color_override("font_color", row_color)
+		pilot_gold_labels[i].add_theme_color_override("font_color", Color(1.0, 0.82, 0.32))
+		pilot_cargo_labels[i].add_theme_color_override("font_color", Color(0.86, 0.88, 0.83))
 
 func log_clear() -> void:
 	info_label.clear()
