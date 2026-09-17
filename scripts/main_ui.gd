@@ -67,6 +67,7 @@ func build_game_ui() -> void:
 
 	var pilot_header: Label = $GameLayer/PilotsPanel/Title as Label
 	pilot_header.text = "İSİM                 CAN   ALTIN   KARGO / HEDEF"
+	pilot_header.offset_right = 536.0
 	pilot_header.add_theme_font_size_override("font_size", 15)
 
 	$GameLayer/RightPanel/CardsPanel/Forward1.pressed.connect(_on_command_pressed.bind(CMD_FORWARD_1))
@@ -156,12 +157,12 @@ func check_all_cargo() -> void:
 			pickups.erase(ship.pos)
 			changed_contracts = true
 			log_line("[color=yellow]%s kontratı kaptı: %s → %s (+%d altın).[/color]" % [
-				ship.name, claimed.name, _cell_name(claimed.dest), claimed.value
+				ship.name, claimed.name, _cell_name(Vector2i(claimed.dest)), int(claimed.value)
 			])
 		elif not ship.cargo.is_empty() and ship.pos == ship.cargo.dest:
 			var value: int = int(ship.cargo.value)
 			var completed_name: String = str(ship.cargo.name)
-			var source: Vector2i = ship.cargo.source
+			var source: Vector2i = Vector2i(ship.cargo.source)
 			ship.coins += value
 			ship.cargo = {}
 			respawn_sources.append(source)
@@ -175,6 +176,11 @@ func check_all_cargo() -> void:
 		board.configure(GRID_SIZE, rocks, pickups, deliveries)
 
 func respawn_ship(ship: Dictionary) -> void:
+	if not ship.cargo.is_empty():
+		var dropped_source: Vector2i = Vector2i(ship.cargo.source)
+		if not pickups.has(dropped_source):
+			_spawn_contract_at(dropped_source)
+			board.configure(GRID_SIZE, rocks, pickups, deliveries)
 	ship.hp = MAX_HP
 	ship.cargo = {}
 	var candidate: Vector2i = START_CELLS[(int(ship.id) - 1) % START_CELLS.size()]
@@ -219,7 +225,7 @@ func refresh_ui() -> void:
 		var cargo_target: String = "—"
 		if not ship.cargo.is_empty():
 			cargo_name = str(ship.cargo.get("short", ship.cargo.name))
-			cargo_target = _cell_name(ship.cargo.dest)
+			cargo_target = _cell_name(Vector2i(ship.cargo.dest))
 		var name_column: String = str(ship.name).rpad(16, " ")
 		var hp_column: String = str(ship.hp).lpad(3, " ")
 		var gold_column: String = str(ship.coins).lpad(5, " ")
