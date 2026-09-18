@@ -72,14 +72,11 @@ shadow_color = Color(0.18, 0.08, 0.015, 0.55)
 shadow_size = 5
 
 [node name="Board" type="Control" unique_id=438967905]
+offset_bottom = 801.0
+offset_right = 1305.0
 custom_minimum_size = Vector2(1305, 801)
 clip_contents = true
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
 script = ExtResource("1_board")
 
 [node name="ArenaBackground" type="Panel" parent="." unique_id=1013414894]
@@ -150,34 +147,34 @@ mouse_filter = 2
 
 [node name="Pad1" type="Panel" parent="StartPadsLayer" unique_id=238731408]
 layout_mode = 0
-offset_left = 58.0
-offset_top = 26.0
-offset_right = 143.0
-offset_bottom = 111.0
+offset_left = 36.0
+offset_top = 21.0
+offset_right = 99.0
+offset_bottom = 84.0
 theme_override_styles/panel = SubResource("PadStyle")
 
 [node name="Pad2" type="Panel" parent="StartPadsLayer" unique_id=1581748260]
 layout_mode = 0
-offset_left = 1778.0
-offset_top = 26.0
-offset_right = 1863.0
-offset_bottom = 111.0
+offset_left = 1206.0
+offset_top = 21.0
+offset_right = 1269.0
+offset_bottom = 84.0
 theme_override_styles/panel = SubResource("PadStyle")
 
 [node name="Pad3" type="Panel" parent="StartPadsLayer" unique_id=1081032907]
 layout_mode = 0
-offset_left = 58.0
-offset_top = 970.0
-offset_right = 143.0
-offset_bottom = 1055.0
+offset_left = 36.0
+offset_top = 717.0
+offset_right = 99.0
+offset_bottom = 780.0
 theme_override_styles/panel = SubResource("PadStyle")
 
 [node name="Pad4" type="Panel" parent="StartPadsLayer" unique_id=1776424682]
 layout_mode = 0
-offset_left = 1778.0
-offset_top = 970.0
-offset_right = 1863.0
-offset_bottom = 1055.0
+offset_left = 1206.0
+offset_top = 717.0
+offset_right = 1269.0
+offset_bottom = 780.0
 theme_override_styles/panel = SubResource("PadStyle")
 
 [node name="RocksLayer" type="Control" parent="." unique_id=911630652]
@@ -192,98 +189,98 @@ mouse_filter = 2
 
 [node name="Rock1" type="Panel" parent="RocksLayer" unique_id=1589064146]
 layout_mode = 0
-offset_left = 578.0
-offset_top = 152.0
-offset_right = 654.0
-offset_bottom = 220.0
+offset_left = 391.0
+offset_top = 115.0
+offset_right = 447.0
+offset_bottom = 165.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock2" type="Panel" parent="RocksLayer" unique_id=219973916]
 layout_mode = 0
-offset_left = 1266.0
-offset_top = 152.0
-offset_right = 1342.0
-offset_bottom = 220.0
+offset_left = 859.0
+offset_top = 115.0
+offset_right = 915.0
+offset_bottom = 165.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock3" type="Panel" parent="RocksLayer" unique_id=1898373902]
 layout_mode = 0
-offset_left = 578.0
-offset_top = 860.0
-offset_right = 654.0
-offset_bottom = 928.0
+offset_left = 391.0
+offset_top = 637.0
+offset_right = 447.0
+offset_bottom = 687.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock4" type="Panel" parent="RocksLayer" unique_id=1170936703]
 layout_mode = 0
-offset_left = 1266.0
-offset_top = 860.0
-offset_right = 1342.0
-offset_bottom = 928.0
+offset_left = 859.0
+offset_top = 637.0
+offset_right = 915.0
+offset_bottom = 687.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock5" type="Panel" parent="RocksLayer" unique_id=1525368031]
 layout_mode = 0
-offset_left = 406.0
-offset_top = 388.0
-offset_right = 482.0
-offset_bottom = 456.0
+offset_left = 274.0
+offset_top = 289.0
+offset_right = 330.0
+offset_bottom = 339.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock6" type="Panel" parent="RocksLayer" unique_id=1869066347]
 layout_mode = 0
-offset_left = 1438.0
-offset_top = 388.0
-offset_right = 1514.0
-offset_bottom = 456.0
+offset_left = 976.0
+offset_top = 289.0
+offset_right = 1032.0
+offset_bottom = 339.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock7" type="Panel" parent="RocksLayer" unique_id=832823910]
 layout_mode = 0
-offset_left = 406.0
-offset_top = 624.0
-offset_right = 482.0
-offset_bottom = 692.0
+offset_left = 274.0
+offset_top = 463.0
+offset_right = 330.0
+offset_bottom = 513.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock8" type="Panel" parent="RocksLayer" unique_id=1029731184]
 layout_mode = 0
-offset_left = 1438.0
-offset_top = 624.0
-offset_right = 1514.0
-offset_bottom = 692.0
+offset_left = 976.0
+offset_top = 463.0
+offset_right = 1032.0
+offset_bottom = 513.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock9" type="Panel" parent="RocksLayer" unique_id=1443735613]
 layout_mode = 0
-offset_left = 922.0
-offset_top = 270.0
-offset_right = 998.0
-offset_bottom = 338.0
+offset_left = 625.0
+offset_top = 202.0
+offset_right = 681.0
+offset_bottom = 252.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock10" type="Panel" parent="RocksLayer" unique_id=1516858635]
 layout_mode = 0
-offset_left = 922.0
-offset_top = 742.0
-offset_right = 998.0
-offset_bottom = 810.0
+offset_left = 625.0
+offset_top = 550.0
+offset_right = 681.0
+offset_bottom = 600.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock11" type="Panel" parent="RocksLayer" unique_id=747967908]
 layout_mode = 0
-offset_left = 578.0
-offset_top = 506.0
-offset_right = 654.0
-offset_bottom = 574.0
+offset_left = 391.0
+offset_top = 376.0
+offset_right = 447.0
+offset_bottom = 426.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="Rock12" type="Panel" parent="RocksLayer" unique_id=1632634131]
 layout_mode = 0
-offset_left = 1266.0
-offset_top = 506.0
-offset_right = 1342.0
-offset_bottom = 574.0
+offset_left = 859.0
+offset_top = 376.0
+offset_right = 915.0
+offset_bottom = 426.0
 theme_override_styles/panel = SubResource("RockStyle")
 
 [node name="DeliveriesLayer" type="Control" parent="." unique_id=270497911]
@@ -298,10 +295,10 @@ mouse_filter = 2
 
 [node name="Delivery1" type="Panel" parent="DeliveriesLayer" unique_id=1147293997]
 layout_mode = 0
-offset_left = 222.0
-offset_top = 265.0
-offset_right = 322.0
-offset_bottom = 343.0
+offset_left = 148.0
+offset_top = 198.0
+offset_right = 221.0
+offset_bottom = 255.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery1" unique_id=1736263146]
@@ -320,10 +317,10 @@ vertical_alignment = 1
 
 [node name="Delivery2" type="Panel" parent="DeliveriesLayer" unique_id=205465355]
 layout_mode = 0
-offset_left = 1598.0
-offset_top = 265.0
-offset_right = 1698.0
-offset_bottom = 343.0
+offset_left = 1084.0
+offset_top = 198.0
+offset_right = 1157.0
+offset_bottom = 255.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery2" unique_id=350352090]
@@ -342,10 +339,10 @@ vertical_alignment = 1
 
 [node name="Delivery3" type="Panel" parent="DeliveriesLayer" unique_id=994313125]
 layout_mode = 0
-offset_left = 222.0
-offset_top = 737.0
-offset_right = 322.0
-offset_bottom = 815.0
+offset_left = 148.0
+offset_top = 546.0
+offset_right = 221.0
+offset_bottom = 603.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery3" unique_id=1764308691]
@@ -364,10 +361,10 @@ vertical_alignment = 1
 
 [node name="Delivery4" type="Panel" parent="DeliveriesLayer" unique_id=851534554]
 layout_mode = 0
-offset_left = 1598.0
-offset_top = 737.0
-offset_right = 1698.0
-offset_bottom = 815.0
+offset_left = 1084.0
+offset_top = 546.0
+offset_right = 1157.0
+offset_bottom = 603.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery4" unique_id=1564065620]
@@ -396,10 +393,10 @@ mouse_filter = 2
 
 [node name="Contract1" type="Panel" parent="ContractsLayer" unique_id=2007091813]
 layout_mode = 0
-offset_left = 732.0
-offset_top = 393.0
-offset_right = 844.0
-offset_bottom = 451.0
+offset_left = 483.0
+offset_top = 285.0
+offset_right = 588.0
+offset_bottom = 343.0
 theme_override_styles/panel = SubResource("ContractStyle")
 
 [node name="Name" type="Label" parent="ContractsLayer/Contract1" unique_id=421253097]
@@ -436,10 +433,10 @@ horizontal_alignment = 1
 
 [node name="Contract2" type="Panel" parent="ContractsLayer" unique_id=1137331614]
 layout_mode = 0
-offset_left = 1076.0
-offset_top = 393.0
-offset_right = 1188.0
-offset_bottom = 451.0
+offset_left = 717.0
+offset_top = 285.0
+offset_right = 822.0
+offset_bottom = 343.0
 theme_override_styles/panel = SubResource("ContractStyle")
 
 [node name="Name" type="Label" parent="ContractsLayer/Contract2" unique_id=120598973]
@@ -476,10 +473,10 @@ horizontal_alignment = 1
 
 [node name="Contract3" type="Panel" parent="ContractsLayer" unique_id=481214935]
 layout_mode = 0
-offset_left = 732.0
-offset_top = 629.0
-offset_right = 844.0
-offset_bottom = 687.0
+offset_left = 483.0
+offset_top = 459.0
+offset_right = 588.0
+offset_bottom = 517.0
 theme_override_styles/panel = SubResource("ContractStyle")
 
 [node name="Name" type="Label" parent="ContractsLayer/Contract3" unique_id=1000469910]
@@ -516,10 +513,10 @@ horizontal_alignment = 1
 
 [node name="Contract4" type="Panel" parent="ContractsLayer" unique_id=1038271051]
 layout_mode = 0
-offset_left = 1076.0
-offset_top = 629.0
-offset_right = 1188.0
-offset_bottom = 687.0
+offset_left = 717.0
+offset_top = 459.0
+offset_right = 822.0
+offset_bottom = 517.0
 theme_override_styles/panel = SubResource("ContractStyle")
 
 [node name="Name" type="Label" parent="ContractsLayer/Contract4" unique_id=534706342]
@@ -566,37 +563,37 @@ mouse_filter = 2
 
 [node name="Ship1" parent="ShipsLayer" unique_id=1382840282 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 53.0
-offset_top = 21.0
-offset_right = 147.0
-offset_bottom = 115.0
+offset_left = 9.0
+offset_top = 9.0
+offset_right = 129.0
+offset_bottom = 129.0
 
 [node name="Ship2" parent="ShipsLayer" unique_id=131105040 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 1773.0
-offset_top = 21.0
-offset_right = 1867.0
-offset_bottom = 115.0
+offset_left = 1176.0
+offset_top = 9.0
+offset_right = 1296.0
+offset_bottom = 129.0
 player_id = 2
 facing = 3
 body_color = Color(0.95, 0.3, 0.3, 1)
 
 [node name="Ship3" parent="ShipsLayer" unique_id=1133825379 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 53.0
-offset_top = 965.0
-offset_right = 147.0
-offset_bottom = 1059.0
+offset_left = 9.0
+offset_top = 672.0
+offset_right = 129.0
+offset_bottom = 792.0
 player_id = 3
 facing = 1
 body_color = Color(0.42, 0.9, 0.55, 1)
 
 [node name="Ship4" parent="ShipsLayer" unique_id=340786920 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 1773.0
-offset_top = 965.0
-offset_right = 1867.0
-offset_bottom = 1059.0
+offset_left = 1176.0
+offset_top = 672.0
+offset_right = 1296.0
+offset_bottom = 792.0
 player_id = 4
 facing = 0
 body_color = Color(0.98, 0.82, 0.3, 1)
