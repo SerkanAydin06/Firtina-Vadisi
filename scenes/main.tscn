@@ -230,7 +230,7 @@ color = Color(0.022, 0.024, 0.028, 1)
 layout_mode = 0
 offset_left = 10.0
 offset_top = 10.0
-offset_right = 1330.0
+offset_right = 1329.0
 offset_bottom = 825.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
