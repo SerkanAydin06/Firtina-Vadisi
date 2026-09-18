@@ -236,6 +236,11 @@ offset_bottom = 825.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
 [node name="Board" parent="GameLayer/BoardFrame" unique_id=89039254 instance=ExtResource("2_board")]
+grow_vertical = 2
+grow_horizontal = 2
+anchor_bottom = 1.0
+anchor_right = 1.0
+anchors_preset = 15
 layout_mode = 1
 offset_left = 7.0
 offset_top = 7.0
