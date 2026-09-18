@@ -83,9 +83,9 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [node name="AirshipToken" type="Control"]
-offset_bottom = 70.0
-offset_right = 70.0
-custom_minimum_size = Vector2(70, 70)
+offset_bottom = 120.0
+offset_right = 120.0
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
@@ -145,10 +145,10 @@ mouse_filter = 2
 [node name="ShipSprite" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.16
-anchor_top = 0.16
-anchor_right = 0.84
-anchor_bottom = 0.78
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.92
+anchor_bottom = 0.86
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_blue")
@@ -159,10 +159,10 @@ mouse_filter = 2
 [node name="HumanBadge" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 10
-anchor_left = 0.25
-anchor_right = 0.75
-offset_top = 4.0
-offset_bottom = 21.0
+anchor_left = 0.28
+anchor_right = 0.72
+offset_top = 5.0
+offset_bottom = 25.0
 grow_horizontal = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("BadgeStyle")
