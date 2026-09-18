@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://bc5q0g0570cnc"]
 
 [ext_resource type="Script" uid="uid://dw2dfds1vuse6" path="res://scripts/main_ui.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://scenes/board.tscn" id="2_board"]
+[ext_resource type="PackedScene" uid="uid://7x2db2cqeplr" path="res://scenes/board.tscn" id="2_board"]
 [ext_resource type="Texture2D" uid="uid://d1ydmcgu2150m" path="res://assets/generated/menu_background.png" id="3_menu_bg"]
 [ext_resource type="Texture2D" uid="uid://b6jrrjhbrwd3c" path="res://assets/generated/logo.png" id="4_logo"]
 [ext_resource type="Texture2D" uid="uid://5auuurhii33v" path="res://assets/generated/start_normal.png" id="5_start"]
-[ext_resource type="Texture2D" uid="uid://bps8ru5udl3jg" path="res://assets/generated/start_hover.png" id="6_start_hover"]
-[ext_resource type="Texture2D" uid="uid://7r6i0inrm7t5" path="res://assets/generated/settings_fixed.svg" id="7_settings"]
-[ext_resource type="Texture2D" uid="uid://b453ldjfboqje" path="res://assets/generated/settings_fixed_hover.svg" id="8_settings_hover"]
+[ext_resource type="Texture2D" uid="uid://d4hbiyw5y7mdj" path="res://assets/generated/settings_normal.png" id="6_muem4"]
+[ext_resource type="Texture2D" uid="uid://bxo22qqvuv1at" path="res://assets/generated/start_hover.png" id="6_start_hover"]
+[ext_resource type="Texture2D" uid="uid://ct2i70yjtenqy" path="res://assets/generated/settings_hover.png" id="7_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://bmfd4ggnhscoq" path="res://assets/generated/exit_normal.png" id="9_exit"]
 [ext_resource type="Texture2D" uid="uid://1bwyj0jqv87b" path="res://assets/generated/exit_hover.png" id="10_exit_hover"]
 [ext_resource type="Texture2D" uid="uid://30kjy6s6kajs" path="res://assets/generated/cmd_forward1.png" id="11_f1"]
@@ -125,6 +125,7 @@ mouse_filter = 2
 color = Color(0.02, 0.025, 0.03, 0.28)
 
 [node name="MenuLayer" type="Control" parent="." unique_id=834960958]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -155,10 +156,10 @@ horizontal_alignment = 1
 
 [node name="StartButton" type="TextureButton" parent="MenuLayer" unique_id=102699066]
 layout_mode = 0
-offset_left = 700.0
+offset_left = 768.0
 offset_top = 455.0
-offset_right = 1220.0
-offset_bottom = 545.0
+offset_right = 1153.0
+offset_bottom = 585.0
 texture_normal = ExtResource("5_start")
 texture_pressed = ExtResource("6_start_hover")
 texture_hover = ExtResource("6_start_hover")
@@ -167,22 +168,22 @@ stretch_mode = 5
 
 [node name="SettingsButton" type="TextureButton" parent="MenuLayer" unique_id=285329966]
 layout_mode = 0
-offset_left = 700.0
-offset_top = 565.0
-offset_right = 1220.0
-offset_bottom = 655.0
-texture_normal = ExtResource("7_settings")
-texture_pressed = ExtResource("8_settings_hover")
-texture_hover = ExtResource("8_settings_hover")
+offset_left = 768.0
+offset_top = 564.0
+offset_right = 1153.0
+offset_bottom = 694.0
+texture_normal = ExtResource("6_muem4")
+texture_pressed = ExtResource("7_dp3eg")
+texture_hover = ExtResource("7_dp3eg")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ExitButton" type="TextureButton" parent="MenuLayer" unique_id=1084741177]
 layout_mode = 0
-offset_left = 700.0
+offset_left = 768.0
 offset_top = 675.0
-offset_right = 1220.0
-offset_bottom = 765.0
+offset_right = 1153.0
+offset_bottom = 805.0
 texture_normal = ExtResource("9_exit")
 texture_pressed = ExtResource("10_exit_hover")
 texture_hover = ExtResource("10_exit_hover")

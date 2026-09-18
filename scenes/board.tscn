@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene format=3 uid="uid://7x2db2cqeplr"]
 
-[ext_resource type="Script" path="res://scripts/board_topdown.gd" id="1_board"]
+[ext_resource type="Script" uid="uid://b7lqh5eb4a4f0" path="res://scripts/board_topdown.gd" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/grid_cells.tscn" id="2_grid"]
 [ext_resource type="PackedScene" path="res://scenes/airship_token.tscn" id="3_ship"]
 
@@ -16,21 +16,6 @@ corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
-[sub_resource type="StyleBoxFlat" id="RockStyle"]
-bg_color = Color(0.25, 0.19, 0.13, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.43, 0.31, 0.20, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 18
-corner_radius_bottom_right = 26
-corner_radius_bottom_left = 16
-shadow_color = Color(0.02, 0.015, 0.01, 0.55)
-shadow_size = 7
-shadow_offset = Vector2(3, 4)
-
 [sub_resource type="StyleBoxFlat" id="PadStyle"]
 bg_color = Color(0.25, 0.18, 0.08, 0.18)
 border_width_left = 2
@@ -43,19 +28,20 @@ corner_radius_top_right = 28
 corner_radius_bottom_right = 28
 corner_radius_bottom_left = 28
 
-[sub_resource type="StyleBoxFlat" id="ContractStyle"]
-bg_color = Color(0.30, 0.16, 0.055, 0.96)
+[sub_resource type="StyleBoxFlat" id="RockStyle"]
+bg_color = Color(0.25, 0.19, 0.13, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(1, 0.68, 0.18, 0.95)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
-shadow_color = Color(0.18, 0.08, 0.015, 0.55)
-shadow_size = 5
+border_color = Color(0.43, 0.31, 0.2, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 18
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 16
+shadow_color = Color(0.02, 0.015, 0.01, 0.55)
+shadow_size = 7
+shadow_offset = Vector2(3, 4)
 
 [sub_resource type="StyleBoxFlat" id="DeliveryStyle"]
 bg_color = Color(0.035, 0.17, 0.18, 0.94)
@@ -71,18 +57,32 @@ corner_radius_bottom_left = 22
 shadow_color = Color(0.01, 0.08, 0.09, 0.45)
 shadow_size = 5
 
-[node name="Board" type="Control"]
+[sub_resource type="StyleBoxFlat" id="ContractStyle"]
+bg_color = Color(0.3, 0.16, 0.055, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.68, 0.18, 0.95)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+shadow_color = Color(0.18, 0.08, 0.015, 0.55)
+shadow_size = 5
+
+[node name="Board" type="Control" unique_id=438967905]
 custom_minimum_size = Vector2(1305, 801)
+clip_contents = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-clip_contents = true
 script = ExtResource("1_board")
 
-[node name="ArenaBackground" type="Panel" parent="."]
+[node name="ArenaBackground" type="Panel" parent="." unique_id=1013414894]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -92,25 +92,20 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("ArenaStyle")
 
-[node name="GridLayer" parent="." instance=ExtResource("2_grid")]
+[node name="GridLayer" parent="." unique_id=1175658399 instance=ExtResource("2_grid")]
 editor_description = "Tam board boyutundaki görünmez grid taşıyıcısı. Hücreler ve çizgiler bunun altındadır."
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="TopRidge" type="ColorRect" parent="."]
+[node name="TopRidge" type="ColorRect" parent="." unique_id=1226862159]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 12.0
 grow_horizontal = 2
-color = Color(0.08, 0.048, 0.028, 0.86)
 mouse_filter = 2
+color = Color(0.08, 0.048, 0.028, 0.86)
 
-[node name="BottomRidge" type="ColorRect" parent="."]
+[node name="BottomRidge" type="ColorRect" parent="." unique_id=1742490490]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -119,19 +114,19 @@ anchor_bottom = 1.0
 offset_top = -12.0
 grow_horizontal = 2
 grow_vertical = 0
-color = Color(0.08, 0.048, 0.028, 0.86)
 mouse_filter = 2
+color = Color(0.08, 0.048, 0.028, 0.86)
 
-[node name="LeftRidge" type="ColorRect" parent="."]
+[node name="LeftRidge" type="ColorRect" parent="." unique_id=1635062272]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 12.0
 grow_vertical = 2
-color = Color(0.09, 0.052, 0.03, 0.86)
 mouse_filter = 2
+color = Color(0.09, 0.052, 0.03, 0.86)
 
-[node name="RightRidge" type="ColorRect" parent="."]
+[node name="RightRidge" type="ColorRect" parent="." unique_id=436731422]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
@@ -140,10 +135,10 @@ anchor_bottom = 1.0
 offset_left = -12.0
 grow_horizontal = 0
 grow_vertical = 2
-color = Color(0.09, 0.052, 0.03, 0.86)
 mouse_filter = 2
+color = Color(0.09, 0.052, 0.03, 0.86)
 
-[node name="StartPadsLayer" type="Control" parent="."]
+[node name="StartPadsLayer" type="Control" parent="." unique_id=557552317]
 editor_description = "Tam board boyutundaki görünmez başlangıç pedi taşıyıcısı. Pad1-Pad4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
@@ -153,39 +148,39 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Pad1" type="Panel" parent="StartPadsLayer"]
-offset_left = 36.0
-offset_top = 21.0
-offset_right = 99.0
-offset_bottom = 84.0
+[node name="Pad1" type="Panel" parent="StartPadsLayer" unique_id=238731408]
 layout_mode = 0
+offset_left = 58.0
+offset_top = 26.0
+offset_right = 143.0
+offset_bottom = 111.0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad2" type="Panel" parent="StartPadsLayer"]
-offset_left = 1206.0
-offset_top = 21.0
-offset_right = 1269.0
-offset_bottom = 84.0
+[node name="Pad2" type="Panel" parent="StartPadsLayer" unique_id=1581748260]
 layout_mode = 0
+offset_left = 1778.0
+offset_top = 26.0
+offset_right = 1863.0
+offset_bottom = 111.0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad3" type="Panel" parent="StartPadsLayer"]
-offset_left = 36.0
-offset_top = 717.0
-offset_right = 99.0
-offset_bottom = 780.0
+[node name="Pad3" type="Panel" parent="StartPadsLayer" unique_id=1081032907]
 layout_mode = 0
+offset_left = 58.0
+offset_top = 970.0
+offset_right = 143.0
+offset_bottom = 1055.0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="Pad4" type="Panel" parent="StartPadsLayer"]
-offset_left = 1206.0
-offset_top = 717.0
-offset_right = 1269.0
-offset_bottom = 780.0
+[node name="Pad4" type="Panel" parent="StartPadsLayer" unique_id=1776424682]
 layout_mode = 0
+offset_left = 1778.0
+offset_top = 970.0
+offset_right = 1863.0
+offset_bottom = 1055.0
 theme_override_styles/panel = SubResource("PadStyle")
 
-[node name="RocksLayer" type="Control" parent="."]
+[node name="RocksLayer" type="Control" parent="." unique_id=911630652]
 editor_description = "Tam board boyutundaki görünmez kaya taşıyıcısı. Rock1-Rock12 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
@@ -195,92 +190,103 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Rock1" type="Panel" parent="RocksLayer"]
-offset_left = 391.0
-offset_top = 115.0
-offset_right = 447.0
-offset_bottom = 165.0
+[node name="Rock1" type="Panel" parent="RocksLayer" unique_id=1589064146]
 layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock2" type="Panel" parent="RocksLayer"]
-offset_left = 859.0
-offset_top = 115.0
-offset_right = 915.0
-offset_bottom = 165.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock3" type="Panel" parent="RocksLayer"]
-offset_left = 391.0
-offset_top = 637.0
-offset_right = 447.0
-offset_bottom = 687.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock4" type="Panel" parent="RocksLayer"]
-offset_left = 859.0
-offset_top = 637.0
-offset_right = 915.0
-offset_bottom = 687.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock5" type="Panel" parent="RocksLayer"]
-offset_left = 274.0
-offset_top = 289.0
-offset_right = 330.0
-offset_bottom = 339.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock6" type="Panel" parent="RocksLayer"]
-offset_left = 976.0
-offset_top = 289.0
-offset_right = 1032.0
-offset_bottom = 339.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock7" type="Panel" parent="RocksLayer"]
-offset_left = 274.0
-offset_top = 463.0
-offset_right = 330.0
-offset_bottom = 513.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock8" type="Panel" parent="RocksLayer"]
-offset_left = 976.0
-offset_top = 463.0
-offset_right = 1032.0
-offset_bottom = 513.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock9" type="Panel" parent="RocksLayer"]
-offset_left = 625.0
-offset_top = 202.0
-offset_right = 681.0
-offset_bottom = 252.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock10" type="Panel" parent="RocksLayer"]
-offset_left = 625.0
-offset_top = 550.0
-offset_right = 681.0
-offset_bottom = 600.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock11" type="Panel" parent="RocksLayer"]
-offset_left = 391.0
-offset_top = 376.0
-offset_right = 447.0
-offset_bottom = 426.0
-layout_mode = 0
-theme_override_styles/panel = SubResource("RockStyle")
-[node name="Rock12" type="Panel" parent="RocksLayer"]
-offset_left = 859.0
-offset_top = 376.0
-offset_right = 915.0
-offset_bottom = 426.0
-layout_mode = 0
+offset_left = 578.0
+offset_top = 152.0
+offset_right = 654.0
+offset_bottom = 220.0
 theme_override_styles/panel = SubResource("RockStyle")
 
-[node name="DeliveriesLayer" type="Control" parent="."]
+[node name="Rock2" type="Panel" parent="RocksLayer" unique_id=219973916]
+layout_mode = 0
+offset_left = 1266.0
+offset_top = 152.0
+offset_right = 1342.0
+offset_bottom = 220.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock3" type="Panel" parent="RocksLayer" unique_id=1898373902]
+layout_mode = 0
+offset_left = 578.0
+offset_top = 860.0
+offset_right = 654.0
+offset_bottom = 928.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock4" type="Panel" parent="RocksLayer" unique_id=1170936703]
+layout_mode = 0
+offset_left = 1266.0
+offset_top = 860.0
+offset_right = 1342.0
+offset_bottom = 928.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock5" type="Panel" parent="RocksLayer" unique_id=1525368031]
+layout_mode = 0
+offset_left = 406.0
+offset_top = 388.0
+offset_right = 482.0
+offset_bottom = 456.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock6" type="Panel" parent="RocksLayer" unique_id=1869066347]
+layout_mode = 0
+offset_left = 1438.0
+offset_top = 388.0
+offset_right = 1514.0
+offset_bottom = 456.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock7" type="Panel" parent="RocksLayer" unique_id=832823910]
+layout_mode = 0
+offset_left = 406.0
+offset_top = 624.0
+offset_right = 482.0
+offset_bottom = 692.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock8" type="Panel" parent="RocksLayer" unique_id=1029731184]
+layout_mode = 0
+offset_left = 1438.0
+offset_top = 624.0
+offset_right = 1514.0
+offset_bottom = 692.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock9" type="Panel" parent="RocksLayer" unique_id=1443735613]
+layout_mode = 0
+offset_left = 922.0
+offset_top = 270.0
+offset_right = 998.0
+offset_bottom = 338.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock10" type="Panel" parent="RocksLayer" unique_id=1516858635]
+layout_mode = 0
+offset_left = 922.0
+offset_top = 742.0
+offset_right = 998.0
+offset_bottom = 810.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock11" type="Panel" parent="RocksLayer" unique_id=747967908]
+layout_mode = 0
+offset_left = 578.0
+offset_top = 506.0
+offset_right = 654.0
+offset_bottom = 574.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="Rock12" type="Panel" parent="RocksLayer" unique_id=1632634131]
+layout_mode = 0
+offset_left = 1266.0
+offset_top = 506.0
+offset_right = 1342.0
+offset_bottom = 574.0
+theme_override_styles/panel = SubResource("RockStyle")
+
+[node name="DeliveriesLayer" type="Control" parent="." unique_id=270497911]
 editor_description = "Tam board boyutundaki görünmez teslimat taşıyıcısı. Delivery1-Delivery4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
@@ -290,14 +296,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Delivery1" type="Panel" parent="DeliveriesLayer"]
-offset_left = 148.0
-offset_top = 198.0
-offset_right = 221.0
-offset_bottom = 255.0
+[node name="Delivery1" type="Panel" parent="DeliveriesLayer" unique_id=1147293997]
 layout_mode = 0
+offset_left = 222.0
+offset_top = 265.0
+offset_right = 322.0
+offset_bottom = 343.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery1"]
+
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery1" unique_id=1736263146]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -306,18 +313,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "KIZIL\nİSKELE"
+text = "KIZIL
+İSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery2" type="Panel" parent="DeliveriesLayer"]
-offset_left = 1084.0
-offset_top = 198.0
-offset_right = 1157.0
-offset_bottom = 255.0
+[node name="Delivery2" type="Panel" parent="DeliveriesLayer" unique_id=205465355]
 layout_mode = 0
+offset_left = 1598.0
+offset_top = 265.0
+offset_right = 1698.0
+offset_bottom = 343.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery2"]
+
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery2" unique_id=350352090]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -326,18 +335,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "FIRTINA\nİSKELESİ"
+text = "FIRTINA
+İSKELESI"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery3" type="Panel" parent="DeliveriesLayer"]
-offset_left = 148.0
-offset_top = 546.0
-offset_right = 221.0
-offset_bottom = 603.0
+[node name="Delivery3" type="Panel" parent="DeliveriesLayer" unique_id=994313125]
 layout_mode = 0
+offset_left = 222.0
+offset_top = 737.0
+offset_right = 322.0
+offset_bottom = 815.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery3"]
+
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery3" unique_id=1764308691]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -346,18 +357,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "SİS\nİSKELESİ"
+text = "SIS
+İSKELESI"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Delivery4" type="Panel" parent="DeliveriesLayer"]
-offset_left = 1084.0
-offset_top = 546.0
-offset_right = 1157.0
-offset_bottom = 603.0
+[node name="Delivery4" type="Panel" parent="DeliveriesLayer" unique_id=851534554]
 layout_mode = 0
+offset_left = 1598.0
+offset_top = 737.0
+offset_right = 1698.0
+offset_bottom = 815.0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery4"]
+
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery4" unique_id=1564065620]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -366,11 +379,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "BAKIR\nİSKELE"
+text = "BAKIR
+İSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ContractsLayer" type="Control" parent="."]
+[node name="ContractsLayer" type="Control" parent="." unique_id=877704791]
 editor_description = "Tam board boyutundaki görünmez kontrat taşıyıcısı. Contract1-Contract4 kendi gerçek ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
@@ -380,155 +394,167 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Contract1" type="Panel" parent="ContractsLayer"]
-offset_left = 483.0
-offset_top = 285.0
-offset_right = 588.0
-offset_bottom = 343.0
+[node name="Contract1" type="Panel" parent="ContractsLayer" unique_id=2007091813]
 layout_mode = 0
+offset_left = 732.0
+offset_top = 393.0
+offset_right = 844.0
+offset_bottom = 451.0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="ContractsLayer/Contract1"]
+
+[node name="Name" type="Label" parent="ContractsLayer/Contract1" unique_id=421253097]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 3.0
-offset_right = 104.0
-offset_bottom = 21.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 109.0
+offset_bottom = 19.0
 theme_override_font_sizes/font_size = 11
 text = "BAHARAT"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="ContractsLayer/Contract1"]
+
+[node name="Reward" type="Label" parent="ContractsLayer/Contract1" unique_id=1912920723]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 20.0
-offset_right = 104.0
-offset_bottom = 38.0
+offset_left = 3.0
+offset_top = 18.0
+offset_right = 109.0
+offset_bottom = 36.0
 theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="ContractsLayer/Contract1"]
+
+[node name="Target" type="Label" parent="ContractsLayer/Contract1" unique_id=1911462083]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 37.0
-offset_right = 104.0
-offset_bottom = 55.0
+offset_left = 3.0
+offset_top = 35.0
+offset_right = 109.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.76, 0.94, 0.9, 1)
 theme_override_font_sizes/font_size = 10
 text = "→ Bakır İskele"
 horizontal_alignment = 1
 
-[node name="Contract2" type="Panel" parent="ContractsLayer"]
-offset_left = 717.0
-offset_top = 285.0
-offset_right = 822.0
-offset_bottom = 343.0
+[node name="Contract2" type="Panel" parent="ContractsLayer" unique_id=1137331614]
 layout_mode = 0
+offset_left = 1076.0
+offset_top = 393.0
+offset_right = 1188.0
+offset_bottom = 451.0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="ContractsLayer/Contract2"]
+
+[node name="Name" type="Label" parent="ContractsLayer/Contract2" unique_id=120598973]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 3.0
-offset_right = 104.0
-offset_bottom = 21.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 109.0
+offset_bottom = 19.0
 theme_override_font_sizes/font_size = 11
-text = "KRİSTAL"
+text = "KRISTAL"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="ContractsLayer/Contract2"]
+
+[node name="Reward" type="Label" parent="ContractsLayer/Contract2" unique_id=1279829730]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 20.0
-offset_right = 104.0
-offset_bottom = 38.0
+offset_left = 3.0
+offset_top = 18.0
+offset_right = 109.0
+offset_bottom = 36.0
 theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="ContractsLayer/Contract2"]
+
+[node name="Target" type="Label" parent="ContractsLayer/Contract2" unique_id=132158192]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 37.0
-offset_right = 104.0
-offset_bottom = 55.0
+offset_left = 3.0
+offset_top = 35.0
+offset_right = 109.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.76, 0.94, 0.9, 1)
 theme_override_font_sizes/font_size = 10
 text = "→ Sis İskelesi"
 horizontal_alignment = 1
 
-[node name="Contract3" type="Panel" parent="ContractsLayer"]
-offset_left = 483.0
-offset_top = 459.0
-offset_right = 588.0
-offset_bottom = 517.0
+[node name="Contract3" type="Panel" parent="ContractsLayer" unique_id=481214935]
 layout_mode = 0
+offset_left = 732.0
+offset_top = 629.0
+offset_right = 844.0
+offset_bottom = 687.0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="ContractsLayer/Contract3"]
+
+[node name="Name" type="Label" parent="ContractsLayer/Contract3" unique_id=1000469910]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 3.0
-offset_right = 104.0
-offset_bottom = 21.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 109.0
+offset_bottom = 19.0
 theme_override_font_sizes/font_size = 11
-text = "SİLAH"
+text = "SILAH"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="ContractsLayer/Contract3"]
+
+[node name="Reward" type="Label" parent="ContractsLayer/Contract3" unique_id=1731995667]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 20.0
-offset_right = 104.0
-offset_bottom = 38.0
+offset_left = 3.0
+offset_top = 18.0
+offset_right = 109.0
+offset_bottom = 36.0
 theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="ContractsLayer/Contract3"]
+
+[node name="Target" type="Label" parent="ContractsLayer/Contract3" unique_id=233430377]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 37.0
-offset_right = 104.0
-offset_bottom = 55.0
+offset_left = 3.0
+offset_top = 35.0
+offset_right = 109.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.76, 0.94, 0.9, 1)
 theme_override_font_sizes/font_size = 10
 text = "→ Fırtına İskelesi"
 horizontal_alignment = 1
 
-[node name="Contract4" type="Panel" parent="ContractsLayer"]
-offset_left = 717.0
-offset_top = 459.0
-offset_right = 822.0
-offset_bottom = 517.0
+[node name="Contract4" type="Panel" parent="ContractsLayer" unique_id=1038271051]
 layout_mode = 0
+offset_left = 1076.0
+offset_top = 629.0
+offset_right = 1188.0
+offset_bottom = 687.0
 theme_override_styles/panel = SubResource("ContractStyle")
-[node name="Name" type="Label" parent="ContractsLayer/Contract4"]
+
+[node name="Name" type="Label" parent="ContractsLayer/Contract4" unique_id=534706342]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 3.0
-offset_right = 104.0
-offset_bottom = 21.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 109.0
+offset_bottom = 19.0
 theme_override_font_sizes/font_size = 11
 text = "İLAÇ"
 horizontal_alignment = 1
-[node name="Reward" type="Label" parent="ContractsLayer/Contract4"]
+
+[node name="Reward" type="Label" parent="ContractsLayer/Contract4" unique_id=72609649]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 20.0
-offset_right = 104.0
-offset_bottom = 38.0
+offset_left = 3.0
+offset_top = 18.0
+offset_right = 109.0
+offset_bottom = 36.0
 theme_override_colors/font_color = Color(1, 0.8, 0.25, 1)
 theme_override_font_sizes/font_size = 11
 text = "+5 ALTIN"
 horizontal_alignment = 1
-[node name="Target" type="Label" parent="ContractsLayer/Contract4"]
+
+[node name="Target" type="Label" parent="ContractsLayer/Contract4" unique_id=1133649873]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 37.0
-offset_right = 104.0
-offset_bottom = 55.0
+offset_left = 3.0
+offset_top = 35.0
+offset_right = 109.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.76, 0.94, 0.9, 1)
 theme_override_font_sizes/font_size = 10
 text = "→ Kızıl İskele"
 horizontal_alignment = 1
 
-[node name="ShipsLayer" type="Control" parent="."]
+[node name="ShipsLayer" type="Control" parent="." unique_id=2061955775]
 editor_description = "Tam board boyutundaki görünmez gemi taşıyıcısı. Ship1-Ship4 kendi hücre ölçülerindedir."
 layout_mode = 1
 anchors_preset = 15
@@ -538,46 +564,39 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Ship1" parent="ShipsLayer" instance=ExtResource("3_ship")]
-offset_left = 33.0
-offset_top = 18.0
-offset_right = 103.0
-offset_bottom = 88.0
+[node name="Ship1" parent="ShipsLayer" unique_id=1382840282 instance=ExtResource("3_ship")]
 layout_mode = 0
-player_id = 1
-facing = 2
-body_color = Color(0.32, 0.72, 1, 1)
-highlight_human_player = true
+offset_left = 53.0
+offset_top = 21.0
+offset_right = 147.0
+offset_bottom = 115.0
 
-[node name="Ship2" parent="ShipsLayer" instance=ExtResource("3_ship")]
-offset_left = 1203.0
-offset_top = 18.0
-offset_right = 1273.0
-offset_bottom = 88.0
+[node name="Ship2" parent="ShipsLayer" unique_id=131105040 instance=ExtResource("3_ship")]
 layout_mode = 0
+offset_left = 1773.0
+offset_top = 21.0
+offset_right = 1867.0
+offset_bottom = 115.0
 player_id = 2
 facing = 3
-body_color = Color(0.95, 0.30, 0.30, 1)
-highlight_human_player = true
+body_color = Color(0.95, 0.3, 0.3, 1)
 
-[node name="Ship3" parent="ShipsLayer" instance=ExtResource("3_ship")]
-offset_left = 33.0
-offset_top = 714.0
-offset_right = 103.0
-offset_bottom = 784.0
+[node name="Ship3" parent="ShipsLayer" unique_id=1133825379 instance=ExtResource("3_ship")]
 layout_mode = 0
+offset_left = 53.0
+offset_top = 965.0
+offset_right = 147.0
+offset_bottom = 1059.0
 player_id = 3
 facing = 1
-body_color = Color(0.42, 0.90, 0.55, 1)
-highlight_human_player = true
+body_color = Color(0.42, 0.9, 0.55, 1)
 
-[node name="Ship4" parent="ShipsLayer" instance=ExtResource("3_ship")]
-offset_left = 1203.0
-offset_top = 714.0
-offset_right = 1273.0
-offset_bottom = 784.0
+[node name="Ship4" parent="ShipsLayer" unique_id=340786920 instance=ExtResource("3_ship")]
 layout_mode = 0
+offset_left = 1773.0
+offset_top = 965.0
+offset_right = 1867.0
+offset_bottom = 1059.0
 player_id = 4
 facing = 0
-body_color = Color(0.98, 0.82, 0.30, 1)
-highlight_human_player = true
+body_color = Color(0.98, 0.82, 0.3, 1)
