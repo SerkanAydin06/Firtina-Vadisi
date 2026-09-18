@@ -104,13 +104,24 @@ func configure(new_grid_size: Vector2i, new_rocks: Array[Vector2i], pickups: Dic
 	fit_board()
 
 func fit_board() -> void:
-	if size.x <= 1.0 or size.y <= 1.0:
+	if size.x <= 1.0 or size.y <= 1.0 or grid_size.x <= 0 or grid_size.y <= 0:
 		return
-	inner_origin = Vector2(12.0, 12.0)
-	inner_size = Vector2(maxf(1.0, size.x - 24.0), maxf(1.0, size.y - 24.0))
-	cell_step = Vector2(inner_size.x / float(grid_size.x), inner_size.y / float(grid_size.y))
+
+	# Hücrelerin tamamı aynı tam piksel ölçüsünde olsun.
+	# Tasarım boyutu 1305x801 olduğunda sonuç tam olarak 117x87'dir.
+	var available_width: float = maxf(1.0, size.x - 18.0)
+	var available_height: float = maxf(1.0, size.y - 18.0)
+	var step_x: float = maxf(1.0, floorf(available_width / float(grid_size.x)))
+	var step_y: float = maxf(1.0, floorf(available_height / float(grid_size.y)))
+	cell_step = Vector2(step_x, step_y)
+	inner_size = Vector2(step_x * float(grid_size.x), step_y * float(grid_size.y))
+	inner_origin = Vector2(
+		roundf((size.x - inner_size.x) * 0.5),
+		roundf((size.y - inner_size.y) * 0.5)
+	)
 	cell_size = minf(cell_step.x, cell_step.y)
 	grid_origin = inner_origin
+
 	_layout_grid_cells()
 	_layout_start_pads()
 	_layout_rocks()
@@ -121,6 +132,7 @@ func fit_board() -> void:
 func _layout_grid_cells() -> void:
 	if grid_size.x <= 0 or grid_size.y <= 0:
 		return
+
 	for i in range(grid_nodes.size()):
 		var cell_node: Panel = grid_nodes[i]
 		var x: int = i % grid_size.x
@@ -128,13 +140,9 @@ func _layout_grid_cells() -> void:
 		if y >= grid_size.y:
 			cell_node.visible = false
 			continue
-		var left: float = roundf(inner_origin.x + inner_size.x * float(x) / float(grid_size.x))
-		var right: float = roundf(inner_origin.x + inner_size.x * float(x + 1) / float(grid_size.x))
-		var top: float = roundf(inner_origin.y + inner_size.y * float(y) / float(grid_size.y))
-		var bottom: float = roundf(inner_origin.y + inner_size.y * float(y + 1) / float(grid_size.y))
 		cell_node.visible = true
-		cell_node.position = Vector2(left, top)
-		cell_node.size = Vector2(right - left, bottom - top)
+		cell_node.position = cell_to_pixel(Vector2i(x, y))
+		cell_node.size = cell_step
 
 	const LINE_WIDTH: float = 2.0
 	for i in range(vertical_grid_lines.size()):
@@ -142,20 +150,20 @@ func _layout_grid_cells() -> void:
 		if i > grid_size.x:
 			line.visible = false
 			continue
-		var px: float = roundf(inner_origin.x + inner_size.x * float(i) / float(grid_size.x))
+		var px: float = inner_origin.x + float(i) * cell_step.x
 		line.visible = true
-		line.position = Vector2(px - LINE_WIDTH * 0.5, roundf(inner_origin.y))
-		line.size = Vector2(LINE_WIDTH, roundf(inner_size.y))
+		line.position = Vector2(px - LINE_WIDTH * 0.5, inner_origin.y)
+		line.size = Vector2(LINE_WIDTH, inner_size.y)
 
 	for i in range(horizontal_grid_lines.size()):
 		var line: ColorRect = horizontal_grid_lines[i]
 		if i > grid_size.y:
 			line.visible = false
 			continue
-		var py: float = roundf(inner_origin.y + inner_size.y * float(i) / float(grid_size.y))
+		var py: float = inner_origin.y + float(i) * cell_step.y
 		line.visible = true
-		line.position = Vector2(roundf(inner_origin.x), py - LINE_WIDTH * 0.5)
-		line.size = Vector2(roundf(inner_size.x), LINE_WIDTH)
+		line.position = Vector2(inner_origin.x, py - LINE_WIDTH * 0.5)
+		line.size = Vector2(inner_size.x, LINE_WIDTH)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
@@ -191,14 +199,16 @@ func cell_center(cell: Vector2i) -> Vector2:
 	return cell_to_pixel(cell) + cell_step * 0.5
 
 func _position_token(token: AirshipToken, cell: Vector2i) -> void:
-	var extent: float = minf(cell_step.x, cell_step.y) * token_fill
+	var extent: float = roundf(minf(cell_step.x, cell_step.y) * token_fill)
 	token.size = Vector2(extent, extent)
-	token.position = cell_center(cell) - token.size * 0.5
+	var raw_position: Vector2 = cell_center(cell) - token.size * 0.5
+	token.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
 
 func _token_position(cell: Vector2i, token: AirshipToken) -> Vector2:
-	var extent: float = minf(cell_step.x, cell_step.y) * token_fill
+	var extent: float = roundf(minf(cell_step.x, cell_step.y) * token_fill)
 	token.size = Vector2(extent, extent)
-	return cell_center(cell) - token.size * 0.5
+	var raw_position: Vector2 = cell_center(cell) - token.size * 0.5
+	return Vector2(roundf(raw_position.x), roundf(raw_position.y))
 
 func _layout_ships() -> void:
 	for id in tokens:
@@ -208,7 +218,7 @@ func _layout_ships() -> void:
 		_position_token(token, cell)
 
 func _layout_start_pads() -> void:
-	var extent: float = minf(cell_step.x, cell_step.y) * 0.72
+	var extent: float = roundf(minf(cell_step.x, cell_step.y) * 0.72)
 	for i in range(pad_nodes.size()):
 		var pad: Panel = pad_nodes[i]
 		if i >= PREVIEW_STARTS.size():
@@ -216,23 +226,25 @@ func _layout_start_pads() -> void:
 			continue
 		pad.visible = true
 		pad.size = Vector2(extent, extent)
-		pad.position = cell_center(PREVIEW_STARTS[i]) - pad.size * 0.5
+		var raw_position: Vector2 = cell_center(PREVIEW_STARTS[i]) - pad.size * 0.5
+		pad.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
 
 func _layout_rocks() -> void:
-	var extent: float = minf(cell_step.x, cell_step.y) * rock_fill
+	var extent: float = roundf(minf(cell_step.x, cell_step.y) * rock_fill)
 	for i in range(rock_nodes.size()):
 		var rock_node: Panel = rock_nodes[i]
 		if i >= rocks.size():
 			rock_node.visible = false
 			continue
 		rock_node.visible = true
-		rock_node.size = Vector2(extent * 1.12, extent)
-		rock_node.position = cell_center(rocks[i]) - rock_node.size * 0.5
+		rock_node.size = Vector2(roundf(extent * 1.12), extent)
+		var raw_position: Vector2 = cell_center(rocks[i]) - rock_node.size * 0.5
+		rock_node.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
 
 func _layout_contracts() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(pickup_cells)
-	var width: float = minf(cell_step.x * 0.90, 112.0)
-	var height: float = minf(cell_step.y * 0.72, 58.0)
+	var width: float = roundf(minf(cell_step.x * 0.90, 112.0))
+	var height: float = roundf(minf(cell_step.y * 0.72, 58.0))
 	for i in range(contract_nodes.size()):
 		var node: Panel = contract_nodes[i]
 		if i >= cells.size():
@@ -242,7 +254,8 @@ func _layout_contracts() -> void:
 		var contract: Dictionary = pickup_cells[cell]
 		node.visible = true
 		node.size = Vector2(width, height)
-		node.position = cell_center(cell) - node.size * 0.5
+		var raw_position: Vector2 = cell_center(cell) - node.size * 0.5
+		node.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
 		var name_label: Label = node.get_node("Name") as Label
 		var reward_label: Label = node.get_node("Reward") as Label
 		var target_label: Label = node.get_node("Target") as Label
@@ -269,7 +282,7 @@ func _fit_contract_text(node: Panel) -> void:
 
 func _layout_deliveries() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(delivery_cells)
-	var extent: float = minf(cell_step.x, cell_step.y) * 0.66
+	var extent: float = roundf(minf(cell_step.x, cell_step.y) * 0.66)
 	for i in range(delivery_nodes.size()):
 		var node: Panel = delivery_nodes[i]
 		if i >= cells.size():
@@ -277,8 +290,9 @@ func _layout_deliveries() -> void:
 			continue
 		var cell: Vector2i = cells[i]
 		node.visible = true
-		node.size = Vector2(extent * 1.28, extent)
-		node.position = cell_center(cell) - node.size * 0.5
+		node.size = Vector2(roundf(extent * 1.28), extent)
+		var raw_position: Vector2 = cell_center(cell) - node.size * 0.5
+		node.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
 		var label: Label = node.get_node("Label") as Label
 		label.text = str(delivery_cells[cell]).to_upper().replace(" ", "\n")
 
