@@ -260,7 +260,7 @@ mouse_filter = 2
 
 [node name="Delivery1" type="Panel" parent="DeliveriesLayer"]
 size = Vector2(73, 57)
-position = Vector2(1084, 546)
+position = Vector2(148, 198)
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery1"]
@@ -272,34 +272,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "BAKIR\nİSKELE"
+text = "KIZIL\nİSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Delivery2" type="Panel" parent="DeliveriesLayer"]
 size = Vector2(73, 57)
-position = Vector2(148, 546)
-layout_mode = 0
-theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
-theme_override_font_sizes/font_size = 11
-text = "SİS\nİSKELESİ"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Delivery3" type="Panel" parent="DeliveriesLayer"]
-size = Vector2(73, 57)
 position = Vector2(1084, 198)
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
-[node name="Label" type="Label" parent="DeliveriesLayer/Delivery3"]
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -312,9 +294,27 @@ text = "FIRTINA\nİSKELESİ"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Delivery3" type="Panel" parent="DeliveriesLayer"]
+size = Vector2(73, 57)
+position = Vector2(148, 546)
+layout_mode = 0
+theme_override_styles/panel = SubResource("DeliveryStyle")
+[node name="Label" type="Label" parent="DeliveriesLayer/Delivery3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
+theme_override_font_sizes/font_size = 11
+text = "SİS\nİSKELESİ"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Delivery4" type="Panel" parent="DeliveriesLayer"]
 size = Vector2(73, 57)
-position = Vector2(148, 198)
+position = Vector2(1084, 546)
 layout_mode = 0
 theme_override_styles/panel = SubResource("DeliveryStyle")
 [node name="Label" type="Label" parent="DeliveriesLayer/Delivery4"]
@@ -326,7 +326,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.75, 1, 0.96, 1)
 theme_override_font_sizes/font_size = 11
-text = "KIZIL\nİSKELE"
+text = "BAKIR\nİSKELE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
