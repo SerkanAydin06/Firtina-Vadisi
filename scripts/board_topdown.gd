@@ -200,7 +200,7 @@ func cell_center(cell: Vector2i) -> Vector2:
 
 func _ship_extent() -> float:
 	# Gemi hücrenin dışına taşmasın. 2 px toplam güvenlik payı bırak.
-	return roundf(minf(token_size_px, cell_step.x - 2.0, cell_step.y - 2.0))
+	return roundf(minf(token_size_px, minf(cell_step.x - 2.0, cell_step.y - 2.0)))
 
 func _position_token(token: AirshipToken, cell: Vector2i) -> void:
 	var extent: float = _ship_extent()
