@@ -83,7 +83,9 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [node name="AirshipToken" type="Control"]
-custom_minimum_size = Vector2(72, 72)
+offset_bottom = 70.0
+offset_right = 70.0
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
