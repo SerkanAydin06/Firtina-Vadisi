@@ -563,37 +563,37 @@ mouse_filter = 2
 
 [node name="Ship1" parent="ShipsLayer" unique_id=1382840282 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 9.0
-offset_top = 9.0
-offset_right = 129.0
-offset_bottom = 129.0
+offset_left = 25.0
+offset_top = 10.0
+offset_right = 110.0
+offset_bottom = 95.0
 
 [node name="Ship2" parent="ShipsLayer" unique_id=131105040 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 1176.0
-offset_top = 9.0
-offset_right = 1296.0
-offset_bottom = 129.0
+offset_left = 1195.0
+offset_top = 10.0
+offset_right = 1280.0
+offset_bottom = 95.0
 player_id = 2
 facing = 3
 body_color = Color(0.95, 0.3, 0.3, 1)
 
 [node name="Ship3" parent="ShipsLayer" unique_id=1133825379 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 9.0
-offset_top = 672.0
-offset_right = 129.0
-offset_bottom = 792.0
+offset_left = 25.0
+offset_top = 706.0
+offset_right = 110.0
+offset_bottom = 791.0
 player_id = 3
 facing = 1
 body_color = Color(0.42, 0.9, 0.55, 1)
 
 [node name="Ship4" parent="ShipsLayer" unique_id=340786920 instance=ExtResource("3_ship")]
 layout_mode = 0
-offset_left = 1176.0
-offset_top = 672.0
-offset_right = 1296.0
-offset_bottom = 792.0
+offset_left = 1195.0
+offset_top = 706.0
+offset_right = 1280.0
+offset_bottom = 791.0
 player_id = 4
 facing = 0
 body_color = Color(0.98, 0.82, 0.3, 1)
