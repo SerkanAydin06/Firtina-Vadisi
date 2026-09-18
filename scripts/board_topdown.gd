@@ -2,7 +2,7 @@
 extends "res://scripts/board.gd"
 
 @export var show_editor_preview: bool = true
-@export_range(0.65, 0.95, 0.01) var token_fill: float = 0.80
+@export_range(80.0, 160.0, 1.0) var token_size_px: float = 120.0
 @export_range(0.45, 0.80, 0.01) var rock_fill: float = 0.58
 
 const PREVIEW_STARTS: Array[Vector2i] = [
@@ -199,16 +199,23 @@ func cell_center(cell: Vector2i) -> Vector2:
 	return cell_to_pixel(cell) + cell_step * 0.5
 
 func _position_token(token: AirshipToken, cell: Vector2i) -> void:
-	var extent: float = roundf(minf(cell_step.x, cell_step.y) * token_fill)
+	var extent: float = roundf(token_size_px)
 	token.size = Vector2(extent, extent)
-	var raw_position: Vector2 = cell_center(cell) - token.size * 0.5
-	token.position = Vector2(roundf(raw_position.x), roundf(raw_position.y))
+	token.position = _clamped_token_position(cell, token.size)
 
 func _token_position(cell: Vector2i, token: AirshipToken) -> Vector2:
-	var extent: float = roundf(minf(cell_step.x, cell_step.y) * token_fill)
+	var extent: float = roundf(token_size_px)
 	token.size = Vector2(extent, extent)
-	var raw_position: Vector2 = cell_center(cell) - token.size * 0.5
-	return Vector2(roundf(raw_position.x), roundf(raw_position.y))
+	return _clamped_token_position(cell, token.size)
+
+func _clamped_token_position(cell: Vector2i, token_size: Vector2) -> Vector2:
+	var raw_position: Vector2 = cell_center(cell) - token_size * 0.5
+	var min_position: Vector2 = inner_origin
+	var max_position: Vector2 = inner_origin + inner_size - token_size
+	return Vector2(
+		roundf(clampf(raw_position.x, min_position.x, max_position.x)),
+		roundf(clampf(raw_position.y, min_position.y, max_position.y))
+	)
 
 func _layout_ships() -> void:
 	for id in tokens:
