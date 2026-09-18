@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://scenes/grid_cell.tscn" id="1_cell"]
 
 [node name="GridCells" type="Control"]
+custom_minimum_size = Vector2(1305, 801)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,408 +13,650 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Cell01" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 9)
 layout_mode = 0
 
 [node name="Cell02" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 9)
 layout_mode = 0
 
 [node name="Cell03" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 9)
 layout_mode = 0
 
 [node name="Cell04" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 9)
 layout_mode = 0
 
 [node name="Cell05" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 9)
 layout_mode = 0
 
 [node name="Cell06" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 9)
 layout_mode = 0
 
 [node name="Cell07" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 9)
 layout_mode = 0
 
 [node name="Cell08" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 9)
 layout_mode = 0
 
 [node name="Cell09" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 9)
 layout_mode = 0
 
 [node name="Cell10" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 9)
 layout_mode = 0
 
 [node name="Cell11" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 9)
 layout_mode = 0
 
 [node name="Cell12" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 96)
 layout_mode = 0
 
 [node name="Cell13" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 96)
 layout_mode = 0
 
 [node name="Cell14" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 96)
 layout_mode = 0
 
 [node name="Cell15" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 96)
 layout_mode = 0
 
 [node name="Cell16" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 96)
 layout_mode = 0
 
 [node name="Cell17" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 96)
 layout_mode = 0
 
 [node name="Cell18" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 96)
 layout_mode = 0
 
 [node name="Cell19" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 96)
 layout_mode = 0
 
 [node name="Cell20" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 96)
 layout_mode = 0
 
 [node name="Cell21" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 96)
 layout_mode = 0
 
 [node name="Cell22" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 96)
 layout_mode = 0
 
 [node name="Cell23" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 183)
 layout_mode = 0
 
 [node name="Cell24" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 183)
 layout_mode = 0
 
 [node name="Cell25" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 183)
 layout_mode = 0
 
 [node name="Cell26" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 183)
 layout_mode = 0
 
 [node name="Cell27" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 183)
 layout_mode = 0
 
 [node name="Cell28" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 183)
 layout_mode = 0
 
 [node name="Cell29" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 183)
 layout_mode = 0
 
 [node name="Cell30" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 183)
 layout_mode = 0
 
 [node name="Cell31" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 183)
 layout_mode = 0
 
 [node name="Cell32" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 183)
 layout_mode = 0
 
 [node name="Cell33" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 183)
 layout_mode = 0
 
 [node name="Cell34" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 270)
 layout_mode = 0
 
 [node name="Cell35" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 270)
 layout_mode = 0
 
 [node name="Cell36" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 270)
 layout_mode = 0
 
 [node name="Cell37" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 270)
 layout_mode = 0
 
 [node name="Cell38" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 270)
 layout_mode = 0
 
 [node name="Cell39" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 270)
 layout_mode = 0
 
 [node name="Cell40" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 270)
 layout_mode = 0
 
 [node name="Cell41" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 270)
 layout_mode = 0
 
 [node name="Cell42" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 270)
 layout_mode = 0
 
 [node name="Cell43" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 270)
 layout_mode = 0
 
 [node name="Cell44" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 270)
 layout_mode = 0
 
 [node name="Cell45" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 357)
 layout_mode = 0
 
 [node name="Cell46" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 357)
 layout_mode = 0
 
 [node name="Cell47" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 357)
 layout_mode = 0
 
 [node name="Cell48" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 357)
 layout_mode = 0
 
 [node name="Cell49" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 357)
 layout_mode = 0
 
 [node name="Cell50" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 357)
 layout_mode = 0
 
 [node name="Cell51" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 357)
 layout_mode = 0
 
 [node name="Cell52" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 357)
 layout_mode = 0
 
 [node name="Cell53" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 357)
 layout_mode = 0
 
 [node name="Cell54" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 357)
 layout_mode = 0
 
 [node name="Cell55" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 357)
 layout_mode = 0
 
 [node name="Cell56" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 444)
 layout_mode = 0
 
 [node name="Cell57" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 444)
 layout_mode = 0
 
 [node name="Cell58" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 444)
 layout_mode = 0
 
 [node name="Cell59" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 444)
 layout_mode = 0
 
 [node name="Cell60" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 444)
 layout_mode = 0
 
 [node name="Cell61" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 444)
 layout_mode = 0
 
 [node name="Cell62" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 444)
 layout_mode = 0
 
 [node name="Cell63" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 444)
 layout_mode = 0
 
 [node name="Cell64" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 444)
 layout_mode = 0
 
 [node name="Cell65" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 444)
 layout_mode = 0
 
 [node name="Cell66" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 444)
 layout_mode = 0
 
 [node name="Cell67" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 531)
 layout_mode = 0
 
 [node name="Cell68" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 531)
 layout_mode = 0
 
 [node name="Cell69" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 531)
 layout_mode = 0
 
 [node name="Cell70" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 531)
 layout_mode = 0
 
 [node name="Cell71" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 531)
 layout_mode = 0
 
 [node name="Cell72" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 531)
 layout_mode = 0
 
 [node name="Cell73" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 531)
 layout_mode = 0
 
 [node name="Cell74" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 531)
 layout_mode = 0
 
 [node name="Cell75" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 531)
 layout_mode = 0
 
 [node name="Cell76" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 531)
 layout_mode = 0
 
 [node name="Cell77" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 531)
 layout_mode = 0
 
 [node name="Cell78" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 618)
 layout_mode = 0
 
 [node name="Cell79" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 618)
 layout_mode = 0
 
 [node name="Cell80" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 618)
 layout_mode = 0
 
 [node name="Cell81" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 618)
 layout_mode = 0
 
 [node name="Cell82" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 618)
 layout_mode = 0
 
 [node name="Cell83" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 618)
 layout_mode = 0
 
 [node name="Cell84" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 618)
 layout_mode = 0
 
 [node name="Cell85" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 618)
 layout_mode = 0
 
 [node name="Cell86" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 618)
 layout_mode = 0
 
 [node name="Cell87" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 618)
 layout_mode = 0
 
 [node name="Cell88" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 618)
 layout_mode = 0
 
 [node name="Cell89" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(9, 705)
 layout_mode = 0
 
 [node name="Cell90" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(126, 705)
 layout_mode = 0
 
 [node name="Cell91" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(243, 705)
 layout_mode = 0
 
 [node name="Cell92" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(360, 705)
 layout_mode = 0
 
 [node name="Cell93" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(477, 705)
 layout_mode = 0
 
 [node name="Cell94" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(594, 705)
 layout_mode = 0
 
 [node name="Cell95" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(711, 705)
 layout_mode = 0
 
 [node name="Cell96" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(828, 705)
 layout_mode = 0
 
 [node name="Cell97" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(945, 705)
 layout_mode = 0
 
 [node name="Cell98" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1062, 705)
 layout_mode = 0
 
 [node name="Cell99" parent="." instance=ExtResource("1_cell")]
+size = Vector2(117, 87)
+position = Vector2(1179, 705)
 layout_mode = 0
 
 [node name="V00" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(8, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V01" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(125, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V02" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(242, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V03" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(359, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V04" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(476, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V05" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(593, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V06" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(710, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V07" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(827, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V08" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(944, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V09" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(1061, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V10" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(1178, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="V11" type="ColorRect" parent="."]
+size = Vector2(2, 783)
+position = Vector2(1295, 9)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H00" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 8)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H01" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 95)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H02" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 182)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H03" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 269)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H04" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 356)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H05" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 443)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H06" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 530)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H07" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 617)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H08" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 704)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
 
 [node name="H09" type="ColorRect" parent="."]
+size = Vector2(1287, 2)
+position = Vector2(9, 791)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0.62, 0.46, 0.27, 1)
