@@ -9,6 +9,12 @@ const SHIP_TEXTURES := {
 	4: preload("res://assets/generated/ship_yellow.png")
 }
 
+# Texture 0° konumunda yukarı bakıyor. Bu açılar mantıksal
+# kuzey/doğu/güney/batı yönlerini izometrik ekran eksenlerine projeler.
+const ISO_FACING_ROTATIONS: Array[float] = [
+	63.434948, 116.565052, 243.434948, -63.434948
+]
+
 @export_range(1, 4, 1) var player_id: int = 1:
 	set(value):
 		player_id = value
@@ -68,7 +74,8 @@ func _sync_visuals() -> void:
 	if sprite != null:
 		sprite.texture = SHIP_TEXTURES.get(player_id, null)
 	if holder != null:
-		holder.rotation = deg_to_rad(float(facing) * 90.0)
+		var facing_index: int = posmod(facing, ISO_FACING_ROTATIONS.size())
+		holder.rotation = deg_to_rad(ISO_FACING_ROTATIONS[facing_index])
 	if human_halo != null:
 		human_halo.visible = is_human_ship
 	if human_inner != null:
