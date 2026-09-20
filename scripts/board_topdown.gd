@@ -2,9 +2,12 @@
 extends "res://scripts/board.gd"
 
 @export var show_editor_preview: bool = true
-@export_range(60.0, 120.0, 1.0) var token_size_px: float = 85.0
-@export var iso_tile_size: Vector2 = Vector2(116.0, 58.0)
-@export_range(0.35, 0.75, 0.01) var rock_fill: float = 0.54
+@export_range(60.0, 105.0, 1.0) var token_size_px: float = 85.0
+@export_range(0.72, 0.95, 0.01) var far_row_scale: float = 0.82
+@export_range(0.0, 0.40, 0.01) var perspective_strength: float = 0.20
+@export_range(30.0, 90.0, 1.0) var side_margin: float = 42.0
+@export_range(50.0, 120.0, 1.0) var top_margin: float = 76.0
+@export_range(55.0, 130.0, 1.0) var bottom_margin: float = 82.0
 
 const PREVIEW_STARTS: Array[Vector2i] = [
 	Vector2i(0,0), Vector2i(10,0), Vector2i(0,8), Vector2i(10,8)
@@ -28,10 +31,9 @@ const PREVIEW_DELIVERIES := {
 	Vector2i(1,2): "Kızıl İskele"
 }
 
-const BASE_ISO_TILE: Vector2 = Vector2(116.0, 58.0)
-const PLATFORM_DEPTH: float = 20.0
+const PLATFORM_DEPTH: float = 18.0
 
-var cell_step: Vector2 = BASE_ISO_TILE
+var cell_step: Vector2 = Vector2(100.0, 62.0)
 var inner_origin: Vector2 = Vector2.ZERO
 var inner_size: Vector2 = Vector2.ZERO
 var grid_nodes: Array[Node2D] = []
@@ -55,7 +57,7 @@ func _ready() -> void:
 	call_deferred("fit_board")
 
 func _draw() -> void:
-	# Bilerek boş: izometrik görünür board elemanları .tscn node'larıdır.
+	# Görünür board elemanları gerçek sahne node'larıdır.
 	pass
 
 func _cache_scene_nodes() -> void:
@@ -98,29 +100,15 @@ func fit_board() -> void:
 	if size.x <= 1.0 or size.y <= 1.0 or grid_size.x <= 0 or grid_size.y <= 0:
 		return
 
-	# İzometrik board, mantıksal 11x9 grid'i değiştirmez.
-	var base_width: float = (float(grid_size.x + grid_size.y) * BASE_ISO_TILE.x) * 0.5
-	var base_height: float = (float(grid_size.x + grid_size.y) * BASE_ISO_TILE.y) * 0.5
-	var scale_factor: float = minf(
-		maxf(0.1, (size.x - 110.0) / base_width),
-		maxf(0.1, (size.y - 180.0) / base_height)
-	)
-	scale_factor = minf(scale_factor, 1.0)
-	cell_step = iso_tile_size * scale_factor
+	var near_width: float = maxf(200.0, size.x - side_margin * 2.0)
+	var board_height: float = maxf(160.0, size.y - top_margin - bottom_margin)
+	inner_origin = Vector2(size.x * 0.5, top_margin)
+	inner_size = Vector2(near_width, board_height)
+	cell_step = Vector2(near_width / float(grid_size.x), board_height / float(grid_size.y))
 	cell_size = minf(cell_step.x, cell_step.y)
+	grid_origin = _grid_point(0.0, 0.0)
 
-	# (0,0) hücresinin merkezi. Board yatayda ortalanır, üstte kanyon payı bırakılır.
-	var projected_min_x: float = -float(grid_size.y - 1) * cell_step.x * 0.5 - cell_step.x * 0.5
-	var projected_max_x: float = float(grid_size.x - 1) * cell_step.x * 0.5 + cell_step.x * 0.5
-	var projected_width: float = projected_max_x - projected_min_x
-	inner_origin = Vector2(
-		floorf((size.x - projected_width) * 0.5 - projected_min_x),
-		ceilf(maxf(70.0, (size.y - base_height * scale_factor) * 0.45))
-	)
-	inner_size = Vector2(projected_width, base_height * scale_factor)
-	grid_origin = inner_origin
-
-	_layout_iso_backdrop()
+	_layout_perspective_backdrop()
 	_layout_grid_cells()
 	_layout_start_pads()
 	_layout_rocks()
@@ -128,30 +116,68 @@ func fit_board() -> void:
 	_layout_deliveries()
 	_layout_ships()
 
-func _layout_iso_backdrop() -> void:
-	var top: Vector2 = cell_center(Vector2i(0, 0)) + Vector2(0.0, -cell_step.y * 0.5)
-	var right: Vector2 = cell_center(Vector2i(grid_size.x - 1, 0)) + Vector2(cell_step.x * 0.5, 0.0)
-	var bottom: Vector2 = cell_center(Vector2i(grid_size.x - 1, grid_size.y - 1)) + Vector2(0.0, cell_step.y * 0.5)
-	var left: Vector2 = cell_center(Vector2i(0, grid_size.y - 1)) + Vector2(-cell_step.x * 0.5, 0.0)
+func _depth_t(grid_y: float) -> float:
+	return clampf(grid_y / float(grid_size.y), 0.0, 1.0)
+
+func _projected_y(t: float) -> float:
+	var curved_t: float = t * (1.0 - perspective_strength) + t * t * perspective_strength
+	return top_margin + inner_size.y * curved_t
+
+func _row_width(t: float) -> float:
+	return inner_size.x * lerpf(far_row_scale, 1.0, t)
+
+func _grid_point(grid_x: float, grid_y: float) -> Vector2:
+	var t: float = _depth_t(grid_y)
+	var width: float = _row_width(t)
+	var x_ratio: float = grid_x / float(grid_size.x)
+	return Vector2(
+		size.x * 0.5 + (x_ratio - 0.5) * width,
+		_projected_y(t)
+	)
+
+func _cell_quad(cell: Vector2i) -> PackedVector2Array:
+	return PackedVector2Array([
+		_grid_point(float(cell.x), float(cell.y)),
+		_grid_point(float(cell.x + 1), float(cell.y)),
+		_grid_point(float(cell.x + 1), float(cell.y + 1)),
+		_grid_point(float(cell.x), float(cell.y + 1))
+	])
+
+func cell_to_pixel(cell: Vector2i) -> Vector2:
+	return cell_center(cell)
+
+func cell_center(cell: Vector2i) -> Vector2:
+	return _grid_point(float(cell.x) + 0.5, float(cell.y) + 0.5)
+
+func _depth_scale(cell: Vector2i) -> float:
+	return lerpf(far_row_scale, 1.0, _depth_t(float(cell.y) + 0.5))
+
+func _entity_z(cell: Vector2i, local_order: int) -> int:
+	return 100 + cell.y * 20 + local_order
+
+func _layout_perspective_backdrop() -> void:
+	var top_left: Vector2 = _grid_point(0.0, 0.0)
+	var top_right: Vector2 = _grid_point(float(grid_size.x), 0.0)
+	var bottom_right: Vector2 = _grid_point(float(grid_size.x), float(grid_size.y))
+	var bottom_left: Vector2 = _grid_point(0.0, float(grid_size.y))
 	var depth: Vector2 = Vector2(0.0, PLATFORM_DEPTH)
 
-	var base: Polygon2D = get_node_or_null("IsoBase") as Polygon2D
-	var shadow: Polygon2D = get_node_or_null("IsoShadow") as Polygon2D
-	var front_left: Polygon2D = get_node_or_null("IsoFrontLeft") as Polygon2D
-	var front_right: Polygon2D = get_node_or_null("IsoFrontRight") as Polygon2D
+	var base: Polygon2D = get_node_or_null("PerspectiveBase") as Polygon2D
+	var shadow: Polygon2D = get_node_or_null("PerspectiveShadow") as Polygon2D
+	var front: Polygon2D = get_node_or_null("PerspectiveFrontLip") as Polygon2D
+	var right_lip: Polygon2D = get_node_or_null("PerspectiveRightLip") as Polygon2D
 	if base != null:
-		base.polygon = PackedVector2Array([top, right, bottom, left])
+		base.polygon = PackedVector2Array([top_left, top_right, bottom_right, bottom_left])
 	if shadow != null:
-		shadow.polygon = PackedVector2Array([top + depth, right + depth, bottom + depth, left + depth])
-	if front_left != null:
-		front_left.polygon = PackedVector2Array([left, bottom, bottom + depth, left + depth])
-	if front_right != null:
-		front_right.polygon = PackedVector2Array([bottom, right, right + depth, bottom + depth])
+		shadow.polygon = PackedVector2Array([top_left + depth, top_right + depth, bottom_right + depth, bottom_left + depth])
+	if front != null:
+		front.polygon = PackedVector2Array([bottom_left, bottom_right, bottom_right + depth, bottom_left + depth])
+	if right_lip != null:
+		right_lip.polygon = PackedVector2Array([top_right, bottom_right, bottom_right + depth, top_right + depth])
 
 func _layout_grid_cells() -> void:
 	if grid_size.x <= 0 or grid_size.y <= 0:
 		return
-	var tile_scale: Vector2 = Vector2(cell_step.x / BASE_ISO_TILE.x, cell_step.y / BASE_ISO_TILE.y)
 	for i in range(grid_nodes.size()):
 		var cell_node: Node2D = grid_nodes[i]
 		var x: int = i % grid_size.x
@@ -159,10 +185,40 @@ func _layout_grid_cells() -> void:
 		if y >= grid_size.y:
 			cell_node.visible = false
 			continue
+		var quad: PackedVector2Array = _cell_quad(Vector2i(x, y))
+		var center: Vector2 = (quad[0] + quad[1] + quad[2] + quad[3]) * 0.25
+		var local_quad := PackedVector2Array([
+			quad[0] - center,
+			quad[1] - center,
+			quad[2] - center,
+			quad[3] - center
+		])
+		var inner_quad := PackedVector2Array([
+			local_quad[0] * 0.94,
+			local_quad[1] * 0.94,
+			local_quad[2] * 0.94,
+			local_quad[3] * 0.94
+		])
+		var outline_points := PackedVector2Array([
+			local_quad[0], local_quad[1], local_quad[2], local_quad[3], local_quad[0]
+		])
 		cell_node.visible = true
-		cell_node.position = cell_center(Vector2i(x, y))
-		cell_node.scale = tile_scale
+		cell_node.position = center
+		cell_node.scale = Vector2.ONE
 		cell_node.z_index = 0
+		var fill: Polygon2D = cell_node.get_node_or_null("Fill") as Polygon2D
+		var inner: Polygon2D = cell_node.get_node_or_null("InnerGlow") as Polygon2D
+		var outline: Line2D = cell_node.get_node_or_null("Outline") as Line2D
+		if fill != null:
+			fill.polygon = local_quad
+			fill.color = Color(0.255, 0.205, 0.145, 0.18 if (x + y) % 2 == 0 else 0.11)
+		if inner != null:
+			inner.polygon = inner_quad
+			inner.color = Color(0.24, 0.34, 0.36, 0.07)
+		if outline != null:
+			outline.points = outline_points
+			outline.width = 2.0
+			outline.default_color = Color(0.66, 0.49, 0.28, 0.90)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
@@ -191,33 +247,21 @@ func update_ship(id: int, cell: Vector2i, new_facing: int, new_hp: int, has_carg
 	tween.tween_property(token, "position", target, 0.22)
 	return tween
 
-func cell_to_pixel(cell: Vector2i) -> Vector2:
-	return cell_center(cell)
-
-func cell_center(cell: Vector2i) -> Vector2:
-	return inner_origin + Vector2(
-		float(cell.x - cell.y) * cell_step.x * 0.5,
-		float(cell.x + cell.y) * cell_step.y * 0.5
-	)
-
-func _entity_z(cell: Vector2i, local_order: int) -> int:
-	return 100 + (cell.x + cell.y) * 10 + local_order
-
-func _ship_extent() -> float:
-	return roundf(token_size_px)
+func _ship_extent(cell: Vector2i) -> float:
+	return roundf(token_size_px * _depth_scale(cell))
 
 func _position_token(token: AirshipToken, cell: Vector2i) -> void:
-	var extent: float = _ship_extent()
+	var extent: float = _ship_extent(cell)
 	token.size = Vector2(extent, extent)
-	var centered_position: Vector2 = cell_center(cell) - token.size * 0.5 + Vector2(0.0, -8.0)
+	var centered_position: Vector2 = cell_center(cell) - token.size * 0.5 + Vector2(0.0, -7.0 * _depth_scale(cell))
 	token.position = Vector2(roundf(centered_position.x), roundf(centered_position.y))
-	token.z_index = _entity_z(cell, 5)
+	token.z_index = _entity_z(cell, 8)
 
 func _token_position(cell: Vector2i, token: AirshipToken) -> Vector2:
-	var extent: float = _ship_extent()
+	var extent: float = _ship_extent(cell)
 	token.size = Vector2(extent, extent)
-	token.z_index = _entity_z(cell, 5)
-	var centered_position: Vector2 = cell_center(cell) - token.size * 0.5 + Vector2(0.0, -8.0)
+	token.z_index = _entity_z(cell, 8)
+	var centered_position: Vector2 = cell_center(cell) - token.size * 0.5 + Vector2(0.0, -7.0 * _depth_scale(cell))
 	return Vector2(roundf(centered_position.x), roundf(centered_position.y))
 
 func _layout_ships() -> void:
@@ -228,40 +272,35 @@ func _layout_ships() -> void:
 		_position_token(token, cell)
 
 func _layout_start_pads() -> void:
-	var pad_size: Vector2 = Vector2(roundf(cell_step.x * 0.47), roundf(cell_step.y * 0.48))
 	for i in range(pad_nodes.size()):
 		var pad: Panel = pad_nodes[i]
 		if i >= PREVIEW_STARTS.size():
 			pad.visible = false
 			continue
 		var cell: Vector2i = PREVIEW_STARTS[i]
+		var s: float = _depth_scale(cell)
 		pad.visible = true
-		pad.size = pad_size
-		var pos: Vector2 = cell_center(cell) - pad.size * 0.5 + Vector2(0.0, 9.0)
+		pad.size = Vector2(roundf(64.0 * s), roundf(38.0 * s))
+		var pos: Vector2 = cell_center(cell) - pad.size * 0.5 + Vector2(0.0, 5.0 * s)
 		pad.position = Vector2(roundf(pos.x), roundf(pos.y))
-		pad.z_index = 10 + (cell.x + cell.y) * 10
+		pad.z_index = _entity_z(cell, 1)
 
 func _layout_rocks() -> void:
-	var rock_size: Vector2 = Vector2(
-		roundf(minf(70.0, cell_step.x * rock_fill)),
-		roundf(minf(52.0, cell_step.y * 0.86))
-	)
 	for i in range(rock_nodes.size()):
 		var rock_node: Panel = rock_nodes[i]
 		if i >= rocks.size():
 			rock_node.visible = false
 			continue
 		var cell: Vector2i = rocks[i]
+		var s: float = _depth_scale(cell)
 		rock_node.visible = true
-		rock_node.size = rock_size
-		var pos: Vector2 = cell_center(cell) - rock_node.size * 0.5 + Vector2(0.0, -13.0)
+		rock_node.size = Vector2(roundf(62.0 * s), roundf(52.0 * s))
+		var pos: Vector2 = cell_center(cell) - rock_node.size * 0.5 + Vector2(0.0, -8.0 * s)
 		rock_node.position = Vector2(roundf(pos.x), roundf(pos.y))
-		rock_node.z_index = _entity_z(cell, 2)
+		rock_node.z_index = _entity_z(cell, 4)
 
 func _layout_contracts() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(pickup_cells)
-	var width: float = roundf(minf(cell_step.x * 0.95, 110.0))
-	var height: float = 54.0
 	for i in range(contract_nodes.size()):
 		var node: Panel = contract_nodes[i]
 		if i >= cells.size():
@@ -269,11 +308,12 @@ func _layout_contracts() -> void:
 			continue
 		var cell: Vector2i = cells[i]
 		var contract: Dictionary = pickup_cells[cell]
+		var s: float = _depth_scale(cell)
 		node.visible = true
-		node.size = Vector2(width, height)
-		var pos: Vector2 = cell_center(cell) - node.size * 0.5 + Vector2(0.0, -3.0)
+		node.size = Vector2(roundf(106.0 * s), roundf(56.0 * s))
+		var pos: Vector2 = cell_center(cell) - node.size * 0.5 + Vector2(0.0, -2.0 * s)
 		node.position = Vector2(roundf(pos.x), roundf(pos.y))
-		node.z_index = _entity_z(cell, 3)
+		node.z_index = _entity_z(cell, 6)
 		var name_label: Label = node.get_node("Name") as Label
 		var reward_label: Label = node.get_node("Reward") as Label
 		var target_label: Label = node.get_node("Target") as Label
@@ -284,37 +324,35 @@ func _layout_contracts() -> void:
 
 func _fit_contract_text(node: Panel) -> void:
 	var width: float = node.size.x
+	var height: float = node.size.y
 	for label_name in ["Name", "Reward", "Target"]:
 		var label: Label = node.get_node(label_name) as Label
 		label.offset_left = 3.0
 		label.offset_right = width - 3.0
 	var name_label: Label = node.get_node("Name") as Label
-	name_label.offset_top = 2.0
-	name_label.offset_bottom = 18.0
+	name_label.offset_top = 1.0
+	name_label.offset_bottom = height * 0.33
 	var reward: Label = node.get_node("Reward") as Label
-	reward.offset_top = 17.0
-	reward.offset_bottom = 34.0
+	reward.offset_top = height * 0.31
+	reward.offset_bottom = height * 0.65
 	var target: Label = node.get_node("Target") as Label
-	target.offset_top = 33.0
-	target.offset_bottom = node.size.y - 2.0
+	target.offset_top = height * 0.63
+	target.offset_bottom = height - 1.0
 
 func _layout_deliveries() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(delivery_cells)
-	var node_size: Vector2 = Vector2(
-		roundf(minf(74.0, cell_step.x * 0.64)),
-		roundf(minf(44.0, cell_step.y * 0.72))
-	)
 	for i in range(delivery_nodes.size()):
 		var node: Panel = delivery_nodes[i]
 		if i >= cells.size():
 			node.visible = false
 			continue
 		var cell: Vector2i = cells[i]
+		var s: float = _depth_scale(cell)
 		node.visible = true
-		node.size = node_size
+		node.size = Vector2(roundf(78.0 * s), roundf(44.0 * s))
 		var pos: Vector2 = cell_center(cell) - node.size * 0.5
 		node.position = Vector2(roundf(pos.x), roundf(pos.y))
-		node.z_index = _entity_z(cell, 1)
+		node.z_index = _entity_z(cell, 3)
 		var label: Label = node.get_node("Label") as Label
 		label.text = str(delivery_cells[cell]).to_upper().replace(" ", "\n")
 
