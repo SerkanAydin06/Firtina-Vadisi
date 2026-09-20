@@ -260,7 +260,7 @@ func _layout_rocks() -> void:
 
 func _layout_contracts() -> void:
 	var cells: Array[Vector2i] = _sorted_cells(pickup_cells)
-	var width: float = roundf(minf(cell_step.x * 0.80, 94.0))
+	var width: float = roundf(minf(cell_step.x * 0.95, 110.0))
 	var height: float = 54.0
 	for i in range(contract_nodes.size()):
 		var node: Panel = contract_nodes[i]
