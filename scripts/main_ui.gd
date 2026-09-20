@@ -148,7 +148,7 @@ func setup_game() -> void:
 	refresh_ui()
 	log_clear()
 	log_line("[b]Oyun başladı.[/b] Dört pilot dört gerçek köşe hücresinde, eşit koşullarda başlıyor.")
-	log_line("İzometrik elmas hücreler hareket mesafesini saymak içindir; koordinat harfleri/rakamları kullanılmaz.")
+	log_line("Perspektifli düz grid hareket mesafesini saymak içindir; kamera tahtaya yukarıdan eğimli bakar.")
 	log_line("Ortadaki kontratlar ortaktır. İlk ulaşan pilot kontratı kapar.")
 
 func _reset_contracts() -> void:
