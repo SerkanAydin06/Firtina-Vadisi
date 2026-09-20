@@ -74,7 +74,7 @@ func _sync_visuals() -> void:
 	if sprite != null:
 		sprite.texture = SHIP_TEXTURES.get(player_id, null)
 	if holder != null:
-		var facing_index: int = posmod(facing, ISO_FACING_ROTATIONS.size())
+		var facing_index: int = posmodi(facing, ISO_FACING_ROTATIONS.size())
 		holder.rotation = deg_to_rad(ISO_FACING_ROTATIONS[facing_index])
 	if human_halo != null:
 		human_halo.visible = is_human_ship
