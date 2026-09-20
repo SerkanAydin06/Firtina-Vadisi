@@ -1,9 +1,17 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[sub_resource type="StyleBoxFlat" id="CellStyle"]
-bg_color = Color(0.20, 0.145, 0.095, 0.045)
+[node name="GridCell" type="Node2D"]
 
-[node name="GridCell" type="Panel"]
-layout_mode = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("CellStyle")
+[node name="Fill" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-58, 0, 0, -29, 58, 0, 0, 29)
+color = Color(0.255, 0.205, 0.145, 0.94)
+
+[node name="InnerGlow" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-51, 0, 0, -25.5, 51, 0, 0, 25.5)
+color = Color(0.25, 0.31, 0.33, 0.10)
+
+[node name="Outline" type="Line2D" parent="."]
+points = PackedVector2Array(-58, 0, 0, -29, 58, 0, 0, 29, -58, 0)
+width = 2.0
+default_color = Color(0.72, 0.54, 0.30, 0.92)
+antialiased = true
