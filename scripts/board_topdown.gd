@@ -114,8 +114,8 @@ func fit_board() -> void:
 	var projected_max_x: float = float(grid_size.x - 1) * cell_step.x * 0.5 + cell_step.x * 0.5
 	var projected_width: float = projected_max_x - projected_min_x
 	inner_origin = Vector2(
-		roundf((size.x - projected_width) * 0.5 - projected_min_x),
-		roundf(maxf(72.0, (size.y - base_height * scale_factor - 120.0) * 0.34 + 78.0))
+		floorf((size.x - projected_width) * 0.5 - projected_min_x),
+		ceilf(maxf(70.0, (size.y - base_height * scale_factor) * 0.45))
 	)
 	inner_size = Vector2(projected_width, base_height * scale_factor)
 	grid_origin = inner_origin
