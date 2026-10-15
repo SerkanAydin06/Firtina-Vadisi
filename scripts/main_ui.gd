@@ -33,6 +33,7 @@ var reduced_motion: bool = false
 var contract_serial: int = 0
 var route_overlay: Node2D
 var route_hint: Label
+var victory_screen: Control
 var contract_tracker: Node
 var turn_phase: String = "planning"
 var active_slot: int = -1
@@ -125,6 +126,9 @@ func build_game_ui() -> void:
 	for slot in command_box.get_children():
 		slot_styles.append(slot.get_theme_stylebox("panel"))
 	wind_style = $GameLayer/RightPanel/WindPanel.get_theme_stylebox("panel")
+	victory_screen = preload("res://scripts/victory_screen.gd").new()
+	add_child(victory_screen)
+	victory_screen.setup(self)
 	route_overlay = preload("res://scripts/route_overlay.gd").new()
 	route_overlay.board = board
 	route_overlay.z_index = 400
@@ -139,6 +143,8 @@ func build_game_ui() -> void:
 	board.resized.connect(func() -> void: contract_tracker.call_deferred("refresh"))
 
 func setup_game() -> void:
+	if is_instance_valid(victory_screen):
+		victory_screen.dismiss()
 	session_id += 1
 	board.cancel_animations()
 	set_input_enabled(true)
@@ -224,6 +230,7 @@ func check_all_cargo() -> void:
 			var source: Vector2i = Vector2i(ship.cargo.source)
 			board.show_effect("delivery", board.cell_center(ship.pos), Vector2.ZERO, value)
 			ship.coins += value
+			ship.deliveries += 1
 			ship.cargo = {}
 			respawn_sources.append(source)
 			changed_contracts = true
@@ -365,6 +372,8 @@ func set_input_enabled(enabled: bool) -> void:
 	_refresh_route_preview()
 
 func show_menu() -> void:
+	if is_instance_valid(victory_screen):
+		victory_screen.dismiss()
 	super.show_menu()
 	present_turn("planning")
 	_refresh_contract_tracking()
@@ -412,3 +421,14 @@ func present_turn(phase: String, slot: int = -1) -> void:
 		_:
 			title.text = "01   UÇUŞ PLANINI HAZIRLA"
 	title.add_theme_color_override("font_color", accent if phase == "wind" else Color("e8bc70"))
+
+func check_victory() -> bool:
+	if game_over:
+		return true
+	if not super.check_victory():
+		return false
+	for ship in ships:
+		if ship.coins >= TARGET_COINS:
+			victory_screen.show_result(ship)
+			break
+	return true

@@ -413,7 +413,7 @@ func setup_game() -> void:
 func make_ship(id: int, ship_name: String, pos: Vector2i, facing: int, human: bool, color: Color) -> Dictionary:
 	return {
 		"id":id, "name":ship_name, "pos":pos, "facing":facing,
-		"hp":MAX_HP, "coins":0, "cargo":{}, "queue":[],
+		"hp":MAX_HP, "coins":0, "deliveries":0, "cargo":{}, "queue":[],
 		"human":human, "color":color, "anchored":false
 	}
 
@@ -709,6 +709,7 @@ func check_all_cargo() -> void:
 			var value: int = ship.cargo.value
 			log_line("[color=aqua]%s kargoyu teslim etti: +%d altın![/color]" % [ship.name, value])
 			ship.coins += value
+			ship.deliveries += 1
 			ship.cargo = {}
 
 func damage_ship(ship: Dictionary, amount: int, reason: String) -> void:
