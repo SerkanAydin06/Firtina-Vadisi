@@ -5,10 +5,10 @@
 
 [sub_resource type="StyleBoxFlat" id="HumanHaloStyle"]
 bg_color = Color(0.10, 0.70, 1.0, 0.10)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.80, 0.98, 1.0, 0.95)
 corner_radius_top_left = 64
 corner_radius_top_right = 64
@@ -76,7 +76,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="HPFill"]
-bg_color = Color(0.25, 0.95, 0.40, 0.98)
+bg_color = Color(0.4, 0.78, 0.68, 0.98)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2

@@ -211,14 +211,14 @@ func _layout_grid_cells() -> void:
 		var outline: Line2D = cell_node.get_node_or_null("Outline") as Line2D
 		if fill != null:
 			fill.polygon = local_quad
-			fill.color = Color(0.255, 0.205, 0.145, 0.18 if (x + y) % 2 == 0 else 0.11)
+			fill.color = Color(0.35, 0.56, 0.59, 0.075 if (x + y) % 2 == 0 else 0.025)
 		if inner != null:
 			inner.polygon = inner_quad
-			inner.color = Color(0.24, 0.34, 0.36, 0.07)
+			inner.color = Color(0.24, 0.34, 0.36, 0.015)
 		if outline != null:
 			outline.points = outline_points
-			outline.width = 2.0
-			outline.default_color = Color(0.66, 0.49, 0.28, 0.90)
+			outline.width = 1.1
+			outline.default_color = Color(0.58, 0.69, 0.68, 0.30)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
@@ -295,7 +295,7 @@ func _layout_rocks() -> void:
 		var cell: Vector2i = rocks[i]
 		var s: float = _depth_scale(cell)
 		rock_node.visible = true
-		rock_node.size = Vector2(roundf(62.0 * s), roundf(52.0 * s))
+		rock_node.size = Vector2(roundf(64.0 * s), roundf(64.0 * s))
 		var pos: Vector2 = cell_center(cell) - rock_node.size * 0.5 + Vector2(0.0, -8.0 * s)
 		rock_node.position = Vector2(roundf(pos.x), roundf(pos.y))
 		rock_node.z_index = _entity_z(cell, 4)
