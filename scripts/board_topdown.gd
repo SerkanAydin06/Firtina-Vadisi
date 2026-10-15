@@ -243,6 +243,7 @@ func update_ship(id: int, cell: Vector2i, new_facing: int, new_hp: int, has_carg
 		token.position = target
 		return null
 	var tween: Tween = create_tween()
+	track_tween(tween)
 	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(token, "position", target, 0.22)
 	return tween

@@ -1,22 +1,45 @@
 # Fırtına Vadisi — Godot 4 Prototype
 
-Bu paket görsel asset kullanmadan oyun çekirdeğini test etmek için hazırlanmıştır.
-
-## İçerik
-- 11x9 grid kanyon haritası
-- 1 insan oyuncu + 3 AI pilot
-- Her tur 3 gizli komut programlama
-- Komutlar: İleri 1, İleri 2, Sola Dön, Sağa Dön, Kanca, Çapa
-- Her komut slotundan sonra rüzgâr
-- Intent -> Resolve -> Animate ayrımı
-- Aynı hücre hedefi, kafa kafaya çarpışma ve domino itme zinciri
-- Kayaya/kanyon sınırına çarpma hasarı
-- İki kargo rotası ve teslimat altını
-- 12 altına ulaşınca zafer
-- Tween tabanlı placeholder hareket animasyonları
+Perspektifli 11×9 kanyon tahtasında 1 insan oyuncu ve 3 botla oynanan,
+üç komut programlamalı zeplin/kargo oyunu.
 
 ## Çalıştırma
-Godot 4.x ile `project.godot` dosyasını açıp F6/F5 ile çalıştırın.
 
-## Görsel ekleme için
-Oyun mantığı `scripts/main.gd` içinde, grid çizimi `scripts/board.gd`, zeplin placeholder çizimi `scripts/airship_token.gd` içindedir. Sonradan Sprite2D/TextureRect tabanlı görseller eklenirken oyun mantığını değiştirmek gerekmez.
+Godot 4.6 veya üzeri ile `project.godot` dosyasını açın ve F5'e basın.
+İlk açılışta görseller içe aktarılır; `.godot` klasörü sürüm kontrolüne dahil değildir.
+
+## Kurallar
+
+- Her tur üç komut seçilir: İleri 1, İleri 2, Sola Dön, Sağa Dön, Kanca, Çapa.
+- Her komuttan sonra o turun rüzgârı uygulanır. Çapa yalnızca sıradaki rüzgârı engeller.
+- İleri 2 hareketi iki ayrı hücre adımıdır. Kargo alımı ve teslimat her adımda,
+  kanca hareketinden sonra ve rüzgârdan sonra kontrol edilir.
+- Dört köşe hücresinde başlayan pilotlar, merkezdeki dört ortak kontrat için yarışır.
+- Her kontrat 5 altın kazandırır. Teslim edilen veya düşen geminin taşıdığı kontrat
+  kaynak hücresine geri gelir. En az 12 altına ulaşan kazanır (üç teslimat).
+- Aynı hedef hücreye hareket ve kafa kafaya geçiş engellenir. Boşalan hücrelere
+  eşzamanlı hareket ve domino itişi desteklenir. Kayalar/sınırlar hasar verir.
+- Canı biten zeplin kargosunu kaybeder ve başlangıcında, doluysa yakınındaki boş
+  bir hücrede onarılır.
+- Botlar mevcut rüzgârı ve statik engelleri hesaba katarak kontrat/teslimat rotası
+  arar. Rakiplerin gizli programlarını önceden bilmez; çarpışmalar rotayı değiştirebilir.
+- Ana menüye dönmek devam eden turu iptal eder. Başlat ve Yeni Oyun yeni maç açar.
+- Ayarlar: tam ekran/pencere ve komutlar arası bekleme süresi; seçimler kaydedilir.
+
+## Kod ve sahneler
+
+- `scenes/main.tscn` + `scripts/main_ui.gd`: aktif arayüz, kontratlar ve başlangıçlar.
+- `scripts/main.gd`: tur, hareket, çarpışma, kanca, rüzgâr, bot ve zafer mantığı.
+- `scenes/board.tscn` + `scripts/board_topdown.gd`: perspektifli tahta ve sahne öğeleri.
+- `scripts/board.gd`: ortak tahta API'si ve animasyon yönetimi.
+- `scenes/airship_token.tscn` + `scripts/airship_token.gd`: zeplin görselleri ve göstergeleri.
+
+## Regresyon kontrolü
+
+```sh
+godot --headless --path . --editor --import
+godot --headless --path . --script tests/regression.gd
+```
+
+Testler yeniden başlatma, tur iptali, çapa, ara hücre kargosu, teslimat, yeniden doğma,
+çarpışmalar, domino itişi, eşzamanlı hareket ve bot rotalarını kapsar.

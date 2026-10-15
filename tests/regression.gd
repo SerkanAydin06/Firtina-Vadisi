@@ -1,0 +1,163 @@
+extends SceneTree
+
+var game
+var failures: int = 0
+var checks: int = 0
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func verify(condition: bool, label: String) -> void:
+	checks += 1
+	if not condition:
+		failures += 1
+		push_error(label)
+
+func fixture(cells: Array) -> void:
+	game.board.cancel_animations()
+	game.ships.clear()
+	game.rocks.clear()
+	game.pickups = {}
+	game.round_no = 1
+	for i in range(cells.size()):
+		game.ships.append(game.make_ship(i + 1, "Test", cells[i], 1, i == 0, Color.WHITE))
+
+func run() -> void:
+	Engine.time_scale = 20.0
+	game = load("res://scenes/main.tscn").instantiate()
+	root.add_child(game)
+	await process_frame
+	game._on_start_pressed()
+	verify(game.ships.size() == 4 and game.pickups.size() == 4, "Initial ships and contracts")
+
+	game.ships[0].coins = 15
+	verify(game.check_victory(), "Victory threshold")
+	game._on_restart_pressed()
+	for button in get_nodes_in_group("command_buttons"):
+		verify(not button.disabled, "Cards unlocked after victory restart")
+	verify(not game.game_over and game.ships[0].coins == 0, "Restart resets result")
+
+	fixture([Vector2i(3, 3)])
+	game.wind_dir = 1
+	game.ships[0].anchored = true
+	await game.resolve_wind()
+	verify(game.ships[0].pos == Vector2i(3, 3), "Anchor stops first wind")
+	await game.resolve_wind()
+	verify(game.ships[0].pos == Vector2i(4, 3), "Anchor expires before next wind")
+
+	fixture([Vector2i(2, 3), Vector2i(3, 3)])
+	game.wind_dir = 1
+	game.ships[1].anchored = true
+	await game.resolve_wind()
+	verify(game.ships[1].pos == Vector2i(3, 3) and game.ships[0].pos == Vector2i(2, 3), "Anchor resists a wind-driven chain")
+
+	fixture([Vector2i(3, 3)])
+	game._spawn_contract_at(Vector2i(4, 3))
+	game.ships[0].queue = [game.CMD_FORWARD_2]
+	await game.resolve_slot(0)
+	verify(not game.ships[0].cargo.is_empty(), "Forward 2 collects cargo on intermediate cell")
+	verify(game.ships[0].pos == Vector2i(5, 3), "Forward 2 completes movement")
+
+	fixture([Vector2i(8, 6)])
+	game._spawn_contract_at(Vector2i(4, 3))
+	game.ships[0].cargo = game.pickups[Vector2i(4, 3)].duplicate(true)
+	game.pickups.clear()
+	game.ships[0].queue = [game.CMD_FORWARD_1]
+	await game.resolve_slot(0)
+	verify(game.ships[0].coins == 5, "Delivery occurs before wind")
+	verify(game.pickups.has(Vector2i(4, 3)), "Delivered contract respawns")
+
+	fixture([Vector2i(0, 0)])
+	game.ships[0].hp = 1
+	game.damage_ship(game.ships[0], 1, "test")
+	verify(game.ships[0].pos == Vector2i(0, 0), "Respawn does not treat itself as occupied")
+
+	fixture([Vector2i(2, 2), Vector2i(4, 2)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT, 2: Vector2i.LEFT}, "motor")
+	verify(game.ships[0].pos == Vector2i(2, 2) and game.ships[1].pos == Vector2i(4, 2), "Shared destination blocks both")
+	fixture([Vector2i(2, 2), Vector2i(3, 2)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT, 2: Vector2i.LEFT}, "motor")
+	verify(game.ships[0].pos == Vector2i(2, 2) and game.ships[1].pos == Vector2i(3, 2), "Head-on movement blocked")
+	fixture([Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT}, "motor")
+	verify(game.ships[0].pos == Vector2i(3, 2) and game.ships[2].pos == Vector2i(5, 2), "Domino push moves whole chain")
+	fixture([Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2)])
+	game.rocks.assign([Vector2i(5, 2)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT}, "motor")
+	verify(game.ships[0].pos == Vector2i(2, 2) and game.ships[1].pos == Vector2i(3, 2), "Failed chain rolls back all movement")
+	verify(game.ships[2].hp == 2, "Blocked end of chain takes damage")
+	fixture([Vector2i(2, 2), Vector2i(3, 2)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT, 2: Vector2i.DOWN}, "motor")
+	verify(game.ships[0].pos == Vector2i(3, 2) and game.ships[1].pos == Vector2i(3, 3), "Moving occupant follows its own intent")
+	fixture([Vector2i(2, 2), Vector2i(3, 2), Vector2i(3, 3), Vector2i(2, 3)])
+	game.resolve_simultaneous_step({1: Vector2i.RIGHT, 2: Vector2i.DOWN, 3: Vector2i.LEFT, 4: Vector2i.UP}, "motor")
+	verify(game.ships[0].pos == Vector2i(3, 2) and game.ships[3].pos == Vector2i(2, 2), "Four-way cycle resolves simultaneously")
+
+	# Reproducible stress cases: no overlap, invalid cells, or multiple moves per step.
+	var random := RandomNumberGenerator.new()
+	random.seed = 42
+	for trial in range(250):
+		var cells: Array = []
+		while cells.size() < 4:
+			var cell := Vector2i(random.randi_range(1, 7), random.randi_range(1, 7))
+			if not cells.has(cell):
+				cells.append(cell)
+		fixture(cells)
+		var intents := {}
+		for id in range(1, 5):
+			if random.randf() < 0.8:
+				intents[id] = game.DIRS[random.randi_range(0, 3)]
+		game.resolve_simultaneous_step(intents, "motor")
+		var occupied := {}
+		for ship in game.ships:
+			verify(not occupied.has(ship.pos) and game.is_inside(ship.pos), "Stress: unique valid cell")
+			occupied[ship.pos] = true
+			var delta: Vector2i = ship.pos - cells[ship.id - 1]
+			verify(absi(delta.x) + absi(delta.y) <= 1, "Stress: at most one movement")
+
+	game.setup_game()
+	for wind in range(4):
+		game.wind_dir = wind
+		for ship in game.ships:
+			var commands: Array[String] = game.plan_ai(ship)
+			verify(commands.size() == 3, "AI produces three commands")
+			var pos: Vector2i = ship.pos
+			var facing: int = ship.facing
+			for command in commands:
+				var next: Dictionary = game._ai_transition(pos, facing, command, [])
+				verify(not next.is_empty(), "AI avoids static obstacles and wind damage")
+				if not next.is_empty():
+					pos = next.pos
+					facing = next.facing
+
+	game.setup_game()
+	game.player_queue.assign([game.CMD_FORWARD_1, game.CMD_LEFT, game.CMD_FORWARD_2])
+	game._on_execute_pressed()
+	await create_timer(0.1).timeout
+	game.show_menu()
+	game._on_start_pressed()
+	var start_positions: Array = game.ships.map(func(ship: Dictionary): return ship.pos)
+	await create_timer(2.0).timeout
+	verify(game.round_no == 1 and not game.resolving, "Old round cancelled after menu/start")
+	verify(game.ships.map(func(ship: Dictionary): return ship.pos) == start_positions, "Old round cannot change new positions")
+	for ship in game.ships:
+		verify(game.board.tokens[ship.id].get_meta("grid_cell") == ship.pos, "Visual position matches new state")
+
+	game.player_queue.assign([game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR])
+	await game._on_execute_pressed()
+	verify(game.round_no == 2 and not game.resolving, "Complete round advances and unlocks input")
+	var original_pause: float = game.resolution_pause
+	var options = game.get_node("MenuLayer/SettingsPopup/Options")
+	var original_fullscreen: bool = options.get_node("Fullscreen").button_pressed
+	options.get_node("Fullscreen").button_pressed = not original_fullscreen
+	options.get_node("Pause").value = 0.65
+	game._load_settings()
+	verify(is_equal_approx(game.resolution_pause, 0.65), "Pace setting persists")
+	verify(options.get_node("Fullscreen").button_pressed == not original_fullscreen, "Fullscreen setting persists")
+	options.get_node("Fullscreen").button_pressed = original_fullscreen
+	options.get_node("Pause").value = original_pause
+	game.board.cancel_animations()
+	game.queue_free()
+	await process_frame
+	print("REGRESSION: %d checks, %d failures" % [checks, failures])
+	quit(1 if failures else 0)

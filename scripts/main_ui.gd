@@ -41,6 +41,10 @@ func build_menu() -> void:
 	$MenuLayer/StartButton.pressed.connect(_on_start_pressed)
 	$MenuLayer/SettingsButton.pressed.connect(_on_settings_pressed)
 	$MenuLayer/ExitButton.pressed.connect(_on_exit_pressed)
+	_load_settings()
+	$MenuLayer/SettingsPopup/Options/Fullscreen.toggled.connect(_set_fullscreen)
+	$MenuLayer/SettingsPopup/Options/Pause.value_changed.connect(_set_resolution_pause)
+	$MenuLayer/SettingsPopup/Options/Close.pressed.connect(func() -> void: settings_popup.hide())
 
 func build_game_ui() -> void:
 	game_layer = $GameLayer as Control
@@ -109,6 +113,9 @@ func build_game_ui() -> void:
 	game_built = true
 
 func setup_game() -> void:
+	session_id += 1
+	board.cancel_animations()
+	set_input_enabled(true)
 	resolving = false
 	game_over = false
 	round_no = 1
@@ -207,9 +214,10 @@ func respawn_ship(ship: Dictionary) -> void:
 			pickups[dropped_source] = ship.cargo.duplicate(true)
 			board.configure(GRID_SIZE, rocks, pickups, deliveries)
 	ship.hp = MAX_HP
+	ship.anchored = false
 	ship.cargo = {}
 	var candidate: Vector2i = START_CELLS[(int(ship.id) - 1) % START_CELLS.size()]
-	if ship_at(candidate) == null and not rocks.has(candidate):
+	if (ship_at(candidate) == null or ship_at(candidate) == ship) and not rocks.has(candidate):
 		ship.pos = candidate
 		return
 	for radius in range(1, 5):
@@ -274,3 +282,28 @@ func _scroll_log_to_bottom() -> void:
 		return
 	var last_line: int = maxi(0, info_label.get_line_count() - 1)
 	info_label.scroll_to_line(last_line)
+
+func _load_settings() -> void:
+	var config := ConfigFile.new()
+	config.load("user://settings.cfg")
+	var fullscreen: bool = bool(config.get_value("display", "fullscreen", true))
+	resolution_pause = clampf(float(config.get_value("game", "resolution_pause", 0.28)), 0.1, 1.0)
+	$MenuLayer/SettingsPopup/Options/Fullscreen.set_pressed_no_signal(fullscreen)
+	$MenuLayer/SettingsPopup/Options/Pause.set_value_no_signal(resolution_pause)
+	$MenuLayer/SettingsPopup/Options/SpeedLabel.text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
+
+func _save_settings() -> void:
+	var config := ConfigFile.new()
+	config.set_value("display", "fullscreen", $MenuLayer/SettingsPopup/Options/Fullscreen.button_pressed)
+	config.set_value("game", "resolution_pause", resolution_pause)
+	config.save("user://settings.cfg")
+
+func _set_fullscreen(enabled: bool) -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED)
+	_save_settings()
+
+func _set_resolution_pause(value: float) -> void:
+	resolution_pause = clampf(value, 0.1, 1.0)
+	$MenuLayer/SettingsPopup/Options/SpeedLabel.text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
+	_save_settings()

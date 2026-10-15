@@ -199,15 +199,36 @@ offset_right = 1260.0
 offset_bottom = 1015.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
-[node name="Text" type="Label" parent="MenuLayer/SettingsPopup" unique_id=2131703594]
+[node name="Options" type="VBoxContainer" parent="MenuLayer/SettingsPopup"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "AYARLAR / BİLGİ
+theme_override_constants/separation = 10
 
-Çözünürlük: 1920 × 1080
-Tüm görünür oyun arayüzü sahne üzerinden düzenlenir."
+[node name="Title" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "AYARLAR"
 horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="Fullscreen" type="CheckButton" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+text = "Tam ekran"
+button_pressed = true
+
+[node name="SpeedLabel" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+text = "Komutlar arası bekleme: 0.28 sn"
+horizontal_alignment = 1
+
+[node name="Pause" type="HSlider" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+min_value = 0.1
+max_value = 1.0
+step = 0.01
+value = 0.28
+
+[node name="Close" type="Button" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+text = "Kapat"
 
 [node name="GameLayer" type="Control" parent="." unique_id=1148719349]
 layout_mode = 1
