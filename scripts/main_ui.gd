@@ -34,6 +34,10 @@ var contract_serial: int = 0
 var route_overlay: Node2D
 var route_hint: Label
 var contract_tracker: Node
+var turn_phase: String = "planning"
+var active_slot: int = -1
+var slot_styles: Array[StyleBox] = []
+var wind_style: StyleBox
 
 func build_shell() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -118,6 +122,9 @@ func build_game_ui() -> void:
 	$GameLayer/RightPanel/MenuButton.pressed.connect(show_menu)
 	game_built = true
 	preload("res://scripts/presentation.gd").apply(self)
+	for slot in command_box.get_children():
+		slot_styles.append(slot.get_theme_stylebox("panel"))
+	wind_style = $GameLayer/RightPanel/WindPanel.get_theme_stylebox("panel")
 	route_overlay = preload("res://scripts/route_overlay.gd").new()
 	route_overlay.board = board
 	route_overlay.z_index = 400
@@ -251,6 +258,8 @@ func respawn_ship(ship: Dictionary) -> void:
 					return
 
 func refresh_ui() -> void:
+	if not resolving:
+		present_turn("finished" if game_over else "planning")
 	_refresh_contract_tracking()
 	_refresh_route_preview()
 	round_label.text = "Tur %d" % round_no
@@ -357,6 +366,7 @@ func set_input_enabled(enabled: bool) -> void:
 
 func show_menu() -> void:
 	super.show_menu()
+	present_turn("planning")
 	_refresh_contract_tracking()
 	_refresh_route_preview()
 
@@ -369,3 +379,36 @@ func _set_reduced_motion(enabled: bool) -> void:
 	if is_instance_valid(board):
 		board.set_reduced_motion(enabled)
 	_save_settings()
+
+func present_turn(phase: String, slot: int = -1) -> void:
+	turn_phase = phase
+	active_slot = slot if phase in ["command", "wind"] else -1
+	if slot_styles.is_empty():
+		return
+	var title: Label = $GameLayer/RightPanel/ProgramPanel/Title
+	var wind: Panel = $GameLayer/RightPanel/WindPanel
+	wind.add_theme_stylebox_override("panel", wind_style)
+	wind.get_node("Title").text = "RÜZGÂR PUSULASI"
+	for i in range(command_box.get_child_count()):
+		var card: PanelContainer = command_box.get_child(i)
+		card.add_theme_stylebox_override("panel", slot_styles[i])
+		card.tooltip_text = "Bu komutu kaldırmak için tıkla" if phase == "planning" else "Komut %d" % (i + 1)
+	var accent := Color("e8bc70") if phase == "command" else Color("8ed5d3")
+	if active_slot >= 0 and active_slot < command_box.get_child_count():
+		var highlight := preload("res://scripts/presentation.gd").panel(Color("203b43"), accent, 8)
+		highlight.set_border_width_all(3)
+		command_box.get_child(active_slot).add_theme_stylebox_override("panel", highlight)
+	match phase:
+		"command":
+			title.text = "KOMUT %d / 3   •   UYGULANIYOR" % (slot + 1)
+		"wind":
+			title.text = "KOMUT %d / 3   •   RÜZGÂR AŞAMASI" % (slot + 1)
+			wind.get_node("Title").text = "RÜZGÂR İTİŞİ   •   UYGULANIYOR"
+			var highlight := preload("res://scripts/presentation.gd").panel(Color("19404a"), accent, 10)
+			highlight.set_border_width_all(2)
+			wind.add_theme_stylebox_override("panel", highlight)
+		"finished":
+			title.text = "SEFER TAMAMLANDI"
+		_:
+			title.text = "01   UÇUŞ PLANINI HAZIRLA"
+	title.add_theme_color_override("font_color", accent if phase == "wind" else Color("e8bc70"))

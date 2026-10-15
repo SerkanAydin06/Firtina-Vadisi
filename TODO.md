@@ -19,7 +19,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 
 ## P2 — tur akışı ve sonuç sunumu
 
-- [ ] **Tur sunumu**
+- [x] **Tur sunumu**
   - Çözülen komut slotunu vurgula; komut/rüzgâr aşaması açıkça görünsün.
   - Tur sonunda planlama durumuna dön; menüye dönüş, yeni maç ve zafer eski vurguları temizlesin.
 - [ ] **Zafer ekranı**
