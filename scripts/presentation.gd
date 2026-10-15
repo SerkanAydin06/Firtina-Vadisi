@@ -35,6 +35,9 @@ static func label(parent: Node, value: String, x: float, y: float, w: float, h: 
 static func apply(game: Control) -> void:
 	var theme := Theme.new()
 	theme.default_font_size = 18
+	theme.set_stylebox("panel", "TooltipPanel", panel(Color("10232c"), GOLD, 6))
+	theme.set_font_size("font_size", "TooltipLabel", 16)
+	theme.set_color("font_color", "TooltipLabel", TEXT)
 	theme.set_color("font_color", "Label", TEXT)
 	theme.set_color("font_color", "Button", TEXT)
 	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
@@ -225,7 +228,6 @@ static func _style_console(game: Control) -> void:
 	game.execute_button.add_theme_stylebox_override("normal", panel(Color("c4a16a"), GOLD, 8))
 	game.execute_button.add_theme_stylebox_override("hover", panel(Color("e1bd85"), GOLD, 8))
 	game.execute_button.add_theme_color_override("font_color", Color("14222a"))
-	label(side, "Üç komut seç. Rüzgârı hesaba kat.", 16, 898, 520, 28, 14, MUTED).horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rect(side.get_node("RestartButton"), 16, 958, 252, 48)
 	rect(side.get_node("MenuButton"), 284, 958, 252, 48)
 

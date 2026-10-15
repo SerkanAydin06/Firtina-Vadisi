@@ -32,6 +32,7 @@ var pilot_cargo_labels: Array[Label] = []
 var contract_serial: int = 0
 var route_overlay: Node2D
 var route_hint: Label
+var contract_tracker: Node
 
 func build_shell() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -122,6 +123,10 @@ func build_game_ui() -> void:
 	route_hint = preload("res://scripts/presentation.gd").label(board, "", 440, 8, 820, 25, 12, Color("91a8af"))
 	route_hint.name = "RouteHint"
 	route_hint.z_index = 401
+	contract_tracker = preload("res://scripts/contract_tracker.gd").new()
+	add_child(contract_tracker)
+	contract_tracker.setup(self)
+	board.resized.connect(func() -> void: contract_tracker.call_deferred("refresh"))
 
 func setup_game() -> void:
 	session_id += 1
@@ -217,6 +222,7 @@ func check_all_cargo() -> void:
 		_spawn_contract_at(source)
 	if changed_contracts:
 		board.configure(GRID_SIZE, rocks, pickups, deliveries)
+		_refresh_contract_tracking()
 
 func respawn_ship(ship: Dictionary) -> void:
 	if not ship.cargo.is_empty():
@@ -227,6 +233,7 @@ func respawn_ship(ship: Dictionary) -> void:
 	ship.hp = MAX_HP
 	ship.anchored = false
 	ship.cargo = {}
+	_refresh_contract_tracking()
 	var candidate: Vector2i = START_CELLS[(int(ship.id) - 1) % START_CELLS.size()]
 	if (ship_at(candidate) == null or ship_at(candidate) == ship) and not rocks.has(candidate):
 		ship.pos = candidate
@@ -240,6 +247,7 @@ func respawn_ship(ship: Dictionary) -> void:
 					return
 
 func refresh_ui() -> void:
+	_refresh_contract_tracking()
 	_refresh_route_preview()
 	round_label.text = "Tur %d" % round_no
 	wind_label.text = DIR_NAMES[wind_dir]
@@ -342,4 +350,9 @@ func set_input_enabled(enabled: bool) -> void:
 
 func show_menu() -> void:
 	super.show_menu()
+	_refresh_contract_tracking()
 	_refresh_route_preview()
+
+func _refresh_contract_tracking() -> void:
+	if is_instance_valid(contract_tracker):
+		contract_tracker.refresh()

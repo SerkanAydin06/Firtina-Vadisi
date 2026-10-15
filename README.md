@@ -62,3 +62,7 @@ Bu dosyalar hesap/model kotası ayarı değil, gereksiz okuma ve açıklamayı a
 ## Rota önizlemesi
 
 Komut seçerken altın düz çizgiler motor adımlarını, mavi kesik çizgiler rüzgârı ve numaralar komut sonlarını gösterir. Kırmızı çarpılar duvar/kaya veya mevcut rakip konumlarından doğan riski belirtir. Rakiplerin gizli komutları hesaba katılmaz; gemi/kanca etkileşimi veya gövdenin tükenmesi sonrası belirsiz rota uzatılmaz. Önizleme oyun durumunu değiştirmez, çözüm sırasında kapanır.
+
+## Kontrat ve hedef takibi
+
+Taşınan yük, hedef iskele ve altın ödülü uçuş konsolunun alt kısmında gösterilir. Oyuncunun hedef iskelesi altın çerçeveyle vurgulanır. Kontratların ve iskelelerin üzerine gelerek ayrıntıları görebilirsiniz. Teslimat, yeniden doğma, menü ve yeni maç eski hedef işaretini temizler; rakiplerin yükleri oyuncunun hedefini değiştirmez.
