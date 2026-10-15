@@ -2,7 +2,6 @@
 extends Control
 class_name StormBoard
 
-const BOARD_TEXTURE: Texture2D = preload("res://assets/generated/board_background.png")
 
 var grid_size := Vector2i(11, 9)
 var cell_size := 62.0
@@ -10,6 +9,19 @@ var rocks: Array[Vector2i] = []
 var pickup_cells: Dictionary = {}
 var delivery_cells: Dictionary = {}
 var tokens: Dictionary = {}
+var active_tweens: Array[Tween] = []
+
+func cancel_animations() -> void:
+	for tween in active_tweens:
+		if tween.is_valid():
+			tween.kill()
+	active_tweens.clear()
+	for token in tokens.values():
+		token.modulate = Color.WHITE
+
+func track_tween(tween: Tween) -> void:
+	active_tweens = active_tweens.filter(func(item: Tween) -> bool: return item.is_valid())
+	active_tweens.append(tween)
 
 var grid_origin := Vector2.ZERO
 
@@ -47,6 +59,7 @@ func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool,
 		token.position = target
 		return null
 	var tween: Tween = create_tween()
+	track_tween(tween)
 	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(token, "position", target, 0.22)
 	return tween
@@ -56,6 +69,7 @@ func flash_ship(id: int) -> void:
 		return
 	var token: AirshipToken = tokens[id]
 	var tween: Tween = create_tween()
+	track_tween(tween)
 	tween.tween_property(token, "modulate", Color(1,0.35,0.35), 0.08)
 	tween.tween_property(token, "modulate", Color.WHITE, 0.14)
 
@@ -68,7 +82,7 @@ func _notification(what: int) -> void:
 
 func _draw() -> void:
 	var board_rect: Rect2 = Rect2(grid_origin, Vector2(grid_size) * cell_size)
-	draw_texture_rect(BOARD_TEXTURE, board_rect.grow(14.0), false)
+	draw_rect(board_rect.grow(14.0), Color(0.12, 0.10, 0.08), true)
 	draw_rect(board_rect, Color(0.03,0.04,0.05,0.18), true)
 	draw_rect(board_rect.grow(4.0), Color(0.90,0.72,0.34,0.40), false, 3.0)
 

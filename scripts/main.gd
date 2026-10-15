@@ -79,6 +79,7 @@ var round_no := 1
 var wind_dir := 1
 var resolving := false
 var game_over := false
+var session_id: int = 0
 
 func _ready() -> void:
 	rng.randomize()
@@ -356,6 +357,9 @@ func make_menu_button(normal_tex: Texture2D, hover_tex: Texture2D, callback: Cal
 	return button
 
 func show_menu() -> void:
+	session_id += 1
+	resolving = false
+	board.cancel_animations()
 	menu_layer.visible = true
 	game_layer.visible = false
 	settings_popup.visible = false
@@ -378,6 +382,8 @@ func _on_restart_pressed() -> void:
 	setup_game()
 
 func setup_game() -> void:
+	session_id += 1
+	set_input_enabled(true)
 	resolving = false
 	game_over = false
 	round_no = 1
@@ -431,6 +437,7 @@ func _on_execute_pressed() -> void:
 	await execute_round()
 
 func execute_round() -> void:
+	var active_session: int = session_id
 	for ship in ships:
 		ship.queue.clear()
 		ship.anchored = false
@@ -445,11 +452,21 @@ func execute_round() -> void:
 
 	for slot in range(3):
 		log_line("\n[i]Komut %d çözülüyor...[/i]" % (slot + 1))
-		await resolve_slot(slot)
+		await resolve_slot(slot, active_session)
+		if active_session != session_id or game_over:
+			return
+		if check_victory():
+			return
 		await get_tree().create_timer(resolution_pause).timeout
+		if active_session != session_id:
+			return
 		log_line("Rüzgâr itişi: %s" % DIR_NAMES[wind_dir])
 		await resolve_wind()
+		if active_session != session_id:
+			return
 		await get_tree().create_timer(resolution_pause).timeout
+		if active_session != session_id:
+			return
 		check_all_cargo()
 		refresh_ui()
 		if check_victory():
@@ -462,7 +479,9 @@ func execute_round() -> void:
 	set_input_enabled(true)
 	refresh_ui()
 
-func resolve_slot(slot: int) -> void:
+func resolve_slot(slot: int, active_session: int = -1) -> void:
+	if active_session == -1:
+		active_session = session_id
 	for ship in ships:
 		if ship.hp <= 0:
 			continue
@@ -477,6 +496,8 @@ func resolve_slot(slot: int) -> void:
 			ship.anchored = true
 			log_line("%s çapayı bıraktı; sıradaki rüzgâra karşı sabitlendi." % ship.name)
 	await animate_all()
+	if active_session != session_id:
+		return
 
 	var hooks: Array = []
 	for ship in ships:
@@ -489,13 +510,18 @@ func resolve_slot(slot: int) -> void:
 	for pair in hooks:
 		var attacker: Dictionary = pair[0]
 		var target: Dictionary = pair[1]
+		if find_hook_target(attacker) != target:
+			continue
 		var pull_dir := sign_vec(attacker.pos - target.pos)
 		log_line("%s, %s zeplinine kanca taktı!" % [attacker.name, target.name])
 		if abs(attacker.pos.x - target.pos.x) + abs(attacker.pos.y - target.pos.y) > 1:
 			attempt_single_push(target, pull_dir, attacker.id)
+			check_all_cargo()
 		else:
 			log_line("Kanca gerildi ama zeplinler zaten bitişik; konum değişmedi.")
 	await animate_all()
+	if active_session != session_id:
+		return
 
 	for substep in range(2):
 		var intents := {}
@@ -513,8 +539,13 @@ func resolve_slot(slot: int) -> void:
 		if intents.is_empty():
 			break
 		resolve_simultaneous_step(intents, "motor")
+		check_all_cargo()
 		await animate_all()
+		if active_session != session_id:
+			return
 		await get_tree().create_timer(0.07).timeout
+		if active_session != session_id:
+			return
 
 func resolve_wind() -> void:
 	var intents := {}
@@ -522,6 +553,9 @@ func resolve_wind() -> void:
 		if ship.hp > 0 and not ship.anchored:
 			intents[ship.id] = DIRS[wind_dir]
 	resolve_simultaneous_step(intents, "rüzgâr")
+	for ship in ships:
+		ship.anchored = false
+	check_all_cargo()
 	await animate_all()
 
 func resolve_simultaneous_step(intents: Dictionary, cause: String) -> void:
@@ -537,6 +571,10 @@ func resolve_simultaneous_step(intents: Dictionary, cause: String) -> void:
 			target_to_ids[target] = []
 		target_to_ids[target].append(id)
 	var blocked_ids := {}
+	if cause == "rüzgâr":
+		for ship in ships:
+			if ship.anchored:
+				blocked_ids[ship.id] = true
 	for target in target_to_ids:
 		var colliding_ids: Array = target_to_ids[target]
 		if colliding_ids.size() > 1:
@@ -564,47 +602,42 @@ func resolve_simultaneous_step(intents: Dictionary, cause: String) -> void:
 		for i in range(shift):
 			ordered_ids.append(ordered_ids.pop_front())
 	var moved_this_step := {}
+	var damage_ids := {}
 	for id in ordered_ids:
 		if blocked_ids.has(id) or moved_this_step.has(id):
 			continue
-		var ship: Variant = get_ship(id)
-		if ship == null or ship.hp <= 0:
-			continue
-		attempt_single_push_tracked(ship, intents[id], moved_this_step)
+		var proposed := {}
+		var failure := {}
+		if _plan_step(id, intents[id], intents, blocked_ids, moved_this_step, proposed, failure):
+			for moving_id in proposed:
+				get_ship(moving_id).pos = proposed[moving_id]
+				moved_this_step[moving_id] = true
+		elif failure.has("id"):
+			damage_ids[failure.id] = failure.reason
+	# Apply damage only after the movement transaction; respawns must not alter its inputs.
+	for id in damage_ids:
+		damage_ship(get_ship(id), 1, damage_ids[id])
 
-func attempt_single_push_tracked(ship: Dictionary, dir: Vector2i, moved: Dictionary) -> bool:
-	if dir == Vector2i.ZERO or moved.has(ship.id):
+func _plan_step(id: int, dir: Vector2i, intents: Dictionary, blocked: Dictionary,
+		moved: Dictionary, proposed: Dictionary, failure: Dictionary) -> bool:
+	if proposed.has(id):
+		return true # A cycle of three or more ships can vacate simultaneously.
+	if blocked.has(id) or moved.has(id):
 		return false
-	var target: Vector2i = ship.pos + dir
-	if not is_inside(target):
-		damage_ship(ship, 1, "kanyon duvarına çarptı")
-		return false
-	if rocks.has(target):
-		damage_ship(ship, 1, "kayalığa çarptı")
-		return false
-	var occupant: Variant = ship_at(target)
-	if occupant != null:
-		if not push_chain_tracked(occupant, dir, [ship.id], moved):
-			damage_ship(occupant, 1, "sıkıştı")
-			board.flash_ship(occupant.id)
-			return false
-	ship.pos = target
-	moved[ship.id] = true
-	return true
-
-func push_chain_tracked(ship: Dictionary, dir: Vector2i, visited: Array, moved: Dictionary) -> bool:
-	if visited.has(ship.id):
-		return false
-	visited.append(ship.id)
+	var ship: Dictionary = get_ship(id)
 	var target: Vector2i = ship.pos + dir
 	if not is_inside(target) or rocks.has(target):
+		failure.id = id
+		failure.reason = "kayalığa çarptı" if rocks.has(target) else "kanyon duvarına çarptı"
 		return false
+	if proposed.values().has(target):
+		return false
+	proposed[id] = target
 	var occupant: Variant = ship_at(target)
 	if occupant != null:
-		if not push_chain_tracked(occupant, dir, visited, moved):
+		var next_dir: Vector2i = intents.get(occupant.id, dir)
+		if not _plan_step(occupant.id, next_dir, intents, blocked, moved, proposed, failure):
 			return false
-	ship.pos = target
-	moved[ship.id] = true
 	return true
 
 func attempt_single_push(ship: Dictionary, dir: Vector2i, source_id: int = -1) -> bool:
@@ -678,6 +711,7 @@ func damage_ship(ship: Dictionary, amount: int, reason: String) -> void:
 func respawn_ship(ship: Dictionary) -> void:
 	var starts := [Vector2i(1,4), Vector2i(9,4), Vector2i(5,7), Vector2i(5,2)]
 	ship.hp = MAX_HP
+	ship.anchored = false
 	ship.cargo = {}
 	var candidate: Vector2i = starts[(ship.id-1) % starts.size()]
 	if ship_at(candidate) == null and not rocks.has(candidate):
@@ -690,23 +724,72 @@ func respawn_ship(ship: Dictionary) -> void:
 					ship.pos = c
 					return
 
-func plan_ai(_ship: Dictionary) -> Array[String]:
-	var q: Array[String] = []
-	for i in range(3):
-		var roll := rng.randf()
-		if roll < 0.34:
-			q.append(CMD_FORWARD_1)
-		elif roll < 0.50:
-			q.append(CMD_FORWARD_2)
-		elif roll < 0.66:
-			q.append(CMD_LEFT)
-		elif roll < 0.82:
-			q.append(CMD_RIGHT)
-		elif roll < 0.92:
-			q.append(CMD_HOOK)
-		else:
-			q.append(CMD_ANCHOR)
-	return q
+func plan_ai(ship: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	var predicted: Dictionary = ship.duplicate(true)
+	var available: Dictionary = pickups.duplicate(true)
+	for slot in range(3):
+		var goals: Array = [predicted.cargo.dest] if not predicted.cargo.is_empty() else available.keys()
+		var command: String = _ai_next_command(predicted.pos, predicted.facing, goals)
+		result.append(command)
+		var next: Dictionary = _ai_transition(predicted.pos, predicted.facing, command, goals)
+		if next.is_empty():
+			continue
+		predicted.pos = next.pos
+		predicted.facing = next.facing
+		if next.has("goal"):
+			if predicted.cargo.is_empty() and available.has(next.goal):
+				predicted.cargo = available[next.goal].duplicate(true)
+				available.erase(next.goal)
+			else:
+				predicted.cargo = {}
+	return result
+
+func _ai_next_command(pos: Vector2i, facing: int, goals: Array) -> String:
+	if goals.is_empty():
+		return CMD_ANCHOR
+	# Search command + wind transitions, rather than walking into a rock or wall.
+	var frontier: Array[Dictionary] = [{"pos": pos, "facing": facing, "first": ""}]
+	var visited := {Vector3i(pos.x, pos.y, facing): true}
+	var cursor: int = 0
+	while cursor < frontier.size():
+		var state: Dictionary = frontier[cursor]
+		cursor += 1
+		for command in [CMD_FORWARD_1, CMD_FORWARD_2, CMD_LEFT, CMD_RIGHT, CMD_ANCHOR]:
+			var next: Dictionary = _ai_transition(state.pos, state.facing, command, goals)
+			if next.is_empty():
+				continue
+			var first: String = command if state.first == "" else state.first
+			if next.has("goal"):
+				return first
+			var key := Vector3i(next.pos.x, next.pos.y, next.facing)
+			if not visited.has(key):
+				visited[key] = true
+				next.first = first
+				frontier.append(next)
+	# If this wind makes every route unsafe, shelter until the next round.
+	return CMD_ANCHOR
+
+func _ai_transition(pos: Vector2i, facing: int, command: String, goals: Array) -> Dictionary:
+	var next := {"pos": pos, "facing": facing}
+	if command == CMD_LEFT:
+		next.facing = (facing + 3) % 4
+	elif command == CMD_RIGHT:
+		next.facing = (facing + 1) % 4
+	var steps: int = 2 if command == CMD_FORWARD_2 else (1 if command == CMD_FORWARD_1 else 0)
+	for step in range(steps):
+		next.pos += DIRS[next.facing]
+		if not is_inside(next.pos) or rocks.has(next.pos):
+			return {}
+		if goals.has(next.pos) and not next.has("goal"):
+			next.goal = next.pos
+	if command != CMD_ANCHOR:
+		next.pos += DIRS[wind_dir]
+		if not is_inside(next.pos) or rocks.has(next.pos):
+			return {}
+	if goals.has(next.pos) and not next.has("goal"):
+		next.goal = next.pos
+	return next
 
 func check_victory() -> bool:
 	for ship in ships:
