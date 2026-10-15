@@ -43,3 +43,11 @@ godot --headless --path . --script tests/regression.gd
 
 Testler yeniden başlatma, tur iptali, çapa, ara hücre kargosu, teslimat, yeniden doğma,
 çarpışmalar, domino itişi, eşzamanlı hareket ve bot rotalarını kapsar.
+
+## Görsel tasarım
+
+Oyun ekranı petrol mavisi ve pirinç paleti, vadi konturları, vektör kaya/komut görselleri ve okunaklı bir uçuş konsolu kullanır. Seçili komuta tıklayarak sıradan çıkarabilirsiniz.
+
+Görsel düzen `scripts/presentation.gd` üzerinden uygulanır; vektör kaynaklar `assets/ui/` içindedir. Ana sahnenin çalışma zamanındaki görünümü aşağıdadır.
+
+![Oyun ekranı](docs/premium-ui.webp)

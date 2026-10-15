@@ -30,6 +30,18 @@ func run() -> void:
 	game._on_start_pressed()
 	verify(game.ships.size() == 4 and game.pickups.size() == 4, "Initial ships and contracts")
 
+	var cards = game.get_node("GameLayer/RightPanel/CardsPanel")
+	cards.get_node("Forward1Tile").pressed.emit()
+	cards.get_node("LeftTile").pressed.emit()
+	verify(game.player_queue.size() == 2, "New command tiles connect to game input")
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	game.command_box.get_child(0).gui_input.emit(click)
+	verify(game.player_queue.size() == 1 and game.player_queue[0] == game.CMD_LEFT, "Selected slot removes its own command")
+	verify(game.board.get_node("GridLayer").position == Vector2.ZERO, "Grid shares the tokens' coordinate origin")
+	game._on_clear_pressed()
+
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
 	game._on_restart_pressed()

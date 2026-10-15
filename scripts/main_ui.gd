@@ -111,6 +111,7 @@ func build_game_ui() -> void:
 	$GameLayer/RightPanel/RestartButton.pressed.connect(_on_restart_pressed)
 	$GameLayer/RightPanel/MenuButton.pressed.connect(show_menu)
 	game_built = true
+	preload("res://scripts/presentation.gd").apply(self)
 
 func setup_game() -> void:
 	session_id += 1
@@ -154,8 +155,8 @@ func setup_game() -> void:
 	new_wind()
 	refresh_ui()
 	log_clear()
-	log_line("[b]Oyun başladı.[/b] Dört pilot dört gerçek köşe hücresinde, eşit koşullarda başlıyor.")
-	log_line("Perspektifli düz grid hareket mesafesini saymak içindir; kamera tahtaya yukarıdan eğimli bakar.")
+	log_line("[color=#d5b47c][b]Sefer başladı.[/b][/color] Rüzgârı oku, rotanı belirle.")
+	log_line("Bir kontrat al ve işaretli iskeleye teslim et: [color=#d5b47c]+5 altın.[/color]")
 	log_line("Ortadaki kontratlar ortaktır. İlk ulaşan pilot kontratı kapar.")
 
 func _reset_contracts() -> void:
@@ -239,12 +240,15 @@ func refresh_ui() -> void:
 		var slot_texture: TextureRect = queue_textures[i]
 		var slot_number: Label = queue_numbers[i]
 		if i < player_queue.size():
-			slot_texture.texture = COMMAND_TEXTURES[player_queue[i]]
+			slot_texture.texture = preload("res://scripts/presentation.gd").command_texture(player_queue[i])
 			slot_texture.visible = true
+			slot_texture.get_parent().get_node("Caption").text = player_queue[i].to_upper()
+			slot_texture.get_parent().get_node("Caption").show()
 			slot_number.visible = false
 		else:
 			slot_texture.texture = null
 			slot_texture.visible = false
+			slot_texture.get_parent().get_node("Caption").hide()
 			slot_number.visible = true
 
 	for i in range(pilot_rows.size()):
