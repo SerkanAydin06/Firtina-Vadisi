@@ -13,7 +13,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 - [x] **Kontrat ve hedef takibi**
   - Taşınan kontratın hedef iskelesini vurgula; yük, hedef ve ödülü okunaklı göster.
   - Kontrat/iskeleden bilgi alınabilsin; teslimat ve yeniden doğmada eski vurgu temizlensin.
-- [ ] **Hareket ve olay efektleri**
+- [x] **Hareket ve olay efektleri**
   - Yumuşak zeplin dönüşü, motor izi, kanca halatı, çarpışma kıvılcımı ve teslimat parlaması.
   - Efektler oturum değişiminde temizlensin, girdiyi engellemesin; hareketi azalt seçeneği olsun.
 

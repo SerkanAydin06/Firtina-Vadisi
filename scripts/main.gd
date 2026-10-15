@@ -512,6 +512,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 		var target: Dictionary = pair[1]
 		if find_hook_target(attacker) != target:
 			continue
+		board.show_hook(attacker.id, target.id)
 		var pull_dir := sign_vec(attacker.pos - target.pos)
 		log_line("%s, %s zeplinine kanca taktı!" % [attacker.name, target.name])
 		if abs(attacker.pos.x - target.pos.x) + abs(attacker.pos.y - target.pos.y) > 1:
@@ -538,7 +539,15 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 				intents[ship.id] = DIRS[ship.facing]
 		if intents.is_empty():
 			break
+		var origins: Dictionary = {}
+		for ship in ships:
+			origins[ship.id] = ship.pos
 		resolve_simultaneous_step(intents, "motor")
+		for ship in ships:
+			var origin: Vector2i = origins[ship.id]
+			var delta: Vector2i = ship.pos - origin
+			if intents.has(ship.id) and absi(delta.x) + absi(delta.y) == 1:
+				board.show_effect("motor", board.cell_center(origin), board.cell_center(ship.pos))
 		check_all_cargo()
 		await animate_all()
 		if active_session != session_id:

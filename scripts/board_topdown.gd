@@ -236,10 +236,10 @@ func update_ship(id: int, cell: Vector2i, new_facing: int, new_hp: int, has_carg
 		return null
 	var token: AirshipToken = tokens[id]
 	token.visible = true
-	token.set_state(new_facing, new_hp, has_cargo)
+	token.set_state(new_facing, new_hp, has_cargo, animate and not reduced_motion)
 	token.set_meta("grid_cell", cell)
 	var target: Vector2 = _token_position(cell, token)
-	if not animate:
+	if not animate or reduced_motion:
 		token.position = target
 		return null
 	var tween: Tween = create_tween()

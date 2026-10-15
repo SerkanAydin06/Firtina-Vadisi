@@ -46,11 +46,27 @@ func setup(id: int, color: Color) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_sync_visuals()
 
-func set_state(new_facing: int, new_hp: int, cargo: bool) -> void:
+var rotation_tween: Tween
+
+func cancel_motion() -> void:
+	if rotation_tween != null and rotation_tween.is_valid():
+		rotation_tween.kill()
+	rotation_tween = null
+	_sync_visuals()
+
+func set_state(new_facing: int, new_hp: int, cargo: bool, animate: bool = false) -> void:
+	var holder := get_node_or_null("SpriteHolder") as Control
+	var start: float = holder.rotation if holder != null else 0.0
+	cancel_motion()
 	facing = new_facing
 	hp = new_hp
 	has_cargo = cargo
 	_sync_visuals()
+	if animate and holder != null:
+		var target := start + wrapf(holder.rotation - start, -PI, PI)
+		holder.rotation = start
+		rotation_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+		rotation_tween.tween_property(holder, "rotation", target, 0.22)
 
 func _sync_visuals() -> void:
 	if not is_inside_tree():

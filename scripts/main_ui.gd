@@ -29,6 +29,7 @@ var pilot_name_labels: Array[Label] = []
 var pilot_hp_labels: Array[Label] = []
 var pilot_gold_labels: Array[Label] = []
 var pilot_cargo_labels: Array[Label] = []
+var reduced_motion: bool = false
 var contract_serial: int = 0
 var route_overlay: Node2D
 var route_hint: Label
@@ -45,6 +46,7 @@ func build_menu() -> void:
 	$MenuLayer/SettingsButton.pressed.connect(_on_settings_pressed)
 	$MenuLayer/ExitButton.pressed.connect(_on_exit_pressed)
 	_load_settings()
+	$MenuLayer/SettingsPopup/Options/ReduceMotion.toggled.connect(_set_reduced_motion)
 	$MenuLayer/SettingsPopup/Options/Fullscreen.toggled.connect(_set_fullscreen)
 	$MenuLayer/SettingsPopup/Options/Pause.value_changed.connect(_set_resolution_pause)
 	$MenuLayer/SettingsPopup/Options/Close.pressed.connect(func() -> void: settings_popup.hide())
@@ -52,6 +54,7 @@ func build_menu() -> void:
 func build_game_ui() -> void:
 	game_layer = $GameLayer as Control
 	board = $GameLayer/BoardFrame/Board as StormBoard
+	board.set_reduced_motion(reduced_motion)
 	round_label = $GameLayer/RightPanel/TopHUD/RoundLabel as Label
 	wind_label = $GameLayer/RightPanel/WindPanel/WindLabel as Label
 	queue_label = $GameLayer/RightPanel/ProgramPanel/QueueSummary as Label
@@ -212,6 +215,7 @@ func check_all_cargo() -> void:
 			var value: int = int(ship.cargo.value)
 			var completed_name: String = str(ship.cargo.name)
 			var source: Vector2i = Vector2i(ship.cargo.source)
+			board.show_effect("delivery", board.cell_center(ship.pos), Vector2.ZERO, value)
 			ship.coins += value
 			ship.cargo = {}
 			respawn_sources.append(source)
@@ -309,6 +313,8 @@ func _scroll_log_to_bottom() -> void:
 func _load_settings() -> void:
 	var config := ConfigFile.new()
 	config.load("user://settings.cfg")
+	reduced_motion = bool(config.get_value("game", "reduced_motion", false))
+	$MenuLayer/SettingsPopup/Options/ReduceMotion.set_pressed_no_signal(reduced_motion)
 	var fullscreen: bool = bool(config.get_value("display", "fullscreen", true))
 	resolution_pause = clampf(float(config.get_value("game", "resolution_pause", 0.28)), 0.1, 1.0)
 	$MenuLayer/SettingsPopup/Options/Fullscreen.set_pressed_no_signal(fullscreen)
@@ -320,6 +326,7 @@ func _save_settings() -> void:
 	var config := ConfigFile.new()
 	config.set_value("display", "fullscreen", $MenuLayer/SettingsPopup/Options/Fullscreen.button_pressed)
 	config.set_value("game", "resolution_pause", resolution_pause)
+	config.set_value("game", "reduced_motion", reduced_motion)
 	config.save("user://settings.cfg")
 
 func _set_fullscreen(enabled: bool) -> void:
@@ -356,3 +363,9 @@ func show_menu() -> void:
 func _refresh_contract_tracking() -> void:
 	if is_instance_valid(contract_tracker):
 		contract_tracker.refresh()
+
+func _set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
+	if is_instance_valid(board):
+		board.set_reduced_motion(enabled)
+	_save_settings()

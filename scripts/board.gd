@@ -9,6 +9,9 @@ var rocks: Array[Vector2i] = []
 var pickup_cells: Dictionary = {}
 var delivery_cells: Dictionary = {}
 var tokens: Dictionary = {}
+var reduced_motion: bool = false
+var effects: Node2D
+
 var active_tweens: Array[Tween] = []
 
 func cancel_animations() -> void:
@@ -16,8 +19,11 @@ func cancel_animations() -> void:
 		if tween.is_valid():
 			tween.kill()
 	active_tweens.clear()
+	if is_instance_valid(effects):
+		effects.clear()
 	for token in tokens.values():
 		token.modulate = Color.WHITE
+		token.cancel_motion()
 
 func track_tween(tween: Tween) -> void:
 	active_tweens = active_tweens.filter(func(item: Tween) -> bool: return item.is_valid())
@@ -53,9 +59,9 @@ func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool,
 	if not tokens.has(id):
 		return null
 	var token: AirshipToken = tokens[id]
-	token.set_state(facing, hp, has_cargo)
+	token.set_state(facing, hp, has_cargo, animate and not reduced_motion)
 	var target: Vector2 = cell_to_pixel(cell)
-	if not animate:
+	if not animate or reduced_motion:
 		token.position = target
 		return null
 	var tween: Tween = create_tween()
@@ -65,9 +71,10 @@ func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool,
 	return tween
 
 func flash_ship(id: int) -> void:
-	if not tokens.has(id):
+	if reduced_motion or not tokens.has(id):
 		return
 	var token: AirshipToken = tokens[id]
+	show_effect("spark", token.position + token.size * 0.5)
 	var tween: Tween = create_tween()
 	track_tween(tween)
 	tween.tween_property(token, "modulate", Color(1,0.35,0.35), 0.08)
@@ -111,3 +118,25 @@ func _draw() -> void:
 		var rr: Rect2 = Rect2(center - Vector2.ONE * cell_size * 0.17, Vector2.ONE * cell_size * 0.34)
 		draw_rect(rr, Color(0.18,0.78,0.75,0.80), true)
 		draw_rect(rr.grow(4), Color(0.67,1.0,0.96,0.75), false, 2)
+
+func set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
+	cancel_animations()
+
+func show_effect(kind: String, start: Vector2, finish: Vector2 = Vector2.ZERO, value: int = 0) -> void:
+	if reduced_motion or Engine.is_editor_hint():
+		return
+	if not is_instance_valid(effects):
+		effects = preload("res://scripts/board_effects.gd").new()
+		effects.z_index = 350
+		add_child(effects)
+	effects.emit_effect(kind, start, finish, value)
+
+func show_hook(attacker: int, target: int) -> void:
+	if tokens.has(attacker) and tokens.has(target):
+		var a: Control = tokens[attacker]
+		var b: Control = tokens[target]
+		show_effect("hook", a.position + a.size * 0.5, b.position + b.size * 0.5)
+
+func cell_center(cell: Vector2i) -> Vector2:
+	return cell_to_pixel(cell) + Vector2.ONE * cell_size * 0.5

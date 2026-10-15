@@ -45,6 +45,7 @@ func run() -> void:
 	verify(game.route_overlay.steps.is_empty(), "Clear removes preview")
 	_test_route_prediction()
 	_test_contract_tracking()
+	await _test_effects()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -163,16 +164,20 @@ func run() -> void:
 	game.player_queue.assign([game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR])
 	await game._on_execute_pressed()
 	verify(game.round_no == 2 and not game.resolving, "Complete round advances and unlocks input")
+	var original_motion: bool = game.reduced_motion
 	var original_pause: float = game.resolution_pause
 	var options = game.get_node("MenuLayer/SettingsPopup/Options")
 	var original_fullscreen: bool = options.get_node("Fullscreen").button_pressed
 	options.get_node("Fullscreen").button_pressed = not original_fullscreen
 	options.get_node("Pause").value = 0.65
+	options.get_node("ReduceMotion").button_pressed = not original_motion
 	game._load_settings()
+	verify(game.reduced_motion == not original_motion and game.board.reduced_motion == not original_motion, "Reduced motion setting persists and applies")
 	verify(is_equal_approx(game.resolution_pause, 0.65), "Pace setting persists")
 	verify(options.get_node("Fullscreen").button_pressed == not original_fullscreen, "Fullscreen setting persists")
 	options.get_node("Fullscreen").button_pressed = original_fullscreen
 	options.get_node("Pause").value = original_pause
+	options.get_node("ReduceMotion").button_pressed = original_motion
 	game.board.cancel_animations()
 	game.queue_free()
 	await process_frame
@@ -259,3 +264,44 @@ func _test_contract_tracking() -> void:
 	verify(tracker.target_cell == null and not tracker.panel.visible, "Menu clears tracking")
 	game._on_start_pressed()
 	verify(tracker.target_cell == null and tracker.panel.visible, "New match starts with empty visible tracker")
+
+func _test_effects() -> void:
+	var board = game.board
+	var original_motion: bool = board.reduced_motion
+	board.set_reduced_motion(false)
+	var token = board.tokens[1]
+	var holder: Control = token.get_node("SpriteHolder")
+	token.set_state(3, 3, false)
+	var start: float = holder.rotation
+	token.set_state(0, 3, false, true)
+	verify(is_equal_approx(holder.rotation, start), "Rotation starts at current heading without snapping")
+	await token.rotation_tween.finished
+	verify(is_equal_approx(holder.rotation, TAU), "North wrap turns through shortest quarter circle")
+	board.show_hook(1, 2)
+	board.flash_ship(1)
+	verify(board.effects.events.size() == 2, "Hook and collision produce effects")
+	await create_timer(0.5).timeout
+	verify(board.effects.events.is_empty() and not board.effects.is_processing(), "Expired effects stop processing")
+	for i in range(60):
+		board.show_effect("motor", Vector2.ZERO, Vector2.ONE)
+	verify(board.effects.events.size() <= 48, "Effect history stays bounded")
+	token.set_state(1, 3, false, true)
+	game.show_menu()
+	verify(board.effects.events.is_empty() and not board.effects.is_processing(), "Menu cancels all effects")
+	verify(token.rotation_tween == null, "Menu cancels rotation")
+	game._on_start_pressed()
+	game.ships[0].pos = Vector2i(4, 3)
+	game.check_all_cargo()
+	game.ships[0].pos = game.ships[0].cargo.dest
+	game.check_all_cargo()
+	verify(board.effects.events.size() == 1 and board.effects.events[0].kind == "delivery", "Actual delivery emits reward effect")
+	board.set_reduced_motion(true)
+	board.show_hook(1, 2)
+	board.flash_ship(1)
+	board.show_effect("delivery", Vector2.ZERO)
+	verify(board.effects.events.is_empty(), "Reduced motion cancels and suppresses effects")
+	board.update_ship(1, Vector2i(1, 1), 2, 3, false, true)
+	verify(token.rotation_tween == null and is_equal_approx(holder.rotation, PI), "Reduced motion applies heading instantly")
+	game._on_start_pressed()
+	verify(board.effects.events.is_empty(), "Restart does not restore old effects")
+	board.set_reduced_motion(original_motion)
