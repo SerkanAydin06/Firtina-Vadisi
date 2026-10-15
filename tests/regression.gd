@@ -46,9 +46,11 @@ func run() -> void:
 	_test_route_prediction()
 	_test_contract_tracking()
 	await _test_effects()
+	await _test_turn_presentation()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
+	verify(game.turn_phase == "finished" and game.active_slot == -1, "Victory clears active turn phase")
 	game._on_restart_pressed()
 	for button in get_nodes_in_group("command_buttons"):
 		verify(not button.disabled, "Cards unlocked after victory restart")
@@ -153,10 +155,12 @@ func run() -> void:
 	verify(game.route_overlay.steps.is_empty(), "Preview hides while resolving")
 	await create_timer(0.1).timeout
 	game.show_menu()
+	verify(game.turn_phase == "planning" and game.active_slot == -1, "Menu clears turn highlight")
 	game._on_start_pressed()
 	var start_positions: Array = game.ships.map(func(ship: Dictionary): return ship.pos)
 	await create_timer(2.0).timeout
 	verify(game.round_no == 1 and not game.resolving, "Old round cancelled after menu/start")
+	verify(game.turn_phase == "planning" and game.active_slot == -1, "Old round cannot restore stale highlight")
 	verify(game.ships.map(func(ship: Dictionary): return ship.pos) == start_positions, "Old round cannot change new positions")
 	for ship in game.ships:
 		verify(game.board.tokens[ship.id].get_meta("grid_cell") == ship.pos, "Visual position matches new state")
@@ -305,3 +309,27 @@ func _test_effects() -> void:
 	game._on_start_pressed()
 	verify(board.effects.events.is_empty(), "Restart does not restore old effects")
 	board.set_reduced_motion(original_motion)
+
+func _test_turn_presentation() -> void:
+	game.setup_game()
+	game.player_queue.assign([game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR])
+	game.refresh_ui()
+	var phases: Array[String] = []
+	game._on_execute_pressed()
+	for frame in range(300):
+		if not game.resolving:
+			break
+		var phase: String = "%s:%d" % [game.turn_phase, game.active_slot]
+		if phases.is_empty() or phases.back() != phase:
+			phases.append(phase)
+			var card = game.command_box.get_child(game.active_slot)
+			verify(card.get_theme_stylebox("panel") != game.slot_styles[game.active_slot], "Active command gets distinct border")
+			verify(game.execute_button.disabled, "Phase presentation does not unlock input")
+			if game.turn_phase == "wind":
+				verify(game.get_node("GameLayer/RightPanel/WindPanel").get_theme_stylebox("panel") != game.wind_style, "Wind phase highlights compass")
+		await process_frame
+	verify(phases == ["command:0", "wind:0", "command:1", "wind:1", "command:2", "wind:2"], "Real round presents all six phases in order")
+	verify(not game.resolving and game.turn_phase == "planning" and game.active_slot == -1, "Round returns to planning")
+	for i in range(3):
+		verify(game.command_box.get_child(i).get_theme_stylebox("panel") == game.slot_styles[i], "Planning restores slot style")
+	verify(game.get_node("GameLayer/RightPanel/WindPanel").get_theme_stylebox("panel") == game.wind_style, "Planning restores compass style")

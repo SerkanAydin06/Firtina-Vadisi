@@ -451,6 +451,7 @@ func execute_round() -> void:
 		log_line("%s: %s | %s | %s" % [ship.name, ship.queue[0], ship.queue[1], ship.queue[2]])
 
 	for slot in range(3):
+		present_turn("command", slot)
 		log_line("\n[i]Komut %d çözülüyor...[/i]" % (slot + 1))
 		await resolve_slot(slot, active_session)
 		if active_session != session_id or game_over:
@@ -460,6 +461,7 @@ func execute_round() -> void:
 		await get_tree().create_timer(resolution_pause).timeout
 		if active_session != session_id:
 			return
+		present_turn("wind", slot)
 		log_line("Rüzgâr itişi: %s" % DIR_NAMES[wind_dir])
 		await resolve_wind()
 		if active_session != session_id:
@@ -885,3 +887,6 @@ func log_clear() -> void:
 
 func log_line(text: String) -> void:
 	info_label.append_text(text + "\n")
+
+func present_turn(_phase: String, _slot: int = -1) -> void:
+	pass
