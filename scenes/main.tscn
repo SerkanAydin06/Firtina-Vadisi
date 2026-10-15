@@ -194,7 +194,7 @@ stretch_mode = 5
 visible = false
 layout_mode = 0
 offset_left = 660.0
-offset_top = 805.0
+offset_top = 755.0
 offset_right = 1260.0
 offset_bottom = 1015.0
 theme_override_styles/panel = SubResource("PanelOuter")
@@ -213,6 +213,10 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Tam ekran"
 button_pressed = true
+
+[node name="ReduceMotion" type="CheckButton" parent="MenuLayer/SettingsPopup/Options"]
+layout_mode = 2
+text = "Hareketi azalt"
 
 [node name="SpeedLabel" type="Label" parent="MenuLayer/SettingsPopup/Options"]
 layout_mode = 2
