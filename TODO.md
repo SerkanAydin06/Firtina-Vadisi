@@ -5,7 +5,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 
 ## P1 — oynanışı anlaşılır ve canlı hâle getir
 
-- [ ] **Rota önizlemesi**
+- [x] **Rota önizlemesi**
   - Seçili üç komutun motor ve rüzgâr adımlarını ayrı işaretlerle göster.
   - Duvar/kaya ve mevcut gemi konumlarından doğan çarpışma riskini belirt.
   - Rakiplerin gizli komutları bilinmediği için önizlemenin tahmini olduğunu açıkça göster.

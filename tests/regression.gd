@@ -40,7 +40,10 @@ func run() -> void:
 	game.command_box.get_child(0).gui_input.emit(click)
 	verify(game.player_queue.size() == 1 and game.player_queue[0] == game.CMD_LEFT, "Selected slot removes its own command")
 	verify(game.board.get_node("GridLayer").position == Vector2.ZERO, "Grid shares the tokens' coordinate origin")
+	verify(not game.route_overlay.steps.is_empty(), "Preview updates after selecting/removing commands")
 	game._on_clear_pressed()
+	verify(game.route_overlay.steps.is_empty(), "Clear removes preview")
+	_test_route_prediction()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -145,6 +148,7 @@ func run() -> void:
 	game.setup_game()
 	game.player_queue.assign([game.CMD_FORWARD_1, game.CMD_LEFT, game.CMD_FORWARD_2])
 	game._on_execute_pressed()
+	verify(game.route_overlay.steps.is_empty(), "Preview hides while resolving")
 	await create_timer(0.1).timeout
 	game.show_menu()
 	game._on_start_pressed()
@@ -173,3 +177,36 @@ func run() -> void:
 	await process_frame
 	print("REGRESSION: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
+
+func _test_route_prediction() -> void:
+	var preview = preload("res://scripts/route_preview.gd")
+	var ship: Dictionary = game.make_ship(1, "Test", Vector2i(4, 4), 1, true, Color.WHITE)
+	var ships: Array = [ship]
+	var original: Array = ships.duplicate(true)
+	var result: Dictionary = preview.build(ship, [game.CMD_FORWARD_2], 2, [], ships, game.GRID_SIZE)
+	verify(result.steps.size() == 3, "Forward 2 previews two motor steps and one wind")
+	verify(result.steps[2].to == Vector2i(6, 5) and result.steps[2].kind == "wind", "Wind is projected after motor")
+	verify(ships == original, "Prediction leaves the live ship state untouched")
+	result = preview.build(ship, [game.CMD_LEFT, game.CMD_FORWARD_1], 1, [], ships, game.GRID_SIZE)
+	verify(result.steps[-1].to == Vector2i(6, 3), "Turn changes predicted motor heading")
+	result = preview.build(ship, [game.CMD_ANCHOR, game.CMD_RIGHT], 1, [], ships, game.GRID_SIZE)
+	verify(result.steps.size() == 3 and result.steps[-1].to == Vector2i(5, 4), "Anchor blocks only its own wind")
+	result = preview.build(ship, [game.CMD_FORWARD_2], 2, [Vector2i(5, 4)], ships, game.GRID_SIZE)
+	verify(result.steps[0].risk and result.steps[1].from == Vector2i(4, 4), "Rock collision keeps predicted position")
+	verify(result.steps[-1].to == Vector2i(4, 5), "Wind still applies after nonfatal collision")
+	ship.hp = 1
+	result = preview.build(ship, [game.CMD_FORWARD_2], 2, [Vector2i(5, 4)], ships, game.GRID_SIZE)
+	verify(result.steps.size() == 1 and not result.reason.is_empty(), "Fatal obstacle ends prediction before respawn")
+	ship.hp = 3
+	ships.append(game.make_ship(2, "Other", Vector2i(5, 4), 0, false, Color.WHITE))
+	result = preview.build(ship, [game.CMD_FORWARD_1, game.CMD_RIGHT], 2, [], ships, game.GRID_SIZE)
+	verify(result.steps.size() == 1 and result.steps[0].risk, "Occupied cell marks risk and stops uncertain route")
+	var unchanged: Dictionary = result.duplicate(true)
+	ships[1].queue = [game.CMD_LEFT, game.CMD_FORWARD_2, game.CMD_HOOK]
+	result = preview.build(ship, [game.CMD_FORWARD_1, game.CMD_RIGHT], 2, [], ships, game.GRID_SIZE)
+	verify(result == unchanged, "Opponent hidden queues never influence preview")
+	result = preview.build(ship, [game.CMD_HOOK], 2, [], ships, game.GRID_SIZE)
+	verify(result.steps[0].kind == "hook" and not result.reason.is_empty(), "Hook target is marked as uncertain")
+	ship.pos = Vector2i(10, 4)
+	result = preview.build(ship, [game.CMD_FORWARD_1], 2, [], [ship], game.GRID_SIZE)
+	verify(result.steps[0].risk and result.steps[-1].to == Vector2i(10, 5), "Boundary blocks motor, then wind proceeds")
