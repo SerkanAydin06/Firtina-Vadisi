@@ -79,9 +79,9 @@ func build_game_ui() -> void:
 	info_label.scroll_following = true
 
 	queue_textures = [
-		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Texture as TextureRect,
-		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2/Texture as TextureRect,
-		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3/Texture as TextureRect
+		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Selected/Texture as TextureRect,
+		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2/Selected/Texture as TextureRect,
+		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3/Selected/Texture as TextureRect
 	]
 	queue_numbers = [
 		$GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Number as Label,
@@ -131,7 +131,7 @@ func build_game_ui() -> void:
 	$GameLayer/RightPanel/RestartButton.pressed.connect(_on_restart_pressed)
 	$GameLayer/RightPanel/MenuButton.pressed.connect(show_menu)
 	game_built = true
-	preload("res://scripts/presentation.gd").apply(self)
+	_bind_scene_controls()
 	for slot in command_box.get_children():
 		slot_styles.append(slot.get_theme_stylebox("panel"))
 	wind_style = $GameLayer/RightPanel/WindPanel.get_theme_stylebox("panel")
@@ -143,9 +143,7 @@ func build_game_ui() -> void:
 	route_overlay.z_index = 400
 	board.add_child(route_overlay)
 	board.resized.connect(route_overlay.queue_redraw)
-	route_hint = preload("res://scripts/presentation.gd").label(board, "", 440, 8, 820, 25, 12, Color("91a8af"))
-	route_hint.name = "RouteHint"
-	route_hint.z_index = 401
+	route_hint = board.get_node("RouteHint") as Label
 	contract_tracker = preload("res://scripts/contract_tracker.gd").new()
 	add_child(contract_tracker)
 	contract_tracker.setup(self)
@@ -473,3 +471,19 @@ func _set_effects_volume(value: float) -> void:
 	effects_volume = clampf(value, 0.0, 1.0)
 	_refresh_audio_settings()
 	_save_settings()
+
+func _bind_scene_controls() -> void:
+	$GameLayer/PilotCount.text = ("4" if start_with_four_ships else "3") + " PİLOT     /     12 ALTIN"
+	var keys := ["Forward1", "Forward2", "Left", "Right", "Hook", "Anchor"]
+	for i in range(keys.size()):
+		var tile: Button = get_node("GameLayer/RightPanel/CardsPanel/" + keys[i] + "Tile")
+		tile.pressed.connect(_on_command_pressed.bind(COMMANDS[i]))
+		tile.draw.connect(func() -> void: tile.modulate = Color(0.5, 0.6, 0.65) if tile.disabled else Color.WHITE)
+	for i in range(command_box.get_child_count()):
+		command_box.get_child(i).gui_input.connect(_on_slot_input.bind(i))
+
+func _on_slot_input(event: InputEvent, slot: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if not resolving and not game_over and slot < player_queue.size():
+			player_queue.remove_at(slot)
+			refresh_ui()

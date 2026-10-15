@@ -26,7 +26,8 @@ Kapsam: bu depo. Güncel kullanıcı isteği ve platform kuralları önceliklidi
 - `project.godot`, `scenes/main.tscn`: Godot 4.6+, giriş sahnesi.
 - `scripts/main.gd`: tur, hareket/itiş, rüzgâr, botlar, hasar, zafer.
 - `scripts/main_ui.gd`: aktif arayüz, kontratlar, başlangıçlar ve ayarlar.
-- `scripts/presentation.gd`: çalışma zamanında uygulanan görsel düzen.
+- `scenes/main.tscn`, `scenes/board.tscn`: editör ve oyun için ortak görsel düzen; yeni statik arayüzü sahnede düzenle.
+- `scripts/presentation.gd`: ortak renk/stil yardımcıları ve komut ikonları.
 - `scripts/board_topdown.gd`, `scripts/board.gd`: tahta, koordinatlar ve animasyonlar.
 - `scripts/airship_token.gd`, `scenes/airship_token.tscn`: zeplin görselleri.
 - `assets/ui/`: yeni SVG görselleri; `assets/generated/`: mevcut PNG'ler.
