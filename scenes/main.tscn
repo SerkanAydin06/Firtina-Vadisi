@@ -1,21 +1,126 @@
-[gd_scene format=3 uid="uid://bc5q0g0570cnc"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://dw2dfds1vuse6" path="res://scripts/main_ui.gd" id="1_main"]
-[ext_resource type="PackedScene" uid="uid://7x2db2cqeplr" path="res://scenes/board.tscn" id="2_board"]
-[ext_resource type="Texture2D" uid="uid://d1ydmcgu2150m" path="res://assets/generated/menu_background.png" id="3_menu_bg"]
-[ext_resource type="Texture2D" uid="uid://b6jrrjhbrwd3c" path="res://assets/generated/logo.png" id="4_logo"]
-[ext_resource type="Texture2D" uid="uid://5auuurhii33v" path="res://assets/generated/start_normal.png" id="5_start"]
-[ext_resource type="Texture2D" uid="uid://d4hbiyw5y7mdj" path="res://assets/generated/settings_normal.png" id="6_muem4"]
-[ext_resource type="Texture2D" uid="uid://bxo22qqvuv1at" path="res://assets/generated/start_hover.png" id="6_start_hover"]
-[ext_resource type="Texture2D" uid="uid://ct2i70yjtenqy" path="res://assets/generated/settings_hover.png" id="7_dp3eg"]
-[ext_resource type="Texture2D" uid="uid://bmfd4ggnhscoq" path="res://assets/generated/exit_normal.png" id="9_exit"]
-[ext_resource type="Texture2D" uid="uid://1bwyj0jqv87b" path="res://assets/generated/exit_hover.png" id="10_exit_hover"]
-[ext_resource type="Texture2D" uid="uid://30kjy6s6kajs" path="res://assets/generated/cmd_forward1.png" id="11_f1"]
-[ext_resource type="Texture2D" uid="uid://cq554buu6348f" path="res://assets/generated/cmd_forward2.png" id="12_f2"]
-[ext_resource type="Texture2D" uid="uid://bxokem1r025py" path="res://assets/generated/cmd_left.png" id="13_left"]
-[ext_resource type="Texture2D" uid="uid://b48vu5gh40nvv" path="res://assets/generated/cmd_right.png" id="14_right"]
-[ext_resource type="Texture2D" uid="uid://dsjek63xjmelg" path="res://assets/generated/cmd_hook.png" id="15_hook"]
-[ext_resource type="Texture2D" uid="uid://dtbqt0n23x0y4" path="res://assets/generated/cmd_anchor.png" id="16_anchor"]
+[ext_resource type="Script" path="res://scripts/main_ui.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/board.tscn" id="2_board"]
+[ext_resource type="Texture2D" path="res://assets/generated/menu_background.png" id="3_menu_bg"]
+[ext_resource type="Texture2D" path="res://assets/generated/logo.png" id="4_logo"]
+[ext_resource type="Texture2D" path="res://assets/generated/start_normal.png" id="5_start"]
+[ext_resource type="Texture2D" path="res://assets/generated/settings_normal.png" id="6_muem4"]
+[ext_resource type="Texture2D" path="res://assets/generated/start_hover.png" id="6_start_hover"]
+[ext_resource type="Texture2D" path="res://assets/generated/settings_hover.png" id="7_dp3eg"]
+[ext_resource type="Texture2D" path="res://assets/generated/exit_normal.png" id="9_exit"]
+[ext_resource type="Texture2D" path="res://assets/generated/exit_hover.png" id="10_exit_hover"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_forward1.png" id="11_f1"]
+[ext_resource type="Script" path="res://scripts/board_topdown.gd" id="11_pm3ni"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_forward2.png" id="12_f2"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_left.png" id="13_left"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_right.png" id="14_right"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_hook.png" id="15_hook"]
+[ext_resource type="Texture2D" path="res://assets/generated/cmd_anchor.png" id="16_anchor"]
+[ext_resource type="Texture2D" path="res://assets/ui/forward1.svg" id="18_y6deb"]
+[ext_resource type="Texture2D" path="res://assets/ui/forward2.svg" id="19_og1vs"]
+[ext_resource type="Texture2D" path="res://assets/ui/left.svg" id="20_2wyq8"]
+[ext_resource type="Texture2D" path="res://assets/ui/right.svg" id="21_vxglm"]
+[ext_resource type="Texture2D" path="res://assets/ui/hook.svg" id="22_2f3dj"]
+[ext_resource type="Texture2D" path="res://assets/ui/anchor.svg" id="23_yq6so"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fv21b"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tel4y"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkpxi"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09411765, 0.1764706, 0.21568628, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5q0nq"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgi5k"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8jky"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.13725491, 0.17254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="Theme" id="Theme_kmb1v"]
+default_font_size = 18
+Button/colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+Button/colors/font_disabled_color = Color(0.36862746, 0.45490196, 0.4862745, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_fv21b")
+Button/styles/focus = SubResource("StyleBoxFlat_tel4y")
+Button/styles/hover = SubResource("StyleBoxFlat_qkpxi")
+Button/styles/normal = SubResource("StyleBoxFlat_5q0nq")
+Button/styles/pressed = SubResource("StyleBoxFlat_dgi5k")
+Label/colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+TooltipLabel/colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+TooltipLabel/font_sizes/font_size = 16
+TooltipPanel/styles/panel = SubResource("StyleBoxFlat_j8jky")
 
 [sub_resource type="StyleBoxFlat" id="PanelOuter"]
 bg_color = Color(0.05, 0.047, 0.043, 0.98)
@@ -29,78 +134,523 @@ corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
-[sub_resource type="StyleBoxFlat" id="TableHeader"]
-bg_color = Color(0.11, 0.09, 0.065, 1)
-border_width_bottom = 2
-border_color = Color(0.52, 0.37, 0.18, 0.9)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fuf3a"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35686275, 0.38431373, 0.33333334, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pibwh"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c6pm6"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.08627451, 0.16470589, 0.20392157, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="TableRowA"]
-bg_color = Color(0.058, 0.06, 0.062, 0.94)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5he1u"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.07450981, 0.14901961, 0.1882353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.24, 0.21, 0.16, 0.8)
+border_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="TableRowB"]
-bg_color = Color(0.072, 0.072, 0.07, 0.94)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5poiv"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.24, 0.21, 0.16, 0.8)
+border_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="PanelInner"]
-bg_color = Color(0.06, 0.06, 0.058, 0.98)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.54, 0.37, 0.16, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2cjbq"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.07450981, 0.14901961, 0.1882353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="SlotStyle"]
-bg_color = Color(0.045, 0.05, 0.055, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.37, 0.31, 0.23, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chjal"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjqg0"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.0627451, 0.11764706, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vchkt"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.05490196, 0.105882354, 0.14117648, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txyw0"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09411765, 0.16862746, 0.20392157, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc5cj"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.06666667, 0.18039216, 0.21960784, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19215687, 0.31764707, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nvyfr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ty1g6"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.078431375, 0.14509805, 0.18039216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23921569, 0.31764707, 0.34117648, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j2jfr"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.078431375, 0.14509805, 0.18039216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23921569, 0.31764707, 0.34117648, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bjg73"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.078431375, 0.14509805, 0.18039216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23921569, 0.31764707, 0.34117648, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bu4jf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o7ddy"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0loja"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ids8r"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnhof"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1v6qk"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_augu2"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tm6hj"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kf5aa"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t5ykj"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e755i"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro3en"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_od4ux"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhfw6"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1epgm"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_152kg"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r4e17"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.17254902, 0.21176471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3137255, 0.3529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y57op"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.20392157, 0.2627451, 0.27450982, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mlv25"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.16078432, 0.27058825, 0.29803923, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a82wo"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.09803922, 0.16078432, 0.19607843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.2627451, 0.29411766, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdvew"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.76862746, 0.6313726, 0.41568628, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kjtvk"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.88235295, 0.7411765, 0.52156866, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xrs0c"]
+content_margin_left = 12.0
+content_margin_right = 12.0
+bg_color = Color(0.08235294, 0.17254902, 0.19607843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21960784, 0.3372549, 0.35686275, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="RedButton"]
-bg_color = Color(0.32, 0.075, 0.065, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.7, 0.22, 0.16, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="GreenButton"]
-bg_color = Color(0.07, 0.27, 0.09, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.28, 0.7, 0.27, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [node name="FirtinaVadisi" type="Control" unique_id=1100546463]
+texture_filter = 4
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_kmb1v")
 script = ExtResource("1_main")
 
 [node name="Background" type="TextureRect" parent="." unique_id=277281092]
@@ -199,60 +749,60 @@ offset_right = 1260.0
 offset_bottom = 1015.0
 theme_override_styles/panel = SubResource("PanelOuter")
 
-[node name="Options" type="VBoxContainer" parent="MenuLayer/SettingsPopup"]
+[node name="Options" type="VBoxContainer" parent="MenuLayer/SettingsPopup" unique_id=801844286]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Title" type="Label" parent="MenuLayer/SettingsPopup/Options" unique_id=23739028]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "AYARLAR"
 horizontal_alignment = 1
 
-[node name="Fullscreen" type="CheckButton" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Fullscreen" type="CheckButton" parent="MenuLayer/SettingsPopup/Options" unique_id=1577225371]
 layout_mode = 2
-text = "Tam ekran"
 button_pressed = true
+text = "Tam ekran"
 
-[node name="ReduceMotion" type="CheckButton" parent="MenuLayer/SettingsPopup/Options"]
+[node name="ReduceMotion" type="CheckButton" parent="MenuLayer/SettingsPopup/Options" unique_id=363105641]
 layout_mode = 2
 text = "Hareketi azalt"
 
-[node name="SpeedLabel" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+[node name="SpeedLabel" type="Label" parent="MenuLayer/SettingsPopup/Options" unique_id=185886209]
 layout_mode = 2
 text = "Komutlar arası bekleme: 0.28 sn"
 horizontal_alignment = 1
 
-[node name="Pause" type="HSlider" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Pause" type="HSlider" parent="MenuLayer/SettingsPopup/Options" unique_id=142590880]
 layout_mode = 2
 min_value = 0.1
 max_value = 1.0
 step = 0.01
 value = 0.28
 
-[node name="MusicLabel" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+[node name="MusicLabel" type="Label" parent="MenuLayer/SettingsPopup/Options" unique_id=728324726]
 layout_mode = 2
-text = "Müzik"
+text = "Müzik: 35%"
 horizontal_alignment = 1
 
-[node name="Music" type="HSlider" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Music" type="HSlider" parent="MenuLayer/SettingsPopup/Options" unique_id=1105497842]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.35
 
-[node name="EffectsLabel" type="Label" parent="MenuLayer/SettingsPopup/Options"]
+[node name="EffectsLabel" type="Label" parent="MenuLayer/SettingsPopup/Options" unique_id=2042281918]
 layout_mode = 2
-text = "Efektler"
+text = "Efektler: 65%"
 horizontal_alignment = 1
 
-[node name="Effects" type="HSlider" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Effects" type="HSlider" parent="MenuLayer/SettingsPopup/Options" unique_id=1784854757]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.65
 
-[node name="Close" type="Button" parent="MenuLayer/SettingsPopup/Options"]
+[node name="Close" type="Button" parent="MenuLayer/SettingsPopup/Options" unique_id=1452819042]
 layout_mode = 2
 text = "Kapat"
 
@@ -272,35 +822,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.022, 0.024, 0.028, 1)
+color = Color(0.03137255, 0.05882353, 0.08627451, 1)
 
 [node name="BoardFrame" type="Panel" parent="GameLayer" unique_id=1322784876]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 1329.0
-offset_bottom = 825.0
-theme_override_styles/panel = SubResource("PanelOuter")
+offset_left = 24.0
+offset_top = 112.0
+offset_right = 1320.0
+offset_bottom = 844.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fuf3a")
 
-[node name="Board" parent="GameLayer/BoardFrame" unique_id=89039254 instance=ExtResource("2_board")]
-grow_vertical = 2
-grow_horizontal = 2
-anchor_bottom = 1.0
-anchor_right = 1.0
-anchors_preset = 15
+[node name="Board" type="Control" parent="GameLayer/BoardFrame" unique_id=89039254 instance=ExtResource("2_board")]
+clip_contents = true
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 7.0
 offset_top = 7.0
 offset_right = -7.0
 offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PilotsPanel" type="Panel" parent="GameLayer" unique_id=289683828]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 833.0
-offset_right = 802.0
-offset_bottom = 1070.0
-theme_override_styles/panel = SubResource("PanelOuter")
+offset_left = 24.0
+offset_top = 864.0
+offset_right = 832.0
+offset_bottom = 1056.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pibwh")
 
 [node name="Title" type="Label" parent="GameLayer/PilotsPanel" unique_id=913196841]
 layout_mode = 0
@@ -309,16 +860,16 @@ offset_top = 7.0
 offset_right = 300.0
 offset_bottom = 35.0
 theme_override_colors/font_color = Color(1, 0.84, 0.48, 1)
-theme_override_font_sizes/font_size = 19
-text = "PİLOTLAR"
+theme_override_font_sizes/font_size = 15
+text = "PİLOTLAR  /  SEFER DURUMU"
 
 [node name="Header" type="Panel" parent="GameLayer/PilotsPanel" unique_id=2117149210]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 38.0
-offset_right = 778.0
-offset_bottom = 72.0
-theme_override_styles/panel = SubResource("TableHeader")
+offset_top = 36.0
+offset_right = 794.0
+offset_bottom = 62.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_c6pm6")
 
 [node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Header" unique_id=1628299234]
 layout_mode = 1
@@ -368,10 +919,10 @@ vertical_alignment = 1
 [node name="Pilot1" type="Panel" parent="GameLayer/PilotsPanel" unique_id=765420949]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 75.0
-offset_right = 778.0
-offset_bottom = 111.0
-theme_override_styles/panel = SubResource("TableRowA")
+offset_top = 66.0
+offset_right = 794.0
+offset_bottom = 94.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5he1u")
 
 [node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot1" unique_id=862782363]
 layout_mode = 1
@@ -387,14 +938,16 @@ theme_override_constants/separation = 8
 [node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns" unique_id=1052826652]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.4152, 0.75920004, 1, 1)
+theme_override_font_sizes/font_size = 16
 text = "Sen"
 vertical_alignment = 1
 
 [node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns" unique_id=1063373538]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.4152, 0.75920004, 1, 1)
+theme_override_font_sizes/font_size = 16
 text = "3 / 3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -402,7 +955,8 @@ vertical_alignment = 1
 [node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns" unique_id=1282655117]
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.82, 0.32, 1)
+theme_override_font_sizes/font_size = 16
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -410,17 +964,18 @@ vertical_alignment = 1
 [node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot1/Columns" unique_id=694069045]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.86, 0.88, 0.83, 1)
+theme_override_font_sizes/font_size = 16
 text = "—"
 vertical_alignment = 1
 
 [node name="Pilot2" type="Panel" parent="GameLayer/PilotsPanel" unique_id=2002226814]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 113.0
-offset_right = 778.0
-offset_bottom = 149.0
-theme_override_styles/panel = SubResource("TableRowB")
+offset_top = 95.0
+offset_right = 794.0
+offset_bottom = 123.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5poiv")
 
 [node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot2" unique_id=1191596420]
 layout_mode = 1
@@ -436,14 +991,16 @@ theme_override_constants/separation = 8
 [node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns" unique_id=1360853190]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.957, 0.398, 0.398, 1)
+theme_override_font_sizes/font_size = 16
 text = "Kızıl Korsan"
 vertical_alignment = 1
 
 [node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns" unique_id=1930229319]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.957, 0.398, 0.398, 1)
+theme_override_font_sizes/font_size = 16
 text = "3 / 3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -451,7 +1008,8 @@ vertical_alignment = 1
 [node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns" unique_id=1308408245]
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.82, 0.32, 1)
+theme_override_font_sizes/font_size = 16
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -459,17 +1017,18 @@ vertical_alignment = 1
 [node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot2/Columns" unique_id=1109586080]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.86, 0.88, 0.83, 1)
+theme_override_font_sizes/font_size = 16
 text = "—"
 vertical_alignment = 1
 
 [node name="Pilot3" type="Panel" parent="GameLayer/PilotsPanel" unique_id=2097178287]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 151.0
-offset_right = 778.0
-offset_bottom = 187.0
-theme_override_styles/panel = SubResource("TableRowA")
+offset_top = 124.0
+offset_right = 794.0
+offset_bottom = 152.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_2cjbq")
 
 [node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot3" unique_id=588189622]
 layout_mode = 1
@@ -485,14 +1044,16 @@ theme_override_constants/separation = 8
 [node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns" unique_id=117183821]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.50119996, 0.914, 0.61300004, 1)
+theme_override_font_sizes/font_size = 16
 text = "Bakır Martı"
 vertical_alignment = 1
 
 [node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns" unique_id=487987025]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.50119996, 0.914, 0.61300004, 1)
+theme_override_font_sizes/font_size = 16
 text = "3 / 3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -500,7 +1061,8 @@ vertical_alignment = 1
 [node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns" unique_id=1769966957]
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.82, 0.32, 1)
+theme_override_font_sizes/font_size = 16
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -508,17 +1070,18 @@ vertical_alignment = 1
 [node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot3/Columns" unique_id=1322605403]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.86, 0.88, 0.83, 1)
+theme_override_font_sizes/font_size = 16
 text = "—"
 vertical_alignment = 1
 
 [node name="Pilot4" type="Panel" parent="GameLayer/PilotsPanel" unique_id=1596611514]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 189.0
-offset_right = 778.0
-offset_bottom = 225.0
-theme_override_styles/panel = SubResource("TableRowB")
+offset_top = 153.0
+offset_right = 794.0
+offset_bottom = 181.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_chjal")
 
 [node name="Columns" type="HBoxContainer" parent="GameLayer/PilotsPanel/Pilot4" unique_id=127795607]
 layout_mode = 1
@@ -534,14 +1097,16 @@ theme_override_constants/separation = 8
 [node name="Name" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns" unique_id=2054152098]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9828, 0.8452, 0.398, 1)
+theme_override_font_sizes/font_size = 16
 text = "Gece Rüzgârı"
 vertical_alignment = 1
 
 [node name="HP" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns" unique_id=1252931884]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9828, 0.8452, 0.398, 1)
+theme_override_font_sizes/font_size = 16
 text = "3 / 3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -549,7 +1114,8 @@ vertical_alignment = 1
 [node name="Gold" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns" unique_id=1542591083]
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.82, 0.32, 1)
+theme_override_font_sizes/font_size = 16
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -557,17 +1123,18 @@ vertical_alignment = 1
 [node name="Cargo" type="Label" parent="GameLayer/PilotsPanel/Pilot4/Columns" unique_id=159568344]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.86, 0.88, 0.83, 1)
+theme_override_font_sizes/font_size = 16
 text = "—"
 vertical_alignment = 1
 
 [node name="LogPanel" type="Panel" parent="GameLayer" unique_id=309232853]
 layout_mode = 0
-offset_left = 810.0
-offset_top = 833.0
-offset_right = 1330.0
-offset_bottom = 1070.0
-theme_override_styles/panel = SubResource("PanelOuter")
+offset_left = 852.0
+offset_top = 864.0
+offset_right = 1320.0
+offset_bottom = 1056.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cjqg0")
 
 [node name="Title" type="Label" parent="GameLayer/LogPanel" unique_id=444091428]
 layout_mode = 0
@@ -576,35 +1143,35 @@ offset_top = 8.0
 offset_right = 280.0
 offset_bottom = 38.0
 theme_override_colors/font_color = Color(1, 0.84, 0.48, 1)
-theme_override_font_sizes/font_size = 19
-text = "UÇUŞ GÜNLÜĞÜ"
+theme_override_font_sizes/font_size = 15
+text = "SEFER GÜNLÜĞÜ"
 
 [node name="InfoLabel" type="RichTextLabel" parent="GameLayer/LogPanel" unique_id=74650087]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 42.0
-offset_right = 506.0
-offset_bottom = 222.0
-theme_override_colors/default_color = Color(0.92, 0.87, 0.77, 1)
-theme_override_font_sizes/normal_font_size = 15
+offset_left = 16.0
+offset_top = 44.0
+offset_right = 452.0
+offset_bottom = 176.0
+theme_override_colors/default_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
 scroll_following = true
 
 [node name="RightPanel" type="Panel" parent="GameLayer" unique_id=675470340]
 layout_mode = 0
-offset_left = 1340.0
-offset_top = 10.0
-offset_right = 1910.0
-offset_bottom = 1070.0
-theme_override_styles/panel = SubResource("PanelOuter")
+offset_left = 1344.0
+offset_top = 24.0
+offset_right = 1896.0
+offset_bottom = 1056.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vchkt")
 
 [node name="TopHUD" type="Panel" parent="GameLayer/RightPanel" unique_id=1826934760]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 14.0
-offset_right = 556.0
-offset_bottom = 82.0
-theme_override_styles/panel = SubResource("PanelInner")
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 536.0
+offset_bottom = 80.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_txyw0")
 
 [node name="RoundLabel" type="Label" parent="GameLayer/RightPanel/TopHUD" unique_id=1201069723]
 layout_mode = 0
@@ -618,23 +1185,23 @@ vertical_alignment = 1
 
 [node name="GoalLabel" type="Label" parent="GameLayer/RightPanel/TopHUD" unique_id=656647622]
 layout_mode = 0
-offset_left = 280.0
+offset_left = 260.0
 offset_top = 9.0
-offset_right = 522.0
-offset_bottom = 57.0
+offset_right = 504.0
+offset_bottom = 55.0
 theme_override_colors/font_color = Color(1, 0.82, 0.35, 1)
-theme_override_font_sizes/font_size = 21
-text = "Hedef 12 Altın"
+theme_override_font_sizes/font_size = 17
+text = "HEDEF  /  12 ALTIN"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="WindPanel" type="Panel" parent="GameLayer/RightPanel" unique_id=199895129]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 92.0
-offset_right = 556.0
-offset_bottom = 220.0
-theme_override_styles/panel = SubResource("PanelInner")
+offset_left = 16.0
+offset_top = 94.0
+offset_right = 536.0
+offset_bottom = 210.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vc5cj")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/WindPanel" unique_id=1259315943]
 layout_mode = 0
@@ -642,39 +1209,40 @@ offset_left = 14.0
 offset_top = 7.0
 offset_right = 180.0
 offset_bottom = 33.0
-theme_override_font_sizes/font_size = 20
-text = "RÜZGÂR"
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 14
+text = "RÜZGÂR PUSULASI"
 
 [node name="WindLabel" type="Label" parent="GameLayer/RightPanel/WindPanel" unique_id=239206399]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 34.0
-offset_right = 528.0
+offset_left = 18.0
+offset_top = 30.0
+offset_right = 502.0
 offset_bottom = 76.0
-theme_override_colors/font_color = Color(0.52, 0.84, 1, 1)
-theme_override_font_sizes/font_size = 29
-text = "DOĞU →"
+theme_override_colors/font_color = Color(0.5568628, 0.8352941, 0.827451, 1)
+theme_override_font_sizes/font_size = 31
+text = "BATI ←"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Hint" type="Label" parent="GameLayer/RightPanel/WindPanel" unique_id=62811224]
 layout_mode = 0
-offset_left = 20.0
+offset_left = 12.0
 offset_top = 80.0
-offset_right = 522.0
-offset_bottom = 115.0
-theme_override_font_sizes/font_size = 13
-text = "Her komuttan sonra tüm zeplinler rüzgârla sürüklenir."
+offset_right = 508.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 14
+text = "Her komuttan sonra 1 hücre sürüklenirsin."
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ProgramPanel" type="Panel" parent="GameLayer/RightPanel" unique_id=16106351]
 layout_mode = 0
-offset_left = 14.0
+offset_left = 16.0
 offset_top = 230.0
-offset_right = 556.0
-offset_bottom = 425.0
-theme_override_styles/panel = SubResource("PanelInner")
+offset_right = 536.0
+offset_bottom = 414.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_nvyfr")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/ProgramPanel" unique_id=1660276577]
 layout_mode = 0
@@ -682,9 +1250,9 @@ offset_left = 14.0
 offset_top = 7.0
 offset_right = 520.0
 offset_bottom = 33.0
-theme_override_font_sizes/font_size = 20
-text = "3 KOMUT PROGRAMLA"
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.9098039, 0.7372549, 0.4392157, 1)
+theme_override_font_sizes/font_size = 16
+text = "01   UÇUŞ PLANINI HAZIRLA"
 
 [node name="QueueSummary" type="Label" parent="GameLayer/RightPanel/ProgramPanel" unique_id=566041647]
 visible = false
@@ -696,77 +1264,122 @@ offset_bottom = 44.0
 
 [node name="CommandBox" type="HBoxContainer" parent="GameLayer/RightPanel/ProgramPanel" unique_id=495885095]
 layout_mode = 0
-offset_left = 31.0
-offset_top = 39.0
-offset_right = 511.0
-offset_bottom = 184.0
-theme_override_constants/separation = 15
+offset_left = 12.0
+offset_top = 44.0
+offset_right = 508.0
+offset_bottom = 189.0
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Slot1" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox" unique_id=2094556847]
-custom_minimum_size = Vector2(145, 145)
+custom_minimum_size = Vector2(156, 128)
 layout_mode = 2
-theme_override_styles/panel = SubResource("SlotStyle")
+tooltip_text = "Bu komutu kaldırmak için tıkla"
+theme_override_styles/panel = SubResource("StyleBoxFlat_ty1g6")
 
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1" unique_id=1107090461]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
+theme_override_colors/font_color = Color(0.3647059, 0.4627451, 0.49411765, 1)
 theme_override_font_sizes/font_size = 34
-text = "1"
+text = "01"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1" unique_id=796554562]
-visible = false
+[node name="Selected" type="VBoxContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1" unique_id=181583960]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Selected" unique_id=796554562]
+visible = false
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Slot2" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox" unique_id=554435918]
-custom_minimum_size = Vector2(145, 145)
+[node name="Caption" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot1/Selected" unique_id=386626832]
+visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("SlotStyle")
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="Slot2" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox" unique_id=554435918]
+custom_minimum_size = Vector2(156, 128)
+layout_mode = 2
+tooltip_text = "Bu komutu kaldırmak için tıkla"
+theme_override_styles/panel = SubResource("StyleBoxFlat_j2jfr")
 
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2" unique_id=394485397]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
+theme_override_colors/font_color = Color(0.3647059, 0.4627451, 0.49411765, 1)
 theme_override_font_sizes/font_size = 34
-text = "2"
+text = "02"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2" unique_id=2072963922]
-visible = false
+[node name="Selected" type="VBoxContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2" unique_id=1901315612]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2/Selected" unique_id=2072963922]
+visible = false
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Slot3" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox" unique_id=1399642406]
-custom_minimum_size = Vector2(145, 145)
+[node name="Caption" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot2/Selected" unique_id=1032062818]
+visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("SlotStyle")
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="Slot3" type="PanelContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox" unique_id=1399642406]
+custom_minimum_size = Vector2(156, 128)
+layout_mode = 2
+tooltip_text = "Bu komutu kaldırmak için tıkla"
+theme_override_styles/panel = SubResource("StyleBoxFlat_bjg73")
 
 [node name="Number" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3" unique_id=1083464135]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.45, 0.43, 1)
+theme_override_colors/font_color = Color(0.3647059, 0.4627451, 0.49411765, 1)
 theme_override_font_sizes/font_size = 34
-text = "3"
+text = "03"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3" unique_id=1660841551]
-visible = false
+[node name="Selected" type="VBoxContainer" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3" unique_id=1450250034]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="Texture" type="TextureRect" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3/Selected" unique_id=1660841551]
+visible = false
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
+[node name="Caption" type="Label" parent="GameLayer/RightPanel/ProgramPanel/CommandBox/Slot3/Selected" unique_id=2131664916]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
 [node name="CardsPanel" type="Panel" parent="GameLayer/RightPanel" unique_id=45821680]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 435.0
-offset_right = 556.0
-offset_bottom = 875.0
-theme_override_styles/panel = SubResource("PanelInner")
+offset_left = 16.0
+offset_top = 432.0
+offset_right = 536.0
+offset_bottom = 808.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bu4jf")
 
 [node name="Title" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=1962345712]
 layout_mode = 0
@@ -774,11 +1387,12 @@ offset_left = 14.0
 offset_top = 7.0
 offset_right = 520.0
 offset_bottom = 34.0
-theme_override_font_sizes/font_size = 20
-text = "KOMUT KARTLARI"
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 16
+text = "02   KOMUTLARINI SEÇ"
 
-[node name="Forward1" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1535628717 groups=["command_buttons"]]
+[node name="Forward1" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1535628717]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 22.0
@@ -792,6 +1406,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Forward1Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=205664567]
+visible = false
 layout_mode = 0
 offset_left = 18.0
 offset_top = 191.0
@@ -803,7 +1418,8 @@ text = "1 hücre ileri gider."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Forward2" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1441708482 groups=["command_buttons"]]
+[node name="Forward2" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1441708482]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 198.0
@@ -817,6 +1433,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Forward2Desc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=1994301674]
+visible = false
 layout_mode = 0
 offset_left = 194.0
 offset_top = 191.0
@@ -828,7 +1445,8 @@ text = "2 hücre ileri gider."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Left" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1716468069 groups=["command_buttons"]]
+[node name="Left" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1716468069]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 374.0
@@ -842,6 +1460,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="LeftDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=1563104240]
+visible = false
 layout_mode = 0
 offset_left = 370.0
 offset_top = 191.0
@@ -853,7 +1472,8 @@ text = "90° sola döner."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Right" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=830954056 groups=["command_buttons"]]
+[node name="Right" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=830954056]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 22.0
@@ -867,6 +1487,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="RightDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=2091317223]
+visible = false
 layout_mode = 0
 offset_left = 18.0
 offset_top = 375.0
@@ -878,7 +1499,8 @@ text = "90° sağa döner."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hook" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=777605981 groups=["command_buttons"]]
+[node name="Hook" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=777605981]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 198.0
@@ -892,6 +1514,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="HookDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=1281437222]
+visible = false
 layout_mode = 0
 offset_left = 194.0
 offset_top = 375.0
@@ -903,7 +1526,8 @@ text = "Öndeki zeplini çeker."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Anchor" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1095130478 groups=["command_buttons"]]
+[node name="Anchor" type="TextureButton" parent="GameLayer/RightPanel/CardsPanel" unique_id=1095130478]
+visible = false
 clip_contents = true
 layout_mode = 0
 offset_left = 374.0
@@ -917,6 +1541,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="AnchorDesc" type="Label" parent="GameLayer/RightPanel/CardsPanel" unique_id=2053748823]
+visible = false
 layout_mode = 0
 offset_left = 370.0
 offset_top = 375.0
@@ -928,39 +1553,351 @@ text = "Bir rüzgâr itişini engeller."
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Forward1Tile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=389810180 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 48.0
+offset_right = 168.0
+offset_bottom = 196.0
+tooltip_text = "1 hücre ilerle"
+theme_override_styles/normal = SubResource("StyleBoxFlat_o7ddy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0loja")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ids8r")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/Forward1Tile" unique_id=1781765390]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("18_y6deb")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/Forward1Tile" unique_id=1782150353]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "İLERİ 1"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/Forward1Tile" unique_id=1026735017]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "1 hücre ilerle"
+horizontal_alignment = 1
+
+[node name="Forward2Tile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=1000469918 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 48.0
+offset_right = 340.0
+offset_bottom = 196.0
+tooltip_text = "2 hücre ilerle"
+theme_override_styles/normal = SubResource("StyleBoxFlat_dnhof")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1v6qk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_augu2")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/Forward2Tile" unique_id=1395302306]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("19_og1vs")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/Forward2Tile" unique_id=837909757]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "İLERİ 2"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/Forward2Tile" unique_id=2109651697]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "2 hücre ilerle"
+horizontal_alignment = 1
+
+[node name="LeftTile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=949161960 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 48.0
+offset_right = 512.0
+offset_bottom = 196.0
+tooltip_text = "90° sola dön"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tm6hj")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kf5aa")
+theme_override_styles/hover = SubResource("StyleBoxFlat_t5ykj")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/LeftTile" unique_id=1421492149]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("20_2wyq8")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/LeftTile" unique_id=396761575]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "SOLA DÖN"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/LeftTile" unique_id=2064933512]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "90° sola dön"
+horizontal_alignment = 1
+
+[node name="RightTile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=1187947142 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 208.0
+offset_right = 168.0
+offset_bottom = 356.0
+tooltip_text = "90° sağa dön"
+theme_override_styles/normal = SubResource("StyleBoxFlat_e755i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ro3en")
+theme_override_styles/hover = SubResource("StyleBoxFlat_od4ux")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/RightTile" unique_id=1359593779]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("21_vxglm")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/RightTile" unique_id=1960144877]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "SAĞA DÖN"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/RightTile" unique_id=551794668]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "90° sağa dön"
+horizontal_alignment = 1
+
+[node name="HookTile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=133576359 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 208.0
+offset_right = 340.0
+offset_bottom = 356.0
+tooltip_text = "Rakibini çek"
+theme_override_styles/normal = SubResource("StyleBoxFlat_xhfw6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/hover = SubResource("StyleBoxFlat_152kg")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/HookTile" unique_id=786716540]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("22_2f3dj")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/HookTile" unique_id=1560721820]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "KANCA"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/HookTile" unique_id=1222783791]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "Rakibini çek"
+horizontal_alignment = 1
+
+[node name="AnchorTile" type="Button" parent="GameLayer/RightPanel/CardsPanel" unique_id=1618652959 groups=["command_buttons"]]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 208.0
+offset_right = 512.0
+offset_bottom = 356.0
+tooltip_text = "Rüzgâra diren"
+theme_override_styles/normal = SubResource("StyleBoxFlat_r4e17")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_y57op")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mlv25")
+
+[node name="Visual0" type="TextureRect" parent="GameLayer/RightPanel/CardsPanel/AnchorTile" unique_id=149956427]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 12.0
+offset_right = 108.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("23_yq6so")
+expand_mode = 1
+
+[node name="Visual1" type="Label" parent="GameLayer/RightPanel/CardsPanel/AnchorTile" unique_id=1564085115]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 160.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 17
+text = "ÇAPA"
+horizontal_alignment = 1
+
+[node name="Visual2" type="Label" parent="GameLayer/RightPanel/CardsPanel/AnchorTile" unique_id=194275374]
+layout_mode = 0
+offset_top = 107.0
+offset_right = 160.0
+offset_bottom = 129.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 13
+text = "Rüzgâra diren"
+horizontal_alignment = 1
+
 [node name="ClearButton" type="Button" parent="GameLayer/RightPanel" unique_id=155200422]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 885.0
-offset_right = 278.0
-offset_bottom = 943.0
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("RedButton")
+offset_left = 16.0
+offset_top = 824.0
+offset_right = 166.0
+offset_bottom = 886.0
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleBoxFlat_a82wo")
+disabled = true
 text = "TEMİZLE"
 
 [node name="ExecuteButton" type="Button" parent="GameLayer/RightPanel" unique_id=1909822392]
 layout_mode = 0
-offset_left = 292.0
-offset_top = 885.0
-offset_right = 556.0
-offset_bottom = 943.0
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("GreenButton")
+offset_left = 178.0
+offset_top = 824.0
+offset_right = 536.0
+offset_bottom = 886.0
+theme_override_colors/font_color = Color(0.078431375, 0.13333334, 0.16470589, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_gdvew")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kjtvk")
 disabled = true
-text = "PROGRAMI AÇ ▶"
+text = "UÇUŞ PLANINI BAŞLAT  →"
 
 [node name="RestartButton" type="Button" parent="GameLayer/RightPanel" unique_id=861874342]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 972.0
-offset_right = 278.0
-offset_bottom = 1020.0
+offset_left = 16.0
+offset_top = 958.0
+offset_right = 268.0
+offset_bottom = 1006.0
 text = "Yeni Oyun"
 
 [node name="MenuButton" type="Button" parent="GameLayer/RightPanel" unique_id=1321916766]
 layout_mode = 0
-offset_left = 292.0
-offset_top = 972.0
-offset_right = 556.0
-offset_bottom = 1020.0
+offset_left = 284.0
+offset_top = 958.0
+offset_right = 536.0
+offset_bottom = 1006.0
 text = "Ana Menü"
+
+[node name="CargoTracker" type="Panel" parent="GameLayer/RightPanel" unique_id=1594937880]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 898.0
+offset_right = 536.0
+offset_bottom = 948.0
+tooltip_text = "Bir kontrat hücresine ulaşarak yükü al. İşaretli iskeleye teslim ederek altın kazan."
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_xrs0c")
+
+[node name="CargoLabel" type="Label" parent="GameLayer/RightPanel/CargoTracker" unique_id=1632749451]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 3.0
+offset_right = 508.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 16
+text = "AKTİF KONTRAT YOK"
+text_overrun_behavior = 3
+
+[node name="DestinationLabel" type="Label" parent="GameLayer/RightPanel/CargoTracker" unique_id=1315522135]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 25.0
+offset_right = 508.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 14
+text = "Altın kontratların üzerine gelerek hedeflerini incele."
+text_overrun_behavior = 3
+
+[node name="GameTitle" type="Label" parent="GameLayer" unique_id=1453482806]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 20.0
+offset_right = 728.0
+offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.9137255, 0.9019608, 0.8627451, 1)
+theme_override_font_sizes/font_size = 38
+text = "FIRTINA VADİSİ"
+
+[node name="GameSubtitle" type="Label" parent="GameLayer" unique_id=2037627355]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 73.0
+offset_right = 931.0
+offset_bottom = 97.0
+theme_override_colors/font_color = Color(0.8352941, 0.7058824, 0.4862745, 1)
+theme_override_font_sizes/font_size = 15
+text = "HAVA KORSANLARI  /  TAKTİK SEFER HARİTASI"
+
+[node name="PilotCount" type="Label" parent="GameLayer" unique_id=781861973]
+layout_mode = 0
+offset_left = 1020.0
+offset_top = 38.0
+offset_right = 1314.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.5686275, 0.65882355, 0.6862745, 1)
+theme_override_font_sizes/font_size = 17
+text = "4 PİLOT     /     12 ALTIN"
+horizontal_alignment = 2

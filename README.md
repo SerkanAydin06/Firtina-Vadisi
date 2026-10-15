@@ -48,7 +48,13 @@ Testler yeniden başlatma, tur iptali, çapa, ara hücre kargosu, teslimat, yeni
 
 Oyun ekranı petrol mavisi ve pirinç paleti, vadi konturları, vektör kaya/komut görselleri ve okunaklı bir uçuş konsolu kullanır. Seçili komuta tıklayarak sıradan çıkarabilirsiniz.
 
-Görsel düzen `scripts/presentation.gd` üzerinden uygulanır; vektör kaynaklar `assets/ui/` içindedir. Ana sahnenin çalışma zamanındaki görünümü aşağıdadır.
+Görsel düzenin kaynağı `scenes/main.tscn` ve `scenes/board.tscn` dosyalarıdır; Godot 2D editöründe doğrudan düzenlenebilir. `main.tscn` editörde oyun alanını gösterir; F5 ana menüden başlar. Menü tasarımını düzenlemek için MenuLayer görünürlüğünü açıp GameLayer görünürlüğünü kapatın. Oyun açılışta görünürlüğü kendisi ayarlar.
+
+`presentation.gd` yalnızca ortak renk/stil yardımcıları ve komut ikonlarını sağlar; sahne düzenini yeniden oluşturmaz. Kartlar, slot içindeki Selected/Texture ve Caption, kargo paneli ve harita görselleri gerçek sahne düğümleridir. Tahtanın konum önizlemesi mevcut @tool betiğiyle güncellenir; ana oyun betiği editörde çalışmaz. Vektör kaynaklar `assets/ui/` içindedir.
+
+Editör güvenlik kontrolü: `godot --headless --editor --path . --script tests/editor_preview.gd`. Godot 4.6 bu bağımsız editör testinin kapanışında RID/kaynak uyarıları verebilir; normal oyun regresyonunda görülmez.
+
+Ana sahnenin oyun görünümü aşağıdadır.
 
 ![Oyun ekranı](docs/premium-ui.webp)
 

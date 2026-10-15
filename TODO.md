@@ -32,7 +32,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 
 ## P3 — editör ve bakım kolaylığı
 
-- [ ] **Editörde aynı görünüm**
+- [x] **Editörde aynı görünüm**
   - Çalışma zamanındaki yeni arayüz Godot sahne editöründe de görülsün ve düzenlenebilsin.
   - Editör önizlemesi oyun başlatmasın, kullanıcı ayarlarını değiştirmesin, düğüm/sinyal çoğaltmasın.
   - Düzenin tek kaynağı olsun; F5 görünümü ve etkileşimleri korunarak doğrulansın.

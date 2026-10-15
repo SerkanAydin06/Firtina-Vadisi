@@ -12,16 +12,9 @@ var target_style: StyleBoxFlat
 func setup(owner_game: Control) -> void:
 	game = owner_game
 	var side: Control = game.get_node("GameLayer/RightPanel")
-	panel = Panel.new()
-	panel.name = "CargoTracker"
-	panel.mouse_filter = Control.MOUSE_FILTER_PASS
-	side.add_child(panel)
-	Visuals.rect(panel, 16, 898, 520, 50)
-	panel.add_theme_stylebox_override("panel", Visuals.panel(Color("152c32"), Color("38565b"), 6))
-	cargo_label = Visuals.label(panel, "", 12, 3, 496, 22, 16, Visuals.TEXT)
-	destination_label = Visuals.label(panel, "", 12, 25, 496, 21, 14, Visuals.GOLD)
-	for label in [cargo_label, destination_label]:
-		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	panel = side.get_node("CargoTracker") as Panel
+	cargo_label = panel.get_node("CargoLabel") as Label
+	destination_label = panel.get_node("DestinationLabel") as Label
 	for dock in game.board.delivery_nodes:
 		normal_styles[dock] = dock.get_theme_stylebox("panel")
 	target_style = Visuals.panel(Color("304c42"), Visuals.GOLD, 6)
