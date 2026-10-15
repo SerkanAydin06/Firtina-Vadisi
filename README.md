@@ -51,3 +51,10 @@ Oyun ekranı petrol mavisi ve pirinç paleti, vadi konturları, vektör kaya/kom
 Görsel düzen `scripts/presentation.gd` üzerinden uygulanır; vektör kaynaklar `assets/ui/` içindedir. Ana sahnenin çalışma zamanındaki görünümü aşağıdadır.
 
 ![Oyun ekranı](docs/premium-ui.webp)
+
+## Geliştirme ve yapay zekâ ile çalışma
+
+Yol haritası: [TODO.md](TODO.md). Ortak çalışma kuralları: [AGENTS.md](AGENTS.md).
+Claude Code giriş yönergesi: [CLAUDE.md](CLAUDE.md).
+ChatGPT ile depoyu inceletirken önce `AGENTS.md` dosyasını okumasını isteyin.
+Bu dosyalar hesap/model kotası ayarı değil, gereksiz okuma ve açıklamayı azaltan proje talimatlarıdır.
