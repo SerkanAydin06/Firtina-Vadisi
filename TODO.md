@@ -6,8 +6,6 @@ Durum: `[ ]` bekliyor; aktif maddeye “Devam ediyor” ekle. Doğrulanan işi l
 
 ## P1 — kalan doğrulamalar ve teknik eksikler
 
-- [ ] **Editör testinin temiz kapanması**
-  - `tests/editor_preview.gd` için Godot 4.6 `--editor --script` kapanışındaki RID/kaynak uyarılarının nedenini ayır ve test yaşam döngüsünü düzelt. Uyarıları gizleme; ayarlara dokunmama ve düğüm çoğaltmama kontrollerini koru.
 - [ ] **Sesleri gerçek çıkışta dinleme**
   - Müzik döngüsünü ve beş olay sesini kulaklık/hoparlörde dinle; geçiş, tıklama ve ses dengesini değerlendir. Mevcut doğrulama teknik sinyal/oynatma testidir; dinleme tamamlanmış sayılmasın.
 - [ ] **Farklı ekranlarda kullanım kontrolü**
