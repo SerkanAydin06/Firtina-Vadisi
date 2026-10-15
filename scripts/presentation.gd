@@ -198,7 +198,7 @@ static func _style_console(game: Control) -> void:
 		tile.tooltip_text = details[i]
 		tile.add_to_group("command_buttons")
 		cards.add_child(tile)
-		rect(tile, 8 + (i % 3) * 172, 48 + (i / 3) * 160, 160, 148)
+		rect(tile, 8 + (i % 3) * 172, 48 + floori(float(i) / 3.0) * 160, 160, 148)
 		tile.add_theme_stylebox_override("normal", panel(Color("192c36"), Color("38505a"), 10))
 		tile.add_theme_stylebox_override("hover", panel(Color("29454c"), GOLD, 10))
 		tile.add_theme_stylebox_override("pressed", panel(Color("344346"), GOLD, 10))
