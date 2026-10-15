@@ -52,7 +52,13 @@ Görsel düzenin kaynağı `scenes/main.tscn` ve `scenes/board.tscn` dosyalarıd
 
 `presentation.gd` yalnızca ortak renk/stil yardımcıları ve komut ikonlarını sağlar; sahne düzenini yeniden oluşturmaz. Kartlar, slot içindeki Selected/Texture ve Caption, kargo paneli ve harita görselleri gerçek sahne düğümleridir. Tahtanın konum önizlemesi mevcut @tool betiğiyle güncellenir; ana oyun betiği editörde çalışmaz. Vektör kaynaklar `assets/ui/` içindedir.
 
-Editör güvenlik kontrolü: `godot --headless --editor --path . --script tests/editor_preview.gd`. Godot 4.6 bu bağımsız editör testinin kapanışında RID/kaynak uyarıları verebilir; normal oyun regresyonunda görülmez.
+Editör güvenlik kontrolü (Python 3 + Godot editör sürümü):
+
+```sh
+python tests/run_editor_preview.py --godot godot
+```
+
+Gerekirse `--godot` ile çalıştırılabilir dosyanın tam yolunu verin. Test, geçici proje kopyasında normal editör yaşam döngüsüne bağlı bir eklenti olarak çalışır; gerçek projede eklenti etkinleştirmez. Linux/Windows kullanıcı veri ve editör ayar dizinleri de geçici alana yönlendirilir. İki kez sahne açıp kapatır; ayarlara dokunmama, oyun/ses başlatmama ve düğüm/sinyal çoğaltmama kontrollerini korur. Motor hata/uyarıları, eksik sonuç veya 120 saniyelik zaman aşımı başarısız çıkış kodu üretir. Godot 4.6 Linux headless ile temiz kapanış doğrulandı. `--editor --script` ile özel SceneTree başlatan eski yöntem kullanılmaz.
 
 Ana sahnenin oyun görünümü aşağıdadır.
 
