@@ -47,6 +47,7 @@ func run() -> void:
 	_test_contract_tracking()
 	await _test_effects()
 	await _test_turn_presentation()
+	await _test_victory_screen()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -84,6 +85,7 @@ func run() -> void:
 	game.ships[0].queue = [game.CMD_FORWARD_1]
 	await game.resolve_slot(0)
 	verify(game.ships[0].coins == 5, "Delivery occurs before wind")
+	verify(game.ships[0].deliveries == 1, "Successful delivery counted exactly once")
 	verify(game.pickups.has(Vector2i(4, 3)), "Delivered contract respawns")
 
 	fixture([Vector2i(0, 0)])
@@ -333,3 +335,45 @@ func _test_turn_presentation() -> void:
 	for i in range(3):
 		verify(game.command_box.get_child(i).get_theme_stylebox("panel") == game.slot_styles[i], "Planning restores slot style")
 	verify(game.get_node("GameLayer/RightPanel/WindPanel").get_theme_stylebox("panel") == game.wind_style, "Planning restores compass style")
+
+func _test_victory_screen() -> void:
+	game.setup_game()
+	game.ships[0].coins = 5
+	game.ships[1].coins = 15
+	game.ships[1].deliveries = 3
+	game.ships[2].coins = 10
+	game.ships[3].coins = 5
+	var order: Array = game.ships.map(func(ship: Dictionary): return ship.id)
+	verify(game.check_victory(), "Bot victory opens results")
+	var screen = game.victory_screen
+	verify(screen.visible and screen.winner_id == 2, "Results identify actual winner")
+	verify(screen.ranking.map(func(ship: Dictionary): return ship.id) == [2, 3, 1, 4], "Results sort by gold with stable ties")
+	verify(game.ships.map(func(ship: Dictionary): return ship.id) == order, "Ranking preserves game pilot order")
+	verify(screen.rows[2].text == "3", "Results display delivery count")
+	verify(screen.replay.has_focus(), "Modal takes keyboard focus")
+	verify(game.get_node("GameLayer/RightPanel/MenuButton").focus_mode == Control.FOCUS_NONE, "Background controls cannot receive keyboard focus")
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = game.get_node("GameLayer/RightPanel/MenuButton").get_global_rect().get_center()
+	root.push_input(click)
+	click = click.duplicate()
+	click.pressed = false
+	root.push_input(click)
+	await process_frame
+	verify(screen.visible and game.game_layer.visible, "Modal intercepts mouse clicks on background menu")
+	game._on_command_pressed(game.CMD_LEFT)
+	verify(game.player_queue.is_empty(), "Game over rejects background commands")
+	var log_before: String = game.info_label.text
+	game.check_victory()
+	verify(game.info_label.text == log_before, "Repeated victory check is idempotent")
+	screen.replay.pressed.emit()
+	verify(not screen.visible and not game.game_over, "Replay button starts fresh game")
+	verify(game.ships.all(func(ship: Dictionary): return ship.deliveries == 0 and ship.coins == 0), "Replay resets all statistics")
+	game.ships[0].coins = 15
+	game.check_victory()
+	verify(screen.heading.text == "ZAFER SENİN", "Human victory gets victory title")
+	screen.menu.pressed.emit()
+	verify(not screen.visible and game.menu_layer.visible, "Result menu button dismisses modal")
+	game._on_start_pressed()
+	verify(screen.ranking.is_empty() and screen.winner_id == -1, "New match clears old results")

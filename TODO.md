@@ -22,7 +22,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 - [x] **Tur sunumu**
   - Çözülen komut slotunu vurgula; komut/rüzgâr aşaması açıkça görünsün.
   - Tur sonunda planlama durumuna dön; menüye dönüş, yeni maç ve zafer eski vurguları temizlesin.
-- [ ] **Zafer ekranı**
+- [x] **Zafer ekranı**
   - Kazanan, altına göre sıralama, teslimat sayıları, yeniden oyna ve ana menü eylemleri.
   - Sonuç paneli arkadaki oyun girişini engellesin; istatistikler yeni maçta sıfırlansın.
 - [ ] **Ses ve atmosfer**
