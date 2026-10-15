@@ -18,7 +18,7 @@ Kapsam: bu depo. Güncel kullanıcı isteği ve platform kuralları önceliklidi
 
 - `TODO.md` içinden yalnızca ilgili maddeyi oku. Liste yol haritasıdır; bütün maddeleri kendiliğinden uygulama yetkisi değildir.
 - Kullanıcı bir maddeyi seçerse tamamlayana veya gerçek bir engele kadar sürdür. Rutin uygulama tercihleri için tekrar izin isteme.
-- Başlanan maddeyi “Devam ediyor”, doğrulanıp tamamlanan maddeyi `[x]` yap. Yapılmayan işi tamamlandı gösterme.
+- Başlanan maddeye “Devam ediyor” ekle; doğrulanıp tamamlanan maddeyi TODO listesinden kaldır. Tamamlanma geçmişini commit/PR açıklamasında tut. Yapılmayan işi tamamlandı gösterme.
 - Yeni işi yalnızca istenmişse veya bulunan somut bir kusurun takibi için ekle. TODO'ya uzun oturum günlükleri yazma.
 
 ## Dosya haritası

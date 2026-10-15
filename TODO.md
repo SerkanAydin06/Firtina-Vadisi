@@ -1,46 +1,28 @@
-# Fırtına Vadisi — geliştirme listesi
+# Fırtına Vadisi — yapılacaklar
 
-Öncelik sırası aşağıdadır. Yeni geliştirmeye başlamadan kullanıcı tarafından seçilen kapsamı esas al.
-Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor” ekle.
+Yalnızca açık işler tutulur; tamamlananların geçmişi Git/PR kayıtlarındadır.
+Öncelik sırasıyla, kullanıcının seçtiği tek madde üzerinde çalış. Liste yeni özellikleri kendiliğinden uygulama yetkisi değildir.
+Durum: `[ ]` bekliyor; aktif maddeye “Devam ediyor” ekle. Doğrulanan işi listeden kaldır.
 
-## P1 — oynanışı anlaşılır ve canlı hâle getir
+## P1 — kalan doğrulamalar ve teknik eksikler
 
-- [x] **Rota önizlemesi**
-  - Seçili üç komutun motor ve rüzgâr adımlarını ayrı işaretlerle göster.
-  - Duvar/kaya ve mevcut gemi konumlarından doğan çarpışma riskini belirt.
-  - Rakiplerin gizli komutları bilinmediği için önizlemenin tahmini olduğunu açıkça göster.
-  - Komut ekleme/çıkarma/temizleme ve yeni turda güncelle; oyun durumunu değiştirme.
-- [x] **Kontrat ve hedef takibi**
-  - Taşınan kontratın hedef iskelesini vurgula; yük, hedef ve ödülü okunaklı göster.
-  - Kontrat/iskeleden bilgi alınabilsin; teslimat ve yeniden doğmada eski vurgu temizlensin.
-- [x] **Hareket ve olay efektleri**
-  - Yumuşak zeplin dönüşü, motor izi, kanca halatı, çarpışma kıvılcımı ve teslimat parlaması.
-  - Efektler oturum değişiminde temizlensin, girdiyi engellemesin; hareketi azalt seçeneği olsun.
+- [ ] **Editör testinin temiz kapanması**
+  - `tests/editor_preview.gd` için Godot 4.6 `--editor --script` kapanışındaki RID/kaynak uyarılarının nedenini ayır ve test yaşam döngüsünü düzelt. Uyarıları gizleme; ayarlara dokunmama ve düğüm çoğaltmama kontrollerini koru.
+- [ ] **Sesleri gerçek çıkışta dinleme**
+  - Müzik döngüsünü ve beş olay sesini kulaklık/hoparlörde dinle; geçiş, tıklama ve ses dengesini değerlendir. Mevcut doğrulama teknik sinyal/oynatma testidir; dinleme tamamlanmış sayılmasın.
+- [ ] **Farklı ekranlarda kullanım kontrolü**
+  - 1920×1080, 1366×768 ve 1280×720'de pencere/tam ekran; ayarlar, araç ipuçları ve sonuç panelini kontrol et. Metin taşması, küçük tıklama alanı veya klavye odağı sorunu bulunursa düzelt.
 
-## P2 — tur akışı ve sonuç sunumu
+## P2 — kullanım kolaylığı
 
-- [x] **Tur sunumu**
-  - Çözülen komut slotunu vurgula; komut/rüzgâr aşaması açıkça görünsün.
-  - Tur sonunda planlama durumuna dön; menüye dönüş, yeni maç ve zafer eski vurguları temizlesin.
-- [x] **Zafer ekranı**
-  - Kazanan, altına göre sıralama, teslimat sayıları, yeniden oyna ve ana menü eylemleri.
-  - Sonuç paneli arkadaki oyun girişini engellesin; istatistikler yeni maçta sıfırlansın.
-- [x] **Ses ve atmosfer**
-  - Rüzgâr, motor, kanca, çarpışma ve teslimat sesleri; uygun arka plan müziği.
-  - Müzik/efekt sesleri ayrı ve kalıcı ayarlansın; sesler üst üste sınırsız birikmesin.
-  - Kullanılan seslerin lisansı/kaynağı kayıtlı olsun.
+- [ ] **Maçı terk etmeden ayarlar**
+  - Oyun içinden ses, hareketi azalt ve bekleme ayarlarına erişim ekle. Açık panel arkadaki girdiyi engellesin; maçı sıfırlamasın, devam eden turla çakışmasın.
+- [ ] **Kısa oyun içi rehber**
+  - Üç komut → rüzgâr → kontrat → teslimat akışını ve çapanın tek rüzgâr etkisini anlatan, kapatılabilir bir rehber ekle. Menüden yeniden açılabilsin.
 
-## P3 — editör ve bakım kolaylığı
+## P3 — paylaşılabilir sürüm
 
-- [x] **Editörde aynı görünüm**
-  - Çalışma zamanındaki yeni arayüz Godot sahne editöründe de görülsün ve düzenlenebilsin.
-  - Editör önizlemesi oyun başlatmasın, kullanıcı ayarlarını değiştirmesin, düğüm/sinyal çoğaltmasın.
-  - Düzenin tek kaynağı olsun; F5 görünümü ve etkileşimleri korunarak doğrulansın.
-
-## Tamamlanan temel işler
-
-- [x] Tur iptali, yeniden başlatma, çapa, kargo, hareket/itiş ve yeniden doğma düzeltmeleri — PR #2.
-- [x] Rüzgâr/engel farkında bot rotaları; kalıcı tam ekran ve bekleme ayarları — PR #2.
-- [x] Vadi haritası, uçuş konsolu, SVG ikonlar ve tıklayarak komut kaldırma — PR #3.
-- [x] `presentation.gd` tam sayı bölmesi uyarısı — PR #4.
-- [x] ChatGPT/Codex ve Claude Code için kısa ortak çalışma talimatları.
+- [ ] **Windows dışa aktarma ve paket kontrolü**
+  - Depoda dışa aktarma önayarı yok. Windows önayarı ve kısa paketleme yönergesi ekle; paketi Godot editörü olmayan ortamda açılış, tam maç, ses ve ayar kalıcılığı açısından doğrula.
+- [ ] **Tanıtım ve kullanım belgelerini güncelleme**
+  - README'deki ayarlar/test kapsamını güncelle; güncel oyun, zafer ve ayarlar ekranlarını ekle. Kullanılan Godot sürümü ile test edilen sürümleri açıkça belirt.
