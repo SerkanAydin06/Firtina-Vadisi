@@ -309,6 +309,13 @@ func _layout_contracts() -> void:
 			continue
 		var cell: Vector2i = cells[i]
 		var contract: Dictionary = pickup_cells[cell]
+		node.set_meta("grid_cell", cell)
+		node.mouse_filter = Control.MOUSE_FILTER_STOP
+		node.tooltip_text = "Yük: %s\nHedef: %s\nÖdül: %d altın\nİlk ulaşan pilot kontratı alır." % [
+			str(contract.get("name", "Kargo")), str(contract.get("dest_name", "Teslimat")), int(contract.get("value", 0))]
+		for child in node.get_children():
+			if child is Control:
+				child.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var s: float = _depth_scale(cell)
 		node.visible = true
 		node.size = Vector2(roundf(106.0 * s), roundf(56.0 * s))
@@ -348,6 +355,12 @@ func _layout_deliveries() -> void:
 			node.visible = false
 			continue
 		var cell: Vector2i = cells[i]
+		node.set_meta("grid_cell", cell)
+		node.mouse_filter = Control.MOUSE_FILTER_STOP
+		var info: String = "%s\nTeslimat iskelesi: yalnızca hedefi burası olan kargoyu kabul eder." % str(delivery_cells[cell])
+		node.set_meta("base_tooltip", info)
+		node.tooltip_text = str(node.get_meta("tracking_tooltip", info)) if node.get_meta("tracked_cell", Vector2i(-1, -1)) == cell else info
+		node.get_node("Label").mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var s: float = _depth_scale(cell)
 		node.visible = true
 		node.size = Vector2(roundf(78.0 * s), roundf(44.0 * s))

@@ -10,7 +10,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
   - Duvar/kaya ve mevcut gemi konumlarından doğan çarpışma riskini belirt.
   - Rakiplerin gizli komutları bilinmediği için önizlemenin tahmini olduğunu açıkça göster.
   - Komut ekleme/çıkarma/temizleme ve yeni turda güncelle; oyun durumunu değiştirme.
-- [ ] **Kontrat ve hedef takibi**
+- [x] **Kontrat ve hedef takibi**
   - Taşınan kontratın hedef iskelesini vurgula; yük, hedef ve ödülü okunaklı göster.
   - Kontrat/iskeleden bilgi alınabilsin; teslimat ve yeniden doğmada eski vurgu temizlensin.
 - [ ] **Hareket ve olay efektleri**

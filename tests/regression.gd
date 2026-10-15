@@ -44,6 +44,7 @@ func run() -> void:
 	game._on_clear_pressed()
 	verify(game.route_overlay.steps.is_empty(), "Clear removes preview")
 	_test_route_prediction()
+	_test_contract_tracking()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -210,3 +211,51 @@ func _test_route_prediction() -> void:
 	ship.pos = Vector2i(10, 4)
 	result = preview.build(ship, [game.CMD_FORWARD_1], 2, [], [ship], game.GRID_SIZE)
 	verify(result.steps[0].risk and result.steps[-1].to == Vector2i(10, 5), "Boundary blocks motor, then wind proceeds")
+
+func _test_contract_tracking() -> void:
+	var tracker = game.contract_tracker
+	var source := Vector2i(4, 3)
+	verify(tracker.target_cell == null, "No cargo means no highlighted destination")
+	for node in game.board.contract_nodes:
+		if node.visible:
+			var info: Dictionary = game.pickups[node.get_meta("grid_cell")]
+			verify(node.tooltip_text.contains(info.name) and node.tooltip_text.contains(info.dest_name), "Available contract tooltip matches its current data")
+			verify(node.mouse_filter == Control.MOUSE_FILTER_STOP, "Contract accepts hover information")
+	game.ships[0].pos = source
+	game.check_all_cargo()
+	var cargo: Dictionary = game.ships[0].cargo.duplicate(true)
+	verify(tracker.target_cell == cargo.dest, "Claim immediately highlights carried cargo destination")
+	verify(tracker.cargo_label.text.contains(cargo.name) and tracker.destination_label.text.contains(cargo.dest_name) and tracker.destination_label.text.contains("5"), "Cargo panel shows load, target and reward")
+	var highlighted: int = 0
+	for dock in game.board.delivery_nodes:
+		if dock.get_theme_stylebox("panel") == tracker.target_style:
+			highlighted += 1
+			verify(dock.get_meta("grid_cell") == cargo.dest and dock.tooltip_text.contains("HEDEFİN"), "Only the actual destination gets player-target information")
+	verify(highlighted == 1, "Exactly one dock highlighted")
+	game.board.fit_board()
+	for dock in game.board.delivery_nodes:
+		if dock.get_meta("grid_cell") == cargo.dest:
+			verify(dock.tooltip_text.contains("HEDEFİN"), "Target tooltip survives deferred board relayout")
+	var before: Array = game.ships.duplicate(true)
+	tracker.refresh()
+	verify(before == game.ships, "Tracker never mutates gameplay")
+	game.ships[0].pos = cargo.dest
+	game.check_all_cargo()
+	verify(tracker.target_cell == null and game.ships[0].coins == 5, "Delivery clears target immediately")
+	for dock in game.board.delivery_nodes:
+		verify(dock.get_theme_stylebox("panel") != tracker.target_style and not dock.tooltip_text.contains("HEDEFİN"), "Delivery removes old highlight and tooltip")
+	game.ships[0].pos = source
+	game.check_all_cargo()
+	game.ships[0].hp = 1
+	game.damage_ship(game.ships[0], 1, "test")
+	verify(tracker.target_cell == null and game.pickups.has(source), "Respawn clears target and restores lost contract")
+	game.ships[1].pos = source
+	game.check_all_cargo()
+	verify(tracker.target_cell == null, "Opponent cargo does not highlight a player destination")
+	game.ships[0].pos = Vector2i(6, 3)
+	game.check_all_cargo()
+	verify(tracker.target_cell != null, "New contract replaces previous target")
+	game.show_menu()
+	verify(tracker.target_cell == null and not tracker.panel.visible, "Menu clears tracking")
+	game._on_start_pressed()
+	verify(tracker.target_cell == null and tracker.panel.visible, "New match starts with empty visible tracker")
