@@ -30,6 +30,8 @@ var pilot_hp_labels: Array[Label] = []
 var pilot_gold_labels: Array[Label] = []
 var pilot_cargo_labels: Array[Label] = []
 var contract_serial: int = 0
+var route_overlay: Node2D
+var route_hint: Label
 
 func build_shell() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -112,6 +114,14 @@ func build_game_ui() -> void:
 	$GameLayer/RightPanel/MenuButton.pressed.connect(show_menu)
 	game_built = true
 	preload("res://scripts/presentation.gd").apply(self)
+	route_overlay = preload("res://scripts/route_overlay.gd").new()
+	route_overlay.board = board
+	route_overlay.z_index = 400
+	board.add_child(route_overlay)
+	board.resized.connect(route_overlay.queue_redraw)
+	route_hint = preload("res://scripts/presentation.gd").label(board, "", 440, 8, 820, 25, 12, Color("91a8af"))
+	route_hint.name = "RouteHint"
+	route_hint.z_index = 401
 
 func setup_game() -> void:
 	session_id += 1
@@ -230,6 +240,7 @@ func respawn_ship(ship: Dictionary) -> void:
 					return
 
 func refresh_ui() -> void:
+	_refresh_route_preview()
 	round_label.text = "Tur %d" % round_no
 	wind_label.text = DIR_NAMES[wind_dir]
 	queue_label.text = ""
@@ -311,3 +322,24 @@ func _set_resolution_pause(value: float) -> void:
 	resolution_pause = clampf(value, 0.1, 1.0)
 	$MenuLayer/SettingsPopup/Options/SpeedLabel.text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
 	_save_settings()
+
+func _refresh_route_preview() -> void:
+	if not is_instance_valid(route_overlay):
+		return
+	if resolving or game_over or player_queue.is_empty() or ships.is_empty() or not game_layer.visible:
+		route_overlay.set_forecast([])
+		route_hint.text = ""
+		return
+	var forecast: Dictionary = preload("res://scripts/route_preview.gd").build(ships[0], player_queue, wind_dir, rocks, ships, GRID_SIZE)
+	route_overlay.set_forecast(forecast.steps)
+	route_hint.text = "TAHMİNİ ROTA: Altın = motor • Mavi kesik = rüzgâr • Kırmızı × = risk. Rakip komutları bilinmiyor."
+	if not forecast.reason.is_empty():
+		route_hint.text = forecast.reason + "  Altın: motor / Mavi: rüzgâr / ×: risk."
+
+func set_input_enabled(enabled: bool) -> void:
+	super.set_input_enabled(enabled)
+	_refresh_route_preview()
+
+func show_menu() -> void:
+	super.show_menu()
+	_refresh_route_preview()

@@ -58,3 +58,7 @@ Yol haritası: [TODO.md](TODO.md). Ortak çalışma kuralları: [AGENTS.md](AGEN
 Claude Code giriş yönergesi: [CLAUDE.md](CLAUDE.md).
 ChatGPT ile depoyu inceletirken önce `AGENTS.md` dosyasını okumasını isteyin.
 Bu dosyalar hesap/model kotası ayarı değil, gereksiz okuma ve açıklamayı azaltan proje talimatlarıdır.
+
+## Rota önizlemesi
+
+Komut seçerken altın düz çizgiler motor adımlarını, mavi kesik çizgiler rüzgârı ve numaralar komut sonlarını gösterir. Kırmızı çarpılar duvar/kaya veya mevcut rakip konumlarından doğan riski belirtir. Rakiplerin gizli komutları hesaba katılmaz; gemi/kanca etkileşimi veya gövdenin tükenmesi sonrası belirsiz rota uzatılmaz. Önizleme oyun durumunu değiştirmez, çözüm sırasında kapanır.
