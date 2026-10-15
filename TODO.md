@@ -25,7 +25,7 @@ Durum: `[ ]` bekliyor, `[x]` tamamlandı; aktif maddenin yanına “Devam ediyor
 - [x] **Zafer ekranı**
   - Kazanan, altına göre sıralama, teslimat sayıları, yeniden oyna ve ana menü eylemleri.
   - Sonuç paneli arkadaki oyun girişini engellesin; istatistikler yeni maçta sıfırlansın.
-- [ ] **Ses ve atmosfer**
+- [x] **Ses ve atmosfer**
   - Rüzgâr, motor, kanca, çarpışma ve teslimat sesleri; uygun arka plan müziği.
   - Müzik/efekt sesleri ayrı ve kalıcı ayarlansın; sesler üst üste sınırsız birikmesin.
   - Kullanılan seslerin lisansı/kaynağı kayıtlı olsun.

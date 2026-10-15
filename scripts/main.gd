@@ -559,6 +559,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 			return
 
 func resolve_wind() -> void:
+	play_sound("wind")
 	var intents := {}
 	for ship in ships:
 		if ship.hp > 0 and not ship.anchored:
@@ -890,4 +891,7 @@ func log_line(text: String) -> void:
 	info_label.append_text(text + "\n")
 
 func present_turn(_phase: String, _slot: int = -1) -> void:
+	pass
+
+func play_sound(_kind: String) -> void:
 	pass

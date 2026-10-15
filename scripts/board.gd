@@ -2,6 +2,8 @@
 extends Control
 class_name StormBoard
 
+signal sound_requested(kind: String)
+
 
 var grid_size := Vector2i(11, 9)
 var cell_size := 62.0
@@ -71,10 +73,12 @@ func update_ship(id: int, cell: Vector2i, facing: int, hp: int, has_cargo: bool,
 	return tween
 
 func flash_ship(id: int) -> void:
-	if reduced_motion or not tokens.has(id):
+	if not tokens.has(id):
 		return
 	var token: AirshipToken = tokens[id]
 	show_effect("spark", token.position + token.size * 0.5)
+	if reduced_motion:
+		return
 	var tween: Tween = create_tween()
 	track_tween(tween)
 	tween.tween_property(token, "modulate", Color(1,0.35,0.35), 0.08)
@@ -124,6 +128,8 @@ func set_reduced_motion(enabled: bool) -> void:
 	cancel_animations()
 
 func show_effect(kind: String, start: Vector2, finish: Vector2 = Vector2.ZERO, value: int = 0) -> void:
+	if not Engine.is_editor_hint():
+		sound_requested.emit(kind)
 	if reduced_motion or Engine.is_editor_hint():
 		return
 	if not is_instance_valid(effects):
