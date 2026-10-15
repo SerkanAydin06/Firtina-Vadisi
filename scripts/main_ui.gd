@@ -33,6 +33,9 @@ var reduced_motion: bool = false
 var contract_serial: int = 0
 var route_overlay: Node2D
 var route_hint: Label
+var game_audio: Node
+var music_volume: float = 0.35
+var effects_volume: float = 0.65
 var victory_screen: Control
 var contract_tracker: Node
 var turn_phase: String = "planning"
@@ -51,6 +54,8 @@ func build_menu() -> void:
 	$MenuLayer/SettingsButton.pressed.connect(_on_settings_pressed)
 	$MenuLayer/ExitButton.pressed.connect(_on_exit_pressed)
 	_load_settings()
+	$MenuLayer/SettingsPopup/Options/Music.value_changed.connect(_set_music_volume)
+	$MenuLayer/SettingsPopup/Options/Effects.value_changed.connect(_set_effects_volume)
 	$MenuLayer/SettingsPopup/Options/ReduceMotion.toggled.connect(_set_reduced_motion)
 	$MenuLayer/SettingsPopup/Options/Fullscreen.toggled.connect(_set_fullscreen)
 	$MenuLayer/SettingsPopup/Options/Pause.value_changed.connect(_set_resolution_pause)
@@ -60,6 +65,10 @@ func build_game_ui() -> void:
 	game_layer = $GameLayer as Control
 	board = $GameLayer/BoardFrame/Board as StormBoard
 	board.set_reduced_motion(reduced_motion)
+	game_audio = preload("res://scripts/game_audio.gd").new()
+	add_child(game_audio)
+	game_audio.set_levels(music_volume, effects_volume)
+	board.sound_requested.connect(play_sound)
 	round_label = $GameLayer/RightPanel/TopHUD/RoundLabel as Label
 	wind_label = $GameLayer/RightPanel/WindPanel/WindLabel as Label
 	queue_label = $GameLayer/RightPanel/ProgramPanel/QueueSummary as Label
@@ -143,6 +152,8 @@ func build_game_ui() -> void:
 	board.resized.connect(func() -> void: contract_tracker.call_deferred("refresh"))
 
 func setup_game() -> void:
+	game_audio.stop_all()
+	game_audio.start_music()
 	if is_instance_valid(victory_screen):
 		victory_screen.dismiss()
 	session_id += 1
@@ -329,6 +340,9 @@ func _scroll_log_to_bottom() -> void:
 func _load_settings() -> void:
 	var config := ConfigFile.new()
 	config.load("user://settings.cfg")
+	music_volume = clampf(float(config.get_value("audio", "music", 0.35)), 0.0, 1.0)
+	effects_volume = clampf(float(config.get_value("audio", "effects", 0.65)), 0.0, 1.0)
+	_refresh_audio_settings()
 	reduced_motion = bool(config.get_value("game", "reduced_motion", false))
 	$MenuLayer/SettingsPopup/Options/ReduceMotion.set_pressed_no_signal(reduced_motion)
 	var fullscreen: bool = bool(config.get_value("display", "fullscreen", true))
@@ -343,6 +357,8 @@ func _save_settings() -> void:
 	config.set_value("display", "fullscreen", $MenuLayer/SettingsPopup/Options/Fullscreen.button_pressed)
 	config.set_value("game", "resolution_pause", resolution_pause)
 	config.set_value("game", "reduced_motion", reduced_motion)
+	config.set_value("audio", "music", music_volume)
+	config.set_value("audio", "effects", effects_volume)
 	config.save("user://settings.cfg")
 
 func _set_fullscreen(enabled: bool) -> void:
@@ -372,6 +388,8 @@ func set_input_enabled(enabled: bool) -> void:
 	_refresh_route_preview()
 
 func show_menu() -> void:
+	if is_instance_valid(game_audio):
+		game_audio.stop_all()
 	if is_instance_valid(victory_screen):
 		victory_screen.dismiss()
 	super.show_menu()
@@ -432,3 +450,26 @@ func check_victory() -> bool:
 			victory_screen.show_result(ship)
 			break
 	return true
+
+func play_sound(kind: String) -> void:
+	if is_instance_valid(game_audio) and game_layer.visible and not game_over:
+		game_audio.play_event(kind)
+
+func _refresh_audio_settings() -> void:
+	var options := $MenuLayer/SettingsPopup/Options
+	options.get_node("Music").set_value_no_signal(music_volume)
+	options.get_node("Effects").set_value_no_signal(effects_volume)
+	options.get_node("MusicLabel").text = "Müzik: %d%%" % roundi(music_volume * 100.0)
+	options.get_node("EffectsLabel").text = "Efektler: %d%%" % roundi(effects_volume * 100.0)
+	if is_instance_valid(game_audio):
+		game_audio.set_levels(music_volume, effects_volume)
+
+func _set_music_volume(value: float) -> void:
+	music_volume = clampf(value, 0.0, 1.0)
+	_refresh_audio_settings()
+	_save_settings()
+
+func _set_effects_volume(value: float) -> void:
+	effects_volume = clampf(value, 0.0, 1.0)
+	_refresh_audio_settings()
+	_save_settings()

@@ -48,6 +48,7 @@ func run() -> void:
 	await _test_effects()
 	await _test_turn_presentation()
 	await _test_victory_screen()
+	_test_audio()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -185,6 +186,9 @@ func run() -> void:
 	options.get_node("Pause").value = original_pause
 	options.get_node("ReduceMotion").button_pressed = original_motion
 	game.board.cancel_animations()
+	game.game_audio.stop_all()
+	# Let the audio thread release stopped playback before tearing down resources.
+	await create_timer(0.15, true, false, true).timeout
 	game.queue_free()
 	await process_frame
 	print("REGRESSION: %d checks, %d failures" % [checks, failures])
@@ -377,3 +381,45 @@ func _test_victory_screen() -> void:
 	verify(not screen.visible and game.menu_layer.visible, "Result menu button dismisses modal")
 	game._on_start_pressed()
 	verify(screen.ranking.is_empty() and screen.winner_id == -1, "New match clears old results")
+
+func _test_audio() -> void:
+	game.setup_game()
+	var sound = game.game_audio
+	var original_music: float = game.music_volume
+	var original_effects: float = game.effects_volume
+	game._set_music_volume(0.23)
+	game._set_effects_volume(0.71)
+	game._load_settings()
+	verify(is_equal_approx(sound.music_level, 0.23) and is_equal_approx(sound.effects_level, 0.71), "Independent audio levels persist")
+	verify(sound.music.playing and sound.music.stream.loop_mode == AudioStreamWAV.LOOP_FORWARD, "Gameplay starts looping music")
+	for kind in ["motor", "hook", "spark", "delivery", "wind"]:
+		var clip: AudioStreamWAV = sound.clips[kind]
+		verify(not clip.data.is_empty() and clip.get_length() > 0.1, "Audio clip generated: " + kind)
+		var peak: int = 0
+		for i in range(0, clip.data.size(), 2):
+			peak = maxi(peak, absi(clip.data.decode_s16(i)))
+		verify(peak > 100 and peak < 32767, "Clip audible and unclipped: " + kind)
+		game.play_sound(kind)
+	verify(sound.last_played.size() == 5, "All five event types reach audio controller")
+	var voice: int = sound.next_voice
+	for i in range(20):
+		game.play_sound("wind")
+	verify(sound.next_voice == voice and sound.players.size() == 6, "Burst effects deduplicated with bounded voice pool")
+	sound.stop_effects()
+	var motion: bool = game.board.reduced_motion
+	game.board.set_reduced_motion(true)
+	game.board.flash_ship(1)
+	verify(sound.last_played.has("spark"), "Reduced motion preserves collision sound")
+	game.board.set_reduced_motion(motion)
+	game._set_effects_volume(0.0)
+	game.play_sound("delivery")
+	verify(sound.last_played.is_empty() and sound.players.all(func(player): return not player.playing), "Zero effects level stops and suppresses sound")
+	verify(is_equal_approx(sound.music.volume_linear, 0.23), "Effects mute leaves music unchanged")
+	game._set_music_volume(0.0)
+	verify(is_zero_approx(sound.music.volume_linear), "Zero music level is silent")
+	game.show_menu()
+	verify(not sound.music.playing and sound.last_played.is_empty(), "Menu stops music and effects")
+	game._on_start_pressed()
+	verify(sound.music.playing and sound.last_played.is_empty(), "New match starts clean audio session")
+	game._set_music_volume(original_music)
+	game._set_effects_volume(original_effects)
