@@ -381,13 +381,16 @@ func _refresh_route_preview() -> void:
 			board_focus.clear()
 	if not is_instance_valid(route_overlay):
 		return
-	if resolving or game_over or player_queue.is_empty() or ships.is_empty() or not game_layer.visible:
+	if resolving and not game_over and game_layer.visible:
+		route_overlay.set_forecast([])
+		return
+	if game_over or player_queue.is_empty() or ships.is_empty() or not game_layer.visible:
 		route_overlay.set_forecast([])
 		route_hint.text = ""
 		return
 	var forecast: Dictionary = preload("res://scripts/route_preview.gd").build(ships[0], player_queue, wind_dir, rocks, ships, GRID_SIZE)
 	route_overlay.set_forecast(forecast.steps)
-	route_hint.text = "TAHMİNİ ROTA: Altın = motor • Mavi kesik = rüzgâr • Kırmızı × = risk. Rakip komutları bilinmiyor."
+	route_hint.text = "TAHMİNİ ROTA   •   %d motor adımı   •   Kesik mavi: rüzgâr   •   ×: risk" % route_overlay.motor_count
 	if not forecast.reason.is_empty():
 		route_hint.text = forecast.reason + "  Altın: motor / Mavi: rüzgâr / ×: risk."
 
@@ -416,6 +419,13 @@ func _set_reduced_motion(enabled: bool) -> void:
 	_save_settings()
 
 func present_turn(phase: String, slot: int = -1) -> void:
+	if is_instance_valid(route_hint):
+		if phase == "command":
+			present_motor_progress(slot, 0)
+		elif phase == "wind":
+			route_hint.text = "RÜZGÂR   •   Çapa etkin" if ships[0].anchored else "RÜZGÂR   •   1 hücre sürüklenme"
+		else:
+			route_hint.text = ""
 	turn_phase = phase
 	active_slot = slot if phase in ["command", "wind"] else -1
 	if slot_styles.is_empty():
@@ -497,3 +507,10 @@ func _on_slot_input(event: InputEvent, slot: int) -> void:
 		if not resolving and not game_over and slot < player_queue.size():
 			player_queue.remove_at(slot)
 			refresh_ui()
+
+func present_motor_progress(slot: int, completed: int) -> void:
+	if not is_instance_valid(route_hint) or slot < 0 or slot >= player_queue.size():
+		return
+	var command: String = player_queue[slot]
+	var total: int = 2 if command == CMD_FORWARD_2 else (1 if command == CMD_FORWARD_1 else 0)
+	route_hint.text = "KOMUT %d   •   Kalan: %d motor adımı" % [slot + 1, maxi(0, total - completed)] if total > 0 else "KOMUT %d   •   %s" % [slot + 1, command]

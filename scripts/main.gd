@@ -526,6 +526,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 	if active_session != session_id:
 		return
 
+	present_motor_progress(slot, 0)
 	for substep in range(2):
 		var intents := {}
 		for ship in ships:
@@ -554,6 +555,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 		await animate_all()
 		if active_session != session_id:
 			return
+		present_motor_progress(slot, substep + 1)
 		await get_tree().create_timer(0.07).timeout
 		if active_session != session_id:
 			return
@@ -894,4 +896,7 @@ func present_turn(_phase: String, _slot: int = -1) -> void:
 	pass
 
 func play_sound(_kind: String) -> void:
+	pass
+
+func present_motor_progress(_slot: int, _completed: int) -> void:
 	pass
