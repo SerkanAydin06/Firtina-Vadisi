@@ -1,20 +1,11 @@
 extends Control
-
-const BoardScript = preload("res://scripts/board.gd")
-
-const MENU_BG: Texture2D = preload("res://assets/generated/menu_background.png")
-const LOGO_TEX: Texture2D = preload("res://assets/generated/logo.png")
-const START_NORMAL: Texture2D = preload("res://assets/generated/start_normal.png")
-const START_HOVER: Texture2D = preload("res://assets/generated/start_hover.png")
-const SETTINGS_NORMAL: Texture2D = preload("res://assets/generated/settings_normal.png")
-const SETTINGS_HOVER: Texture2D = preload("res://assets/generated/settings_hover.png")
-const EXIT_NORMAL: Texture2D = preload("res://assets/generated/exit_normal.png")
-const EXIT_HOVER: Texture2D = preload("res://assets/generated/exit_hover.png")
-const CONFIRM_BUTTON_TEX: Texture2D = preload("res://assets/generated/confirm_button.png")
+## Oyun mantığı: tur, hareket/itiş, kanca, rüzgâr, botlar, hasar ve zafer.
+## Sahne bağlantıları ve sunum `main_ui.gd` içindedir; bu dosya düğüm oluşturmaz.
 
 const GRID_SIZE := Vector2i(11, 9)
 const MAX_HP := 3
 const TARGET_COINS := 12
+const WIND_CALM := -1
 
 const CMD_FORWARD_1 := "İleri 1"
 const CMD_FORWARD_2 := "İleri 2"
@@ -23,17 +14,17 @@ const CMD_RIGHT := "Sağa Dön"
 const CMD_HOOK := "Kanca"
 const CMD_ANCHOR := "Çapa"
 const COMMANDS := [CMD_FORWARD_1, CMD_FORWARD_2, CMD_LEFT, CMD_RIGHT, CMD_HOOK, CMD_ANCHOR]
-const COMMAND_TEXTURES := {
-	CMD_FORWARD_1: preload("res://assets/generated/cmd_forward1.png"),
-	CMD_FORWARD_2: preload("res://assets/generated/cmd_forward2.png"),
-	CMD_LEFT: preload("res://assets/generated/cmd_left.png"),
-	CMD_RIGHT: preload("res://assets/generated/cmd_right.png"),
-	CMD_HOOK: preload("res://assets/generated/cmd_hook.png"),
-	CMD_ANCHOR: preload("res://assets/generated/cmd_anchor.png")
-}
 
 const DIRS := [Vector2i(0,-1), Vector2i(1,0), Vector2i(0,1), Vector2i(-1,0)]
 const DIR_NAMES := ["KUZEY ↑", "DOĞU →", "GÜNEY ↓", "BATI ←"]
+const CALM_NAME := "SAKİN HAVA"
+
+# Bot arama maliyetleri: bir komut 2, bir gövde kaybı 7, rakip hücresine girmek 3.
+const AI_STEP_COST := 2
+const AI_DAMAGE_COST := 7
+const AI_CROWD_COST := 3
+const AI_MAX_COST := 80
+const AI_MOVES := [CMD_FORWARD_1, CMD_FORWARD_2, CMD_LEFT, CMD_RIGHT, CMD_ANCHOR]
 
 @export var start_with_four_ships := true
 @export_range(0.1, 1.0, 0.05) var resolution_pause := 0.28
@@ -41,7 +32,7 @@ const DIR_NAMES := ["KUZEY ↑", "DOĞU →", "GÜNEY ↓", "BATI ←"]
 var background_rect: TextureRect
 var menu_layer: Control
 var game_layer: Control
-var settings_popup: PanelContainer
+var settings_popup: Control
 var game_built: bool = false
 
 var board: StormBoard
@@ -52,34 +43,20 @@ var info_label: RichTextLabel
 var execute_button: Button
 var clear_button: Button
 var command_box: HBoxContainer
-var score_box: VBoxContainer
 
 var rng := RandomNumberGenerator.new()
 var ships: Array[Dictionary] = []
-var rocks: Array[Vector2i] = [
-	Vector2i(4,1), Vector2i(5,1), Vector2i(7,1),
-	Vector2i(2,2), Vector2i(7,2), Vector2i(8,2),
-	Vector2i(2,3), Vector2i(5,3), Vector2i(8,3),
-	Vector2i(4,4), Vector2i(8,4),
-	Vector2i(1,5), Vector2i(4,5), Vector2i(6,5),
-	Vector2i(1,6), Vector2i(6,6), Vector2i(9,6),
-	Vector2i(3,7), Vector2i(4,7), Vector2i(9,7)
-]
-var pickups := {
-	Vector2i(0,4): {"name":"Kaçak Baharat", "dest":Vector2i(10,4), "value":4},
-	Vector2i(5,8): {"name":"Fırtına Kristali", "dest":Vector2i(5,0), "value":5}
-}
-var deliveries := {
-	Vector2i(10,4): "Doğu İskele",
-	Vector2i(5,0): "Kuzey Kulesi"
-}
+var rocks: Array[Vector2i] = []
+var pickups := {}
+var deliveries := {}
 
 var player_queue: Array[String] = []
 var round_no := 1
-var wind_dir := 1
+var wind_dir := WIND_CALM
 var resolving := false
 var game_over := false
 var session_id: int = 0
+var last_winners: Array = []
 
 func _ready() -> void:
 	rng.randomize()
@@ -88,273 +65,51 @@ func _ready() -> void:
 	build_game_ui()
 	show_menu()
 
-func build_shell() -> void:
-	background_rect = TextureRect.new()
-	background_rect.texture = MENU_BG
-	background_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	background_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	background_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(background_rect)
+# --- Alt sınıfın doldurduğu sahne ve sunum kancaları -------------------------
 
-	var tint := ColorRect.new()
-	tint.color = Color(0.05, 0.045, 0.05, 0.28)
-	tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(tint)
+func build_shell() -> void:
+	pass
 
 func build_menu() -> void:
-	menu_layer = Control.new()
-	menu_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(menu_layer)
-
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	menu_layer.add_child(center)
-
-	var column := VBoxContainer.new()
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation", 18)
-	center.add_child(column)
-
-	var logo := TextureRect.new()
-	logo.texture = LOGO_TEX
-	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	logo.custom_minimum_size = Vector2(700, 260)
-	column.add_child(logo)
-
-	var subtitle := Label.new()
-	subtitle.text = "Rüzgâra karşı. Sınırın ötesine."
-	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.add_theme_font_size_override("font_size", 28)
-	subtitle.modulate = Color(1.0, 0.92, 0.80)
-	column.add_child(subtitle)
-
-	var buttons := VBoxContainer.new()
-	buttons.add_theme_constant_override("separation", 10)
-	column.add_child(buttons)
-
-	buttons.add_child(make_menu_button(START_NORMAL, START_HOVER, _on_start_pressed))
-	buttons.add_child(make_menu_button(SETTINGS_NORMAL, SETTINGS_HOVER, _on_settings_pressed))
-	buttons.add_child(make_menu_button(EXIT_NORMAL, EXIT_HOVER, _on_exit_pressed))
-
-	settings_popup = PanelContainer.new()
-	settings_popup.visible = false
-	settings_popup.custom_minimum_size = Vector2(500, 190)
-	settings_popup.position = Vector2(40, 40)
-	settings_popup.anchor_left = 0.5
-	settings_popup.anchor_top = 0.5
-	settings_popup.anchor_right = 0.5
-	settings_popup.anchor_bottom = 0.5
-	settings_popup.offset_left = -250
-	settings_popup.offset_top = -95
-	settings_popup.offset_right = 250
-	settings_popup.offset_bottom = 95
-	menu_layer.add_child(settings_popup)
-
-	var popup_margin := MarginContainer.new()
-	popup_margin.add_theme_constant_override("margin_left", 18)
-	popup_margin.add_theme_constant_override("margin_right", 18)
-	popup_margin.add_theme_constant_override("margin_top", 18)
-	popup_margin.add_theme_constant_override("margin_bottom", 18)
-	settings_popup.add_child(popup_margin)
-
-	var popup_box := VBoxContainer.new()
-	popup_box.add_theme_constant_override("separation", 10)
-	popup_margin.add_child(popup_box)
-
-	var popup_title := Label.new()
-	popup_title.text = "Ayarlar / Bilgi"
-	popup_title.add_theme_font_size_override("font_size", 24)
-	popup_box.add_child(popup_title)
-
-	var popup_text := Label.new()
-	popup_text.text = "• Çözünürlük: 1920 x 1080\n• Üretilen görseller artık menüde, komut kartlarında, oyun alanında ve zeplinlerde uygulanmıştır.\n• Kapatmak için tekrar Ayarlar düğmesine bas."
-	popup_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	popup_box.add_child(popup_text)
+	pass
 
 func build_game_ui() -> void:
-	game_layer = Control.new()
-	game_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	game_layer.visible = false
-	add_child(game_layer)
+	pass
 
-	var shade := ColorRect.new()
-	shade.color = Color(0.02, 0.03, 0.04, 0.42)
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	game_layer.add_child(shade)
+func setup_game() -> void:
+	pass
 
-	var margin := MarginContainer.new()
-	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	margin.add_theme_constant_override("margin_left", 22)
-	margin.add_theme_constant_override("margin_right", 22)
-	margin.add_theme_constant_override("margin_top", 18)
-	margin.add_theme_constant_override("margin_bottom", 18)
-	game_layer.add_child(margin)
+func refresh_ui() -> void:
+	pass
 
-	var main_row := HBoxContainer.new()
-	main_row.add_theme_constant_override("separation", 18)
-	margin.add_child(main_row)
+func check_all_cargo() -> void:
+	pass
 
-	var left := VBoxContainer.new()
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	left.add_theme_constant_override("separation", 10)
-	main_row.add_child(left)
+func log_clear() -> void:
+	pass
 
-	var header := HBoxContainer.new()
-	header.add_theme_constant_override("separation", 18)
-	left.add_child(header)
+func log_line(_text: String) -> void:
+	pass
 
-	var logo := TextureRect.new()
-	logo.texture = LOGO_TEX
-	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	logo.custom_minimum_size = Vector2(360, 105)
-	header.add_child(logo)
+func present_turn(_phase: String, _slot: int = -1) -> void:
+	pass
 
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header.add_child(spacer)
+func play_sound(_kind: String) -> void:
+	pass
 
-	var hud_box := VBoxContainer.new()
-	hud_box.alignment = BoxContainer.ALIGNMENT_CENTER
-	hud_box.add_theme_constant_override("separation", 6)
-	header.add_child(hud_box)
+func present_motor_progress(_slot: int, _completed: int) -> void:
+	pass
 
-	round_label = Label.new()
-	round_label.add_theme_font_size_override("font_size", 24)
-	round_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	hud_box.add_child(round_label)
+## Botun taşıyacak kargosu ve alınabilir kontrat yoksa bekleyeceği hücreler.
+func _ai_idle_goals(_ship: Dictionary) -> Array:
+	return []
 
-	wind_label = Label.new()
-	wind_label.add_theme_font_size_override("font_size", 22)
-	wind_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	hud_box.add_child(wind_label)
+func respawn_ship(ship: Dictionary) -> void:
+	ship.hp = MAX_HP
+	ship.anchored = false
+	ship.cargo = {}
 
-	board = BoardScript.new()
-	board.custom_minimum_size = Vector2(1120, 760)
-	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	left.add_child(board)
-
-	var legend := Label.new()
-	legend.text = "Sarı = Kargo alımı     Turkuaz = Teslimat     Kızıl işaret = Kayalık / çarpışma alanı"
-	legend.modulate = Color(0.95, 0.90, 0.82)
-	legend.add_theme_font_size_override("font_size", 18)
-	left.add_child(legend)
-
-	var side_panel := PanelContainer.new()
-	side_panel.custom_minimum_size = Vector2(520, 0)
-	main_row.add_child(side_panel)
-	var side_margin := MarginContainer.new()
-	side_margin.add_theme_constant_override("margin_left", 16)
-	side_margin.add_theme_constant_override("margin_right", 16)
-	side_margin.add_theme_constant_override("margin_top", 14)
-	side_margin.add_theme_constant_override("margin_bottom", 14)
-	side_panel.add_child(side_margin)
-	var side := VBoxContainer.new()
-	side.add_theme_constant_override("separation", 10)
-	side_margin.add_child(side)
-
-	var program_title := Label.new()
-	program_title.text = "3 KOMUT PROGRAMLA"
-	program_title.add_theme_font_size_override("font_size", 21)
-	side.add_child(program_title)
-
-	queue_label = Label.new()
-	queue_label.text = "[ ? ]   [ ? ]   [ ? ]"
-	queue_label.add_theme_font_size_override("font_size", 18)
-	queue_label.custom_minimum_size.y = 34
-	side.add_child(queue_label)
-
-	command_box = HBoxContainer.new()
-	command_box.add_theme_constant_override("separation", 8)
-	side.add_child(command_box)
-
-	var grid := GridContainer.new()
-	grid.columns = 3
-	grid.add_theme_constant_override("h_separation", 8)
-	grid.add_theme_constant_override("v_separation", 8)
-	side.add_child(grid)
-	for command in COMMANDS:
-		var btn := TextureButton.new()
-		btn.texture_normal = COMMAND_TEXTURES[command]
-		btn.texture_hover = COMMAND_TEXTURES[command]
-		btn.texture_pressed = COMMAND_TEXTURES[command]
-		btn.ignore_texture_size = true
-		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		btn.custom_minimum_size = Vector2(152, 202)
-		btn.tooltip_text = command
-		btn.pressed.connect(_on_command_pressed.bind(command))
-		btn.add_to_group("command_buttons")
-		grid.add_child(btn)
-
-	var action_row := HBoxContainer.new()
-	action_row.add_theme_constant_override("separation", 8)
-	side.add_child(action_row)
-	clear_button = Button.new()
-	clear_button.text = "Temizle"
-	clear_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	clear_button.pressed.connect(_on_clear_pressed)
-	action_row.add_child(clear_button)
-	execute_button = Button.new()
-	execute_button.text = "PROGRAMI AÇ"
-	execute_button.disabled = true
-	execute_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	execute_button.pressed.connect(_on_execute_pressed)
-	action_row.add_child(execute_button)
-
-	var sep := HSeparator.new()
-	side.add_child(sep)
-	var score_title := Label.new()
-	score_title.text = "PİLOTLAR"
-	score_title.add_theme_font_size_override("font_size", 18)
-	side.add_child(score_title)
-	score_box = VBoxContainer.new()
-	side.add_child(score_box)
-
-	var sep2 := HSeparator.new()
-	side.add_child(sep2)
-	var log_title := Label.new()
-	log_title.text = "UÇUŞ KAYDI"
-	log_title.add_theme_font_size_override("font_size", 18)
-	side.add_child(log_title)
-	info_label = RichTextLabel.new()
-	info_label.bbcode_enabled = true
-	info_label.fit_content = false
-	info_label.scroll_active = true
-	info_label.custom_minimum_size = Vector2(0, 280)
-	info_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	side.add_child(info_label)
-
-	var footer_row := HBoxContainer.new()
-	footer_row.add_theme_constant_override("separation", 8)
-	side.add_child(footer_row)
-
-	var restart := Button.new()
-	restart.text = "Yeni Oyun"
-	restart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	restart.pressed.connect(_on_restart_pressed)
-	footer_row.add_child(restart)
-
-	var to_menu := Button.new()
-	to_menu.text = "Ana Menü"
-	to_menu.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	to_menu.pressed.connect(show_menu)
-	footer_row.add_child(to_menu)
-
-	game_built = true
-
-func make_menu_button(normal_tex: Texture2D, hover_tex: Texture2D, callback: Callable) -> TextureButton:
-	var button := TextureButton.new()
-	button.texture_normal = normal_tex
-	button.texture_hover = hover_tex
-	button.texture_pressed = hover_tex
-	button.ignore_texture_size = true
-	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	button.custom_minimum_size = Vector2(520, 90)
-	button.pressed.connect(callback)
-	return button
+# --- Menü ve girdi -----------------------------------------------------------
 
 func show_menu() -> void:
 	session_id += 1
@@ -376,46 +131,19 @@ func _on_settings_pressed() -> void:
 func _on_exit_pressed() -> void:
 	get_tree().quit()
 
+## Çözülen tur da güvenle iptal edilir: yeni oturum eski eşzamansız işleri durdurur.
 func _on_restart_pressed() -> void:
-	if resolving:
-		return
 	setup_game()
-
-func setup_game() -> void:
-	session_id += 1
-	set_input_enabled(true)
-	resolving = false
-	game_over = false
-	round_no = 1
-	player_queue.clear()
-	ships.clear()
-	for child in board.get_children():
-		child.queue_free()
-	board.tokens.clear()
-	board.configure(GRID_SIZE, rocks, pickups, deliveries)
-
-	ships.append(make_ship(1, "Sen", Vector2i(1,4), 1, true, Color(0.32,0.72,1.0)))
-	ships.append(make_ship(2, "Kızıl Korsan", Vector2i(9,4), 3, false, Color(0.95,0.30,0.30)))
-	ships.append(make_ship(3, "Bakır Martı", Vector2i(5,7), 0, false, Color(0.42,0.90,0.55)))
-	if start_with_four_ships:
-		ships.append(make_ship(4, "Gece Rüzgârı", Vector2i(5,2), 2, false, Color(0.98,0.82,0.30)))
-
-	for ship in ships:
-		board.add_ship(ship.id, ship.color, ship.pos)
-		board.update_ship(ship.id, ship.pos, ship.facing, ship.hp, false, false)
-
-	new_wind()
-	refresh_ui()
-	log_clear()
-	log_line("[b]Oyun başladı.[/b] Üç komut seç. Her komuttan sonra rüzgâr tüm zeplinleri iter.")
-	log_line("Kargo almak için sarı hücreye, teslim etmek için ilgili turkuaz hücreye git.")
 
 func make_ship(id: int, ship_name: String, pos: Vector2i, facing: int, human: bool, color: Color) -> Dictionary:
 	return {
 		"id":id, "name":ship_name, "pos":pos, "facing":facing,
 		"hp":MAX_HP, "coins":0, "deliveries":0, "cargo":{}, "queue":[],
-		"human":human, "color":color, "anchored":false
+		"human":human, "color":color, "anchored":false, "downed":false
 	}
+
+func can_edit_program() -> bool:
+	return not resolving and not game_over and game_built and game_layer.visible
 
 func _on_command_pressed(command: String) -> void:
 	if resolving or game_over or player_queue.size() >= 3:
@@ -429,6 +157,12 @@ func _on_clear_pressed() -> void:
 	player_queue.clear()
 	refresh_ui()
 
+func _on_undo_pressed() -> void:
+	if resolving or game_over or player_queue.is_empty():
+		return
+	player_queue.pop_back()
+	refresh_ui()
+
 func _on_execute_pressed() -> void:
 	if resolving or game_over or player_queue.size() != 3:
 		return
@@ -436,15 +170,16 @@ func _on_execute_pressed() -> void:
 	set_input_enabled(false)
 	await execute_round()
 
+# --- Tur çözümü --------------------------------------------------------------
+
 func execute_round() -> void:
 	var active_session: int = session_id
 	for ship in ships:
 		ship.queue.clear()
 		ship.anchored = false
-		if ship.human:
-			ship.queue = player_queue.duplicate()
-		else:
-			ship.queue = plan_ai(ship)
+		ship.downed = false
+	for ship in ships:
+		ship.queue = player_queue.duplicate() if ship.human else plan_ai(ship)
 
 	log_line("\n[b]--- TUR %d ---[/b]" % round_no)
 	for ship in ships:
@@ -462,7 +197,10 @@ func execute_round() -> void:
 		if active_session != session_id:
 			return
 		present_turn("wind", slot)
-		log_line("Rüzgâr itişi: %s" % DIR_NAMES[wind_dir])
+		if wind_dir == WIND_CALM:
+			log_line("Sakin hava: rüzgâr esmedi.")
+		else:
+			log_line("Rüzgâr itişi: %s" % DIR_NAMES[wind_dir])
 		await resolve_wind()
 		if active_session != session_id:
 			return
@@ -481,11 +219,15 @@ func execute_round() -> void:
 	set_input_enabled(true)
 	refresh_ui()
 
+## Düşüp onarılan pilot turun kalan komutlarını uygulamaz.
+func can_act(ship: Dictionary) -> bool:
+	return ship.hp > 0 and not ship.get("downed", false)
+
 func resolve_slot(slot: int, active_session: int = -1) -> void:
 	if active_session == -1:
 		active_session = session_id
 	for ship in ships:
-		if ship.hp <= 0:
+		if not can_act(ship):
 			continue
 		var cmd: String = ship.queue[slot]
 		if cmd == CMD_LEFT:
@@ -501,27 +243,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 	if active_session != session_id:
 		return
 
-	var hooks: Array = []
-	for ship in ships:
-		if ship.hp > 0 and ship.queue[slot] == CMD_HOOK:
-			var target: Variant = find_hook_target(ship)
-			if target != null:
-				hooks.append([ship, target])
-			else:
-				log_line("%s kancayı boşa attı." % ship.name)
-	for pair in hooks:
-		var attacker: Dictionary = pair[0]
-		var target: Dictionary = pair[1]
-		if find_hook_target(attacker) != target:
-			continue
-		board.show_hook(attacker.id, target.id)
-		var pull_dir := sign_vec(attacker.pos - target.pos)
-		log_line("%s, %s zeplinine kanca taktı!" % [attacker.name, target.name])
-		if abs(attacker.pos.x - target.pos.x) + abs(attacker.pos.y - target.pos.y) > 1:
-			attempt_single_push(target, pull_dir, attacker.id)
-			check_all_cargo()
-		else:
-			log_line("Kanca gerildi ama zeplinler zaten bitişik; konum değişmedi.")
+	resolve_hooks(slot)
 	await animate_all()
 	if active_session != session_id:
 		return
@@ -530,7 +252,7 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 	for substep in range(2):
 		var intents := {}
 		for ship in ships:
-			if ship.hp <= 0:
+			if not can_act(ship):
 				continue
 			var cmd: String = ship.queue[slot]
 			var steps := 0
@@ -560,11 +282,46 @@ func resolve_slot(slot: int, active_session: int = -1) -> void:
 		if active_session != session_id:
 			return
 
+## Tüm kancalar aynı konumlardan hedef seçer ve çekişler tek eşzamanlı adımda uygulanır.
+## Karşı yönlerden veya dik açıyla çekilen hedef yerinde kalır.
+func resolve_hooks(slot: int) -> void:
+	var pulls := {}
+	for ship in ships:
+		if not can_act(ship) or ship.queue[slot] != CMD_HOOK:
+			continue
+		var target: Variant = find_hook_target(ship)
+		if target == null:
+			log_line("%s kancayı boşa attı." % ship.name)
+			continue
+		board.show_hook(ship.id, target.id)
+		log_line("%s, %s zeplinine kanca taktı!" % [ship.name, target.name])
+		if target.get("downed", false):
+			log_line("%s onarımda; kanca onu yerinden oynatamadı." % target.name)
+		elif absi(ship.pos.x - target.pos.x) + absi(ship.pos.y - target.pos.y) > 1:
+			pulls[target.id] = pulls.get(target.id, Vector2i.ZERO) + sign_vec(ship.pos - target.pos)
+		else:
+			log_line("Kanca gerildi ama zeplinler zaten bitişik; konum değişmedi.")
+	var intents := {}
+	for id in pulls:
+		var pull: Vector2i = pulls[id]
+		if absi(pull.x) + absi(pull.y) == 1:
+			intents[id] = pull
+		else:
+			log_line("%s iki yönden çekildi; kancalar birbirini dengeledi." % get_ship(id).name)
+	if not intents.is_empty():
+		resolve_simultaneous_step(intents, "kanca")
+		check_all_cargo()
+
 func resolve_wind() -> void:
+	if wind_dir == WIND_CALM:
+		for ship in ships:
+			ship.anchored = false
+		await animate_all()
+		return
 	play_sound("wind")
 	var intents := {}
 	for ship in ships:
-		if ship.hp > 0 and not ship.anchored:
+		if can_act(ship) and not ship.anchored:
 			intents[ship.id] = DIRS[wind_dir]
 	resolve_simultaneous_step(intents, "rüzgâr")
 	for ship in ships:
@@ -587,7 +344,7 @@ func resolve_simultaneous_step(intents: Dictionary, cause: String) -> void:
 	var blocked_ids := {}
 	if cause == "rüzgâr":
 		for ship in ships:
-			if ship.anchored:
+			if ship.anchored or ship.get("downed", false):
 				blocked_ids[ship.id] = true
 	for target in target_to_ids:
 		var colliding_ids: Array = target_to_ids[target]
@@ -628,14 +385,14 @@ func resolve_simultaneous_step(intents: Dictionary, cause: String) -> void:
 				moved_this_step[moving_id] = true
 		elif failure.has("id"):
 			damage_ids[failure.id] = failure.reason
-	# Apply damage only after the movement transaction; respawns must not alter its inputs.
+	# Hasar hareket işleminden sonra uygulanır; yeniden doğma girdileri değiştirmez.
 	for id in damage_ids:
 		damage_ship(get_ship(id), 1, damage_ids[id])
 
 func _plan_step(id: int, dir: Vector2i, intents: Dictionary, blocked: Dictionary,
 		moved: Dictionary, proposed: Dictionary, failure: Dictionary) -> bool:
 	if proposed.has(id):
-		return true # A cycle of three or more ships can vacate simultaneously.
+		return true # Üç veya daha fazla zeplinden oluşan döngü aynı anda boşalabilir.
 	if blocked.has(id) or moved.has(id):
 		return false
 	var ship: Dictionary = get_ship(id)
@@ -654,39 +411,6 @@ func _plan_step(id: int, dir: Vector2i, intents: Dictionary, blocked: Dictionary
 			return false
 	return true
 
-func attempt_single_push(ship: Dictionary, dir: Vector2i, source_id: int = -1) -> bool:
-	if dir == Vector2i.ZERO:
-		return false
-	var target: Vector2i = ship.pos + dir
-	if not is_inside(target):
-		damage_ship(ship, 1, "kanyon duvarına çarptı")
-		return false
-	if rocks.has(target):
-		damage_ship(ship, 1, "kayalığa çarptı")
-		return false
-	var occupant: Variant = ship_at(target)
-	if occupant != null and occupant.id != source_id:
-		if not push_chain(occupant, dir, [ship.id]):
-			damage_ship(occupant, 1, "sıkıştı")
-			board.flash_ship(occupant.id)
-			return false
-	ship.pos = target
-	return true
-
-func push_chain(ship: Dictionary, dir: Vector2i, visited: Array) -> bool:
-	if visited.has(ship.id):
-		return false
-	visited.append(ship.id)
-	var target: Vector2i = ship.pos + dir
-	if not is_inside(target) or rocks.has(target):
-		return false
-	var occupant: Variant = ship_at(target)
-	if occupant != null:
-		if not push_chain(occupant, dir, visited):
-			return false
-	ship.pos = target
-	return true
-
 func find_hook_target(attacker: Dictionary) -> Variant:
 	var dir: Vector2i = DIRS[attacker.facing]
 	for distance in range(1,4):
@@ -699,129 +423,182 @@ func find_hook_target(attacker: Dictionary) -> Variant:
 	return null
 
 func sign_vec(v: Vector2i) -> Vector2i:
-	return Vector2i(sign(v.x), sign(v.y))
-
-func check_all_cargo() -> void:
-	for ship in ships:
-		if ship.hp <= 0:
-			continue
-		if ship.cargo.is_empty() and pickups.has(ship.pos):
-			ship.cargo = pickups[ship.pos].duplicate(true)
-			log_line("[color=yellow]%s, %s aldı.[/color]" % [ship.name, ship.cargo.name])
-		elif not ship.cargo.is_empty() and ship.pos == ship.cargo.dest:
-			var value: int = ship.cargo.value
-			log_line("[color=aqua]%s kargoyu teslim etti: +%d altın![/color]" % [ship.name, value])
-			ship.coins += value
-			ship.deliveries += 1
-			ship.cargo = {}
+	return Vector2i(signi(v.x), signi(v.y))
 
 func damage_ship(ship: Dictionary, amount: int, reason: String) -> void:
 	ship.hp = max(0, ship.hp - amount)
 	board.flash_ship(ship.id)
 	log_line("[color=salmon]%s %s: -%d gövde.[/color]" % [ship.name, reason, amount])
 	if ship.hp <= 0:
-		log_line("[b][color=red]%s düştü! Başlangıç noktasında onarıldı.[/color][/b]" % ship.name)
 		respawn_ship(ship)
+		ship.downed = resolving
+		if resolving:
+			log_line("[b][color=red]%s düştü! Başlangıcında onarıldı; bu turun kalanını bekleyecek.[/color][/b]" % ship.name)
+		else:
+			log_line("[b][color=red]%s düştü! Başlangıcında onarıldı.[/color][/b]" % ship.name)
 
-func respawn_ship(ship: Dictionary) -> void:
-	var starts := [Vector2i(1,4), Vector2i(9,4), Vector2i(5,7), Vector2i(5,2)]
-	ship.hp = MAX_HP
-	ship.anchored = false
-	ship.cargo = {}
-	var candidate: Vector2i = starts[(ship.id-1) % starts.size()]
-	if ship_at(candidate) == null and not rocks.has(candidate):
-		ship.pos = candidate
-	else:
-		for y in range(GRID_SIZE.y):
-			for x in range(GRID_SIZE.x):
-				var c := Vector2i(x,y)
-				if not rocks.has(c) and ship_at(c) == null:
-					ship.pos = c
-					return
+# --- Botlar ------------------------------------------------------------------
 
 func plan_ai(ship: Dictionary) -> Array[String]:
 	var result: Array[String] = []
-	var predicted: Dictionary = ship.duplicate(true)
+	var pos: Vector2i = ship.pos
+	var facing: int = ship.facing
+	var hp: int = ship.hp
+	var cargo: Dictionary = ship.cargo
 	var available: Dictionary = pickups.duplicate(true)
+	var crowd := {}
+	for other in ships:
+		if other.id != ship.id and other.hp > 0:
+			crowd[other.pos] = true
 	for slot in range(3):
-		var goals: Array = [predicted.cargo.dest] if not predicted.cargo.is_empty() else available.keys()
-		var command: String = _ai_next_command(predicted.pos, predicted.facing, goals)
+		var goals: Array = [cargo.dest] if not cargo.is_empty() else available.keys()
+		if goals.is_empty():
+			goals = _ai_idle_goals(ship)
+		var command: String = _ai_next_command(pos, facing, hp, goals, crowd)
 		result.append(command)
-		var next: Dictionary = _ai_transition(predicted.pos, predicted.facing, command, goals)
-		if next.is_empty():
-			continue
-		predicted.pos = next.pos
-		predicted.facing = next.facing
-		if next.has("goal"):
-			if predicted.cargo.is_empty() and available.has(next.goal):
-				predicted.cargo = available[next.goal].duplicate(true)
-				available.erase(next.goal)
-			else:
-				predicted.cargo = {}
+		var next: Dictionary = ai_simulate(pos, facing, hp, command)
+		if next.hp <= 0:
+			break
+		pos = next.pos
+		facing = next.facing
+		hp = next.hp
+		for cell in next.cells:
+			if cargo.is_empty() and available.has(cell):
+				cargo = available[cell]
+				available.erase(cell)
+			elif not cargo.is_empty() and cell == cargo.dest:
+				cargo = {}
+	while result.size() < 3:
+		result.append(CMD_ANCHOR)
 	return result
 
-func _ai_next_command(pos: Vector2i, facing: int, goals: Array) -> String:
-	if goals.is_empty():
-		return CMD_ANCHOR
-	# Search command + wind transitions, rather than walking into a rock or wall.
-	var frontier: Array[Dictionary] = [{"pos": pos, "facing": facing, "first": ""}]
-	var visited := {Vector3i(pos.x, pos.y, facing): true}
-	var cursor: int = 0
-	while cursor < frontier.size():
-		var state: Dictionary = frontier[cursor]
-		cursor += 1
-		for command in [CMD_FORWARD_1, CMD_FORWARD_2, CMD_LEFT, CMD_RIGHT, CMD_ANCHOR]:
-			var next: Dictionary = _ai_transition(state.pos, state.facing, command, goals)
-			if next.is_empty():
-				continue
-			var first: String = command if state.first == "" else state.first
-			if next.has("goal"):
-				return first
-			var key := Vector3i(next.pos.x, next.pos.y, next.facing)
-			if not visited.has(key):
-				visited[key] = true
-				next.first = first
-				frontier.append(next)
-	# If this wind makes every route unsafe, shelter until the next round.
-	return CMD_ANCHOR
-
-func _ai_transition(pos: Vector2i, facing: int, command: String, goals: Array) -> Dictionary:
-	var next := {"pos": pos, "facing": facing}
+## Tek başına bir zeplinin bir komut + rüzgâr sonucunu çözücüyle aynı kurallarla hesaplar.
+## `cells`, kargo/teslimat kontrolü yapılan hücreleri sırayla içerir.
+func ai_simulate(pos: Vector2i, facing: int, hp: int, command: String) -> Dictionary:
+	var state := {"pos": pos, "facing": facing, "hp": hp, "damage": 0, "cells": []}
 	if command == CMD_LEFT:
-		next.facing = (facing + 3) % 4
+		state.facing = (facing + 3) % 4
 	elif command == CMD_RIGHT:
-		next.facing = (facing + 1) % 4
+		state.facing = (facing + 1) % 4
 	var steps: int = 2 if command == CMD_FORWARD_2 else (1 if command == CMD_FORWARD_1 else 0)
 	for step in range(steps):
-		next.pos += DIRS[next.facing]
-		if not is_inside(next.pos) or rocks.has(next.pos):
-			return {}
-		if goals.has(next.pos) and not next.has("goal"):
-			next.goal = next.pos
-	if command != CMD_ANCHOR:
-		next.pos += DIRS[wind_dir]
-		if not is_inside(next.pos) or rocks.has(next.pos):
-			return {}
-	if goals.has(next.pos) and not next.has("goal"):
-		next.goal = next.pos
-	return next
+		var target: Vector2i = state.pos + DIRS[state.facing]
+		if not is_inside(target) or rocks.has(target):
+			state.damage += 1
+		else:
+			state.pos = target
+			state.cells.append(target)
+	if command != CMD_ANCHOR and wind_dir != WIND_CALM:
+		var drift: Vector2i = state.pos + DIRS[wind_dir]
+		if not is_inside(drift) or rocks.has(drift):
+			state.damage += 1
+		else:
+			state.pos = drift
+			state.cells.append(drift)
+	state.hp = hp - state.damage
+	return state
+
+## En ucuz rotanın ilk komutu. Güvenli rota yoksa sınırlı hasarı kabul eder,
+## hedefe hiç ulaşılamıyorsa hedefe en çok yaklaştıran komutu seçer.
+func _ai_next_command(pos: Vector2i, facing: int, hp: int, goals: Array, crowd: Dictionary = {}) -> String:
+	if goals.is_empty():
+		return CMD_ANCHOR
+	var goal_set := {}
+	for goal in goals:
+		goal_set[goal] = true
+	var buckets: Array = []
+	buckets.resize(AI_MAX_COST + 1)
+	for i in range(buckets.size()):
+		buckets[i] = []
+	var best := {Vector4i(pos.x, pos.y, facing, hp): 0}
+	buckets[0].append({"pos": pos, "facing": facing, "hp": hp, "first": "", "goal": false})
+	var fallback: String = CMD_ANCHOR
+	var fallback_score: int = _ai_distance(pos, goals) * 10
+	for cost in range(buckets.size()):
+		for state in buckets[cost]:
+			if state.goal:
+				return state.first
+			if best.get(Vector4i(state.pos.x, state.pos.y, state.facing, state.hp), -1) < cost:
+				continue
+			for command in AI_MOVES:
+				var next: Dictionary = ai_simulate(state.pos, state.facing, state.hp, command)
+				if next.hp <= 0:
+					continue
+				var first: String = command if state.first == "" else state.first
+				var step_cost: int = AI_STEP_COST + next.damage * AI_DAMAGE_COST
+				var reached: bool = false
+				for cell in next.cells:
+					if crowd.has(cell):
+						step_cost += AI_CROWD_COST
+					if goal_set.has(cell):
+						reached = true
+				var next_cost: int = cost + step_cost
+				if next_cost > AI_MAX_COST:
+					continue
+				if reached:
+					buckets[next_cost].append({"first": first, "goal": true})
+					continue
+				var key := Vector4i(next.pos.x, next.pos.y, next.facing, next.hp)
+				if best.has(key) and best[key] <= next_cost:
+					continue
+				best[key] = next_cost
+				buckets[next_cost].append({"pos": next.pos, "facing": next.facing, "hp": next.hp, "first": first, "goal": false})
+				var score: int = _ai_distance(next.pos, goals) * 10 + next_cost
+				if score < fallback_score:
+					fallback_score = score
+					fallback = first
+	return fallback
+
+func _ai_distance(pos: Vector2i, goals: Array) -> int:
+	var nearest: int = 999
+	for goal in goals:
+		nearest = mini(nearest, absi(goal.x - pos.x) + absi(goal.y - pos.y))
+	return nearest
+
+# --- Zafer, rüzgâr ve yardımcılar -------------------------------------------
+
+## Eşik geçilirse önce altın, sonra kalan gövde kazananı belirler; ikisi de eşitse ortak zafer.
+func victory_winners() -> Array:
+	var contenders: Array = ships.filter(func(ship: Dictionary) -> bool: return ship.coins >= TARGET_COINS)
+	if contenders.is_empty():
+		return []
+	contenders.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a.coins != b.coins:
+			return a.coins > b.coins
+		if a.hp != b.hp:
+			return a.hp > b.hp
+		return a.id < b.id)
+	var top: Dictionary = contenders[0]
+	return contenders.filter(func(ship: Dictionary) -> bool: return ship.coins == top.coins and ship.hp == top.hp)
 
 func check_victory() -> bool:
-	for ship in ships:
-		if ship.coins >= TARGET_COINS:
-			game_over = true
-			resolving = false
-			set_input_enabled(false)
-			log_line("\n[b][color=yellow]%s %d altına ulaştı ve Fırtına Vadisi'ni kazandı![/color][/b]" % [ship.name, ship.coins])
-			refresh_ui()
-			return true
-	return false
+	var winners: Array = victory_winners()
+	if winners.is_empty():
+		return false
+	last_winners = winners
+	game_over = true
+	resolving = false
+	set_input_enabled(false)
+	if winners.size() == 1:
+		log_line("\n[b][color=yellow]%s %d altına ulaştı ve Fırtına Vadisi'ni kazandı![/color][/b]" % [winners[0].name, winners[0].coins])
+	else:
+		var names: Array = winners.map(func(ship: Dictionary) -> String: return str(ship.name))
+		log_line("\n[b][color=yellow]Ortak zafer: %s %d altınla eşit bitirdi![/color][/b]" % [", ".join(names), winners[0].coins])
+	refresh_ui()
+	return true
 
+## İlk tur sakin geçer: köşelerdeki pilotlar daha komut seçmeden duvara itilmez.
 func new_wind() -> void:
+	if round_no <= 1:
+		wind_dir = WIND_CALM
+		return
 	var old := wind_dir
 	wind_dir = rng.randi_range(0,3)
-	if round_no > 1 and wind_dir == old and rng.randf() < 0.55:
+	if old != WIND_CALM and wind_dir == old and rng.randf() < 0.55:
 		wind_dir = (wind_dir + rng.randi_range(1,3)) % 4
+
+func wind_name() -> String:
+	return CALM_NAME if wind_dir == WIND_CALM else DIR_NAMES[wind_dir]
 
 func animate_all() -> void:
 	refresh_tokens(true)
@@ -831,44 +608,11 @@ func refresh_tokens(animate := false) -> void:
 	for ship in ships:
 		board.update_ship(ship.id, ship.pos, ship.facing, ship.hp, not ship.cargo.is_empty(), animate)
 
-func refresh_ui() -> void:
-	round_label.text = "Tur %d" % round_no
-	wind_label.text = "Rüzgâr: %s" % DIR_NAMES[wind_dir]
-	var slots := []
-	for i in range(3):
-		slots.append("[ %s ]" % (player_queue[i] if i < player_queue.size() else "?"))
-	queue_label.text = "   ".join(slots)
-	execute_button.disabled = resolving or game_over or player_queue.size() != 3
-	clear_button.disabled = resolving or game_over or player_queue.is_empty()
-
-	for child in command_box.get_children():
-		child.queue_free()
-	for i in range(3):
-		var holder := PanelContainer.new()
-		holder.custom_minimum_size = Vector2(96, 132)
-		command_box.add_child(holder)
-		if i < player_queue.size():
-			var tex := TextureRect.new()
-			tex.texture = COMMAND_TEXTURES[player_queue[i]]
-			tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			tex.custom_minimum_size = Vector2(90, 126)
-			holder.add_child(tex)
-
-	for child in score_box.get_children():
-		child.queue_free()
-	for ship in ships:
-		var l := Label.new()
-		var cargo_text: String = "—" if ship.cargo.is_empty() else str(ship.cargo.name)
-		l.text = "%s  |  ❤ %d  |  Altın %d  |  Kargo: %s" % [ship.name, ship.hp, ship.coins, cargo_text]
-		l.modulate = ship.color.lightened(0.12)
-		score_box.add_child(l)
-
 func set_input_enabled(enabled: bool) -> void:
 	for child in get_tree().get_nodes_in_group("command_buttons"):
 		if child is BaseButton:
 			child.disabled = not enabled
-	clear_button.disabled = not enabled
+	clear_button.disabled = not enabled or player_queue.is_empty()
 	execute_button.disabled = not enabled or player_queue.size() != 3
 
 func get_ship(id: int) -> Variant:
@@ -885,18 +629,3 @@ func ship_at(cell: Vector2i) -> Variant:
 
 func is_inside(cell: Vector2i) -> bool:
 	return cell.x >= 0 and cell.y >= 0 and cell.x < GRID_SIZE.x and cell.y < GRID_SIZE.y
-
-func log_clear() -> void:
-	info_label.clear()
-
-func log_line(text: String) -> void:
-	info_label.append_text(text + "\n")
-
-func present_turn(_phase: String, _slot: int = -1) -> void:
-	pass
-
-func play_sound(_kind: String) -> void:
-	pass
-
-func present_motor_progress(_slot: int, _completed: int) -> void:
-	pass

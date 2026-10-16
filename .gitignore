@@ -2,3 +2,5 @@
 .godot/
 # Local export credentials
 export_credentials.cfg
+# Dışa aktarılan paketler
+build/

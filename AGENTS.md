@@ -32,6 +32,7 @@ Kapsam: bu depo. Güncel kullanıcı isteği ve platform kuralları önceliklidi
 - `scripts/airship_token.gd`, `scenes/airship_token.tscn`: zeplin görselleri.
 - `assets/ui/`: yeni SVG görselleri; `assets/generated/`: mevcut PNG'ler.
 - `tests/regression.gd`: oyun akışı regresyonları; `README.md`: kurallar ve çalıştırma.
+- `export_presets.cfg`: Windows/Linux dışa aktarma; çıktı `build/` (sürüm kontrolü dışında). `docs/`: README görselleri (`.gdignore` ile Godot dışında).
 
 ## Korunacak davranışlar
 

@@ -3,6 +3,7 @@ extends Control
 const Visuals = preload("res://scripts/presentation.gd")
 var ranking: Array = []
 var winner_id: int = -1
+var winner_ids: Array = []
 var blocked_focus: Dictionary = {}
 var game: Control
 var heading: Label
@@ -59,21 +60,34 @@ func setup(owner_game: Control) -> void:
 		button.focus_previous = button.get_path_to(other)
 	hide()
 
-func show_result(winner: Dictionary) -> void:
-	if visible:
+## `winners` tek kazanan ya da eşitlikte ortak kazananlardır (önce altın, sonra kalan gövde).
+func show_result(winners: Array) -> void:
+	if visible or winners.is_empty():
 		return
+	var winner: Dictionary = winners[0]
 	winner_id = winner.id
+	winner_ids = winners.map(func(ship: Dictionary) -> int: return int(ship.id))
 	ranking = game.ships.duplicate(true)
 	ranking.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.coins > b.coins if a.coins != b.coins else a.id < b.id)
-	heading.text = "ZAFER SENİN" if winner.human else "SEFER TAMAMLANDI"
-	summary.text = "Kazanan: %s  •  %d altın  •  %d tur" % [winner.name, winner.coins, game.round_no]
+		if a.coins != b.coins:
+			return a.coins > b.coins
+		if a.hp != b.hp:
+			return a.hp > b.hp
+		return a.id < b.id)
+	var human_won: bool = winners.any(func(ship: Dictionary) -> bool: return ship.human)
+	if winners.size() > 1:
+		heading.text = "ORTAK ZAFER" if human_won else "BERABERE BİTTİ"
+		var names: Array = winners.map(func(ship: Dictionary) -> String: return str(ship.name))
+		summary.text = "Kazananlar: %s  •  %d altın  •  %d tur" % [", ".join(names), winner.coins, game.round_no]
+	else:
+		heading.text = "ZAFER SENİN" if human_won else "SEFER TAMAMLANDI"
+		summary.text = "Kazanan: %s  •  %d altın  •  %d tur" % [winner.name, winner.coins, game.round_no]
 	for i in range(4):
 		rows[i * 3].get_parent().visible = i < ranking.size()
 		if i >= ranking.size():
 			continue
 		var ship: Dictionary = ranking[i]
-		rows[i * 3].text = "%02d   %s%s" % [i + 1, ship.name, "   •   KAZANAN" if ship.id == winner_id else ""]
+		rows[i * 3].text = "%02d   %s%s" % [i + 1, ship.name, "   •   KAZANAN" if winner_ids.has(int(ship.id)) else ""]
 		rows[i * 3].add_theme_color_override("font_color", ship.color.lightened(0.2))
 		rows[i * 3 + 1].text = str(ship.coins)
 		rows[i * 3 + 2].text = str(ship.deliveries)
@@ -98,3 +112,4 @@ func dismiss() -> void:
 	blocked_focus.clear()
 	ranking.clear()
 	winner_id = -1
+	winner_ids.clear()
