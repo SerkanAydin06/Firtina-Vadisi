@@ -31,6 +31,7 @@ var pilot_gold_labels: Array[Label] = []
 var pilot_cargo_labels: Array[Label] = []
 var reduced_motion: bool = false
 var contract_serial: int = 0
+var board_focus: Node2D
 var route_overlay: Node2D
 var route_hint: Label
 var game_audio: Node
@@ -142,6 +143,11 @@ func build_game_ui() -> void:
 	route_overlay.board = board
 	route_overlay.z_index = 400
 	board.add_child(route_overlay)
+	board_focus = preload("res://scripts/board_focus.gd").new()
+	board_focus.board = board
+	board_focus.z_index = 90
+	board.add_child(board_focus)
+	board.resized.connect(board_focus.clear)
 	board.resized.connect(route_overlay.queue_redraw)
 	route_hint = board.get_node("RouteHint") as Label
 	contract_tracker = preload("res://scripts/contract_tracker.gd").new()
@@ -369,6 +375,10 @@ func _set_resolution_pause(value: float) -> void:
 	_save_settings()
 
 func _refresh_route_preview() -> void:
+	if is_instance_valid(board_focus):
+		board_focus.enabled = not resolving and not game_over and game_layer.visible
+		if not board_focus.enabled:
+			board_focus.clear()
 	if not is_instance_valid(route_overlay):
 		return
 	if resolving or game_over or player_queue.is_empty() or ships.is_empty() or not game_layer.visible:
