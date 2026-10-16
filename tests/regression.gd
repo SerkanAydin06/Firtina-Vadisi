@@ -47,6 +47,7 @@ func run() -> void:
 	_test_contract_tracking()
 	await _test_effects()
 	_test_hover()
+	_test_board_focus()
 	await _test_turn_presentation()
 	await _test_victory_screen()
 	_test_audio()
@@ -451,3 +452,23 @@ func _test_hover() -> void:
 	board.set_reduced_motion(false)
 	verify(token.is_processing(), "Fresh match resumes hover")
 	board.set_reduced_motion(original_motion)
+
+func _test_board_focus() -> void:
+	game.setup_game()
+	var focus = game.board_focus
+	var snapshot: Array = game.ships.duplicate(true)
+	for cell in [Vector2i(0, 0), Vector2i(5, 4), Vector2i(10, 8)]:
+		focus.show_at(game.board.cell_center(cell))
+		verify(focus.cell == cell, "Locator matches perspective cell center")
+	focus.show_at(Vector2(-100, -100))
+	verify(focus.cell == Vector2i(-1, -1), "Locator clears outside board")
+	focus.show_at(game.board.cell_center(Vector2i(4, 4)))
+	game.resolving = true
+	game._refresh_route_preview()
+	verify(not focus.enabled and focus.cell.x == -1, "Resolving hides locator")
+	game.resolving = false
+	game.show_menu()
+	verify(not focus.enabled and focus.cell.x == -1, "Menu clears locator")
+	verify(game.ships == snapshot, "Locator never changes game state")
+	game._on_start_pressed()
+	verify(focus.enabled, "Planning restores locator")
