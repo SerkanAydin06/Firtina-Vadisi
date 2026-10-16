@@ -211,14 +211,14 @@ func _layout_grid_cells() -> void:
 		var outline: Line2D = cell_node.get_node_or_null("Outline") as Line2D
 		if fill != null:
 			fill.polygon = local_quad
-			fill.color = Color(0.35, 0.56, 0.59, 0.075 if (x + y) % 2 == 0 else 0.025)
+			fill.color = Color(0.35, 0.56, 0.59, 0.0)
 		if inner != null:
 			inner.polygon = inner_quad
-			inner.color = Color(0.24, 0.34, 0.36, 0.015)
+			inner.color = Color(0.24, 0.34, 0.36, 0.0)
 		if outline != null:
 			outline.points = outline_points
-			outline.width = 1.1
-			outline.default_color = Color(0.58, 0.69, 0.68, 0.30)
+			outline.width = 0.8
+			outline.default_color = Color(0.66, 0.78, 0.74, 0.13)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
