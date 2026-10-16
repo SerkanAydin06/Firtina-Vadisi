@@ -10,9 +10,12 @@ config_version=5
 
 [application]
 
-config/name="Fırtına Vadisi - Prototype"
+config/name="Fırtına Vadisi"
+config/description="Rüzgâra karşı üç komutla uçan zeplin/kargo strateji oyunu."
+config/version="1.0.0"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.7")
+config/icon="res://icon.png"
 
 [display]
 
