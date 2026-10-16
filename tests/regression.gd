@@ -46,6 +46,7 @@ func run() -> void:
 	_test_route_prediction()
 	_test_contract_tracking()
 	await _test_effects()
+	_test_hover()
 	await _test_turn_presentation()
 	await _test_victory_screen()
 	_test_audio()
@@ -423,3 +424,30 @@ func _test_audio() -> void:
 	verify(sound.music.playing and sound.last_played.is_empty(), "New match starts clean audio session")
 	game._set_music_volume(original_music)
 	game._set_effects_volume(original_effects)
+
+func _test_hover() -> void:
+	game.setup_game()
+	var board = game.board
+	var original_motion: bool = board.reduced_motion
+	board.set_reduced_motion(false)
+	var token = board.tokens[1]
+	var cell: Vector2i = game.ships[0].pos
+	var ground: Vector2 = token.position
+	var start: float = token.hover_lift
+	token._process(1.5)
+	verify(not is_equal_approx(start, token.hover_lift), "Hover changes visual altitude slowly")
+	verify(token.position == ground and game.ships[0].pos == cell, "Hover never changes board position")
+	verify(token.get_node("SpriteHolder").position.y < 0, "Hull stays above ground")
+	verify(token.get_node("HumanHalo").scale.y < 1.0, "Ground marker follows board perspective")
+	token._sync_geometry()
+	var ring_position: Vector2 = token.get_node("HumanHalo").position
+	token._sync_geometry()
+	verify(token.get_node("HumanHalo").position == ring_position, "Geometry refresh does not accumulate ring offset")
+	board.set_reduced_motion(true)
+	verify(not token.is_processing() and token.hover_lift > 0.0, "Reduced motion keeps altitude without bobbing")
+	game.show_menu()
+	verify(not token.is_processing(), "Hidden game stops hover processing")
+	game._on_start_pressed()
+	board.set_reduced_motion(false)
+	verify(token.is_processing(), "Fresh match resumes hover")
+	board.set_reduced_motion(original_motion)

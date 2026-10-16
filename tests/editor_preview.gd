@@ -33,6 +33,8 @@ func run() -> void:
 		check(game.find_children("*", "AudioStreamPlayer", true, false).is_empty(), "Editor does not create audio")
 		check(not game.has_node("VictoryScreen"), "Editor does not initialize game results")
 		var board = game.get_node("GameLayer/BoardFrame/Board")
+		var token = board.tokens[1]
+		check(token.hover_lift > 0.0 and not token.is_processing(), "Editor shows static altitude without idle animation")
 		var count := count_nodes(game)
 		board.fit_board()
 		board.fit_board()

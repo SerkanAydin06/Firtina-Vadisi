@@ -34,11 +34,16 @@ const SHIP_TEXTURES := {
 		highlight_human_player = value
 		_sync_visuals()
 
+var hover_time: float = 0.0
+var hover_enabled: bool = true
+var hover_lift: float = 0.0
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip_contents = false
 	_sync_visuals()
 	_sync_geometry()
+	_update_hover_processing()
 
 func setup(id: int, color: Color) -> void:
 	player_id = id
@@ -107,7 +112,59 @@ func _sync_geometry() -> void:
 	var holder: Control = get_node_or_null("SpriteHolder") as Control
 	if holder != null:
 		holder.pivot_offset = size * 0.5
+	# Selection rings mark the ground cell; only the ship floats above it.
+	for key in ["HumanHalo", "HumanInner", "OpponentRing"]:
+		var ring := get_node_or_null(key) as Control
+		if ring != null:
+			ring.pivot_offset = ring.size * 0.5
+			ring.scale = Vector2(1.0, 0.42)
+			ring.offset_top = size.y * 0.13
+			ring.offset_bottom = size.y * 0.13
+	var badge := get_node_or_null("HumanBadge") as Control
+	if badge != null:
+		badge.offset_top = size.y * 0.68
+		badge.offset_bottom = badge.offset_top + 17.0
+	_apply_hover()
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and is_inside_tree():
+		_update_hover_processing()
 	if what == NOTIFICATION_RESIZED and is_inside_tree():
 		call_deferred("_sync_geometry")
+
+func set_hover_motion(enabled: bool) -> void:
+	hover_enabled = enabled
+	if not enabled:
+		hover_time = 0.0
+	_apply_hover()
+	_update_hover_processing()
+
+func _update_hover_processing() -> void:
+	set_process(hover_enabled and not Engine.is_editor_hint() and is_visible_in_tree())
+
+func _process(delta: float) -> void:
+	hover_time = fmod(hover_time + delta, 30.0)
+	_apply_hover()
+
+func _apply_hover() -> void:
+	var holder := get_node_or_null("SpriteHolder") as Control
+	if holder == null:
+		return
+	var bob: float = sin(hover_time * TAU / 6.0 + float(player_id) * 1.7) if hover_enabled and not Engine.is_editor_hint() else 0.0
+	hover_lift = size.y * (0.18 + 0.045 * bob)
+	holder.position = Vector2(0.0, -hover_lift)
+	queue_redraw()
+
+func visual_center() -> Vector2:
+	return position + size * 0.5 - Vector2(0.0, hover_lift)
+
+func _draw() -> void:
+	# Feathered contact shadow stays on the board, softer when the hull rises.
+	var altitude: float = hover_lift / maxf(size.y, 1.0)
+	var spread: float = 1.0 + altitude * 0.8
+	var center := size * Vector2(0.56, 0.65)
+	for i in range(10):
+		var radius: float = size.x * (0.36 - float(i) * 0.022) * spread
+		draw_set_transform(center, 0.0, Vector2(1.0, 0.36))
+		draw_circle(Vector2.ZERO, radius, Color(0.005, 0.015, 0.02, 0.045 - altitude * 0.035))
+	draw_set_transform(Vector2.ZERO)
