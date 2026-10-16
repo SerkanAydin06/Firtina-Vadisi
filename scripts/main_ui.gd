@@ -21,6 +21,11 @@ const CONTRACT_SHORT_NAMES: Array[String] = [
 	"Baharat", "Kristal", "Silah", "İlaç", "Bakır", "Sis Özü", "Çekirdek", "Harita"
 ]
 const CONTRACT_VALUE: int = 5
+const LOG_LIMIT: int = 160
+const SETTINGS_PATH := "user://settings.cfg"
+const WINDOW_SIZE := Vector2i(1920, 1080)
+const COMMAND_KEYS := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]
+const COMMAND_KEYPAD := [KEY_KP_1, KEY_KP_2, KEY_KP_3, KEY_KP_4, KEY_KP_5, KEY_KP_6]
 
 var queue_textures: Array[TextureRect] = []
 var queue_numbers: Array[Label] = []
@@ -43,6 +48,11 @@ var turn_phase: String = "planning"
 var active_slot: int = -1
 var slot_styles: Array[StyleBox] = []
 var wind_style: StyleBox
+var settings_layer: Control
+var guide_layer: Control
+var log_lines: Array[String] = []
+var save_timer: Timer
+var guide_seen: bool = false
 
 func build_shell() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -50,17 +60,33 @@ func build_shell() -> void:
 
 func build_menu() -> void:
 	menu_layer = $MenuLayer as Control
-	settings_popup = $MenuLayer/SettingsPopup as PanelContainer
+	settings_layer = $SettingsLayer as Control
+	settings_popup = settings_layer
+	guide_layer = $GuideLayer as Control
+	save_timer = Timer.new()
+	save_timer.one_shot = true
+	save_timer.wait_time = 0.4
+	save_timer.timeout.connect(_save_settings)
+	add_child(save_timer)
 	$MenuLayer/StartButton.pressed.connect(_on_start_pressed)
 	$MenuLayer/SettingsButton.pressed.connect(_on_settings_pressed)
 	$MenuLayer/ExitButton.pressed.connect(_on_exit_pressed)
+	$MenuLayer/GuideButton.pressed.connect(open_guide)
 	_load_settings()
-	$MenuLayer/SettingsPopup/Options/Music.value_changed.connect(_set_music_volume)
-	$MenuLayer/SettingsPopup/Options/Effects.value_changed.connect(_set_effects_volume)
-	$MenuLayer/SettingsPopup/Options/ReduceMotion.toggled.connect(_set_reduced_motion)
-	$MenuLayer/SettingsPopup/Options/Fullscreen.toggled.connect(_set_fullscreen)
-	$MenuLayer/SettingsPopup/Options/Pause.value_changed.connect(_set_resolution_pause)
-	$MenuLayer/SettingsPopup/Options/Close.pressed.connect(func() -> void: settings_popup.hide())
+	var options := _options()
+	options.get_node("Music").value_changed.connect(_set_music_volume)
+	options.get_node("Effects").value_changed.connect(_set_effects_volume)
+	options.get_node("ReduceMotion").toggled.connect(_set_reduced_motion)
+	options.get_node("Fullscreen").toggled.connect(_set_fullscreen)
+	options.get_node("Pause").value_changed.connect(_set_resolution_pause)
+	options.get_node("Close").pressed.connect(close_settings)
+	$GuideLayer/GuidePanel/Close.pressed.connect(close_guide)
+	# Gölgeler arkadaki tıklamaları yakalar ve dışarı tıklayınca paneli kapatır.
+	$SettingsLayer/Shade.gui_input.connect(_on_shade_input.bind(close_settings))
+	$GuideLayer/Shade.gui_input.connect(_on_shade_input.bind(close_guide))
+
+func _options() -> Control:
+	return $SettingsLayer/SettingsPopup/Options
 
 func build_game_ui() -> void:
 	game_layer = $GameLayer as Control
@@ -121,16 +147,14 @@ func build_game_ui() -> void:
 		$GameLayer/PilotsPanel/Pilot4/Columns/Cargo as Label
 	]
 
-	$GameLayer/RightPanel/CardsPanel/Forward1.pressed.connect(_on_command_pressed.bind(CMD_FORWARD_1))
-	$GameLayer/RightPanel/CardsPanel/Forward2.pressed.connect(_on_command_pressed.bind(CMD_FORWARD_2))
-	$GameLayer/RightPanel/CardsPanel/Left.pressed.connect(_on_command_pressed.bind(CMD_LEFT))
-	$GameLayer/RightPanel/CardsPanel/Right.pressed.connect(_on_command_pressed.bind(CMD_RIGHT))
-	$GameLayer/RightPanel/CardsPanel/Hook.pressed.connect(_on_command_pressed.bind(CMD_HOOK))
-	$GameLayer/RightPanel/CardsPanel/Anchor.pressed.connect(_on_command_pressed.bind(CMD_ANCHOR))
 	clear_button.pressed.connect(_on_clear_pressed)
 	execute_button.pressed.connect(_on_execute_pressed)
 	$GameLayer/RightPanel/RestartButton.pressed.connect(_on_restart_pressed)
 	$GameLayer/RightPanel/MenuButton.pressed.connect(show_menu)
+	$GameLayer/RightPanel/SettingsButton.pressed.connect(open_settings)
+	$GameLayer/RightPanel/GuideButton.pressed.connect(open_guide)
+	execute_button.tooltip_text = "Uçuş planını başlat (Enter)"
+	clear_button.tooltip_text = "Programı temizle (Delete)"
 	game_built = true
 	_bind_scene_controls()
 	for slot in command_box.get_children():
@@ -160,11 +184,13 @@ func setup_game() -> void:
 	game_audio.start_music()
 	if is_instance_valid(victory_screen):
 		victory_screen.dismiss()
+	close_settings()
 	session_id += 1
 	board.cancel_animations()
 	set_input_enabled(true)
 	resolving = false
 	game_over = false
+	last_winners = []
 	round_no = 1
 	contract_serial = 0
 	player_queue.clear()
@@ -204,6 +230,11 @@ func setup_game() -> void:
 	log_line("[color=#d5b47c][b]Sefer başladı.[/b][/color] Rüzgârı oku, rotanı belirle.")
 	log_line("Bir kontrat al ve işaretli iskeleye teslim et: [color=#d5b47c]+5 altın.[/color]")
 	log_line("Ortadaki kontratlar ortaktır. İlk ulaşan pilot kontratı kapar.")
+	log_line("İlk tur sakin; rüzgâr ikinci turda başlar.")
+	if not guide_seen:
+		guide_seen = true
+		_queue_save()
+		open_guide()
 
 func _reset_contracts() -> void:
 	pickups = {}
@@ -257,6 +288,14 @@ func check_all_cargo() -> void:
 		board.configure(GRID_SIZE, rocks, pickups, deliveries)
 		_refresh_contract_tracking()
 
+## Kontrat kalmadıysa bot ortadaki kontrat hücrelerinin yanında bekler.
+func _ai_idle_goals(_ship: Dictionary) -> Array:
+	var goals: Array = []
+	for source in CONTRACT_SOURCES:
+		if not rocks.has(source):
+			goals.append(source)
+	return goals
+
 func respawn_ship(ship: Dictionary) -> void:
 	if not ship.cargo.is_empty():
 		var dropped_source: Vector2i = Vector2i(ship.cargo.source)
@@ -285,7 +324,8 @@ func refresh_ui() -> void:
 	_refresh_contract_tracking()
 	_refresh_route_preview()
 	round_label.text = "Tur %d" % round_no
-	wind_label.text = DIR_NAMES[wind_dir]
+	wind_label.text = wind_name()
+	$GameLayer/RightPanel/WindPanel/Hint.text = "İlk tur sakin; rüzgâr sonraki turda başlar." if wind_dir == WIND_CALM else "Her komuttan sonra 1 hücre sürüklenirsin."
 	queue_label.text = ""
 	execute_button.disabled = resolving or game_over or player_queue.size() != 3
 	clear_button.disabled = resolving or game_over or player_queue.is_empty()
@@ -328,11 +368,19 @@ func refresh_ui() -> void:
 		pilot_cargo_labels[i].add_theme_color_override("font_color", Color(0.86, 0.88, 0.83))
 
 func log_clear() -> void:
+	log_lines.clear()
 	info_label.clear()
 	info_label.scroll_to_line(0)
 
+## Uçuş kaydı son LOG_LIMIT satırla sınırlıdır; uzun maçlarda bellek ve çizim süresi sabit kalır.
 func log_line(text: String) -> void:
-	info_label.append_text(text + "\n")
+	log_lines.append(text)
+	if log_lines.size() > LOG_LIMIT:
+		log_lines = log_lines.slice(log_lines.size() - LOG_LIMIT)
+		info_label.clear()
+		info_label.append_text("\n".join(log_lines) + "\n")
+	else:
+		info_label.append_text(text + "\n")
 	call_deferred("_scroll_log_to_bottom")
 
 func _scroll_log_to_bottom() -> void:
@@ -343,40 +391,75 @@ func _scroll_log_to_bottom() -> void:
 
 func _load_settings() -> void:
 	var config := ConfigFile.new()
-	config.load("user://settings.cfg")
+	config.load(SETTINGS_PATH)
 	music_volume = clampf(float(config.get_value("audio", "music", 0.35)), 0.0, 1.0)
 	effects_volume = clampf(float(config.get_value("audio", "effects", 0.65)), 0.0, 1.0)
 	_refresh_audio_settings()
 	reduced_motion = bool(config.get_value("game", "reduced_motion", false))
-	$MenuLayer/SettingsPopup/Options/ReduceMotion.set_pressed_no_signal(reduced_motion)
+	_options().get_node("ReduceMotion").set_pressed_no_signal(reduced_motion)
+	if is_instance_valid(board):
+		board.set_reduced_motion(reduced_motion)
+	guide_seen = bool(config.get_value("game", "guide_seen", false))
 	var fullscreen: bool = bool(config.get_value("display", "fullscreen", true))
 	resolution_pause = clampf(float(config.get_value("game", "resolution_pause", 0.28)), 0.1, 1.0)
-	$MenuLayer/SettingsPopup/Options/Fullscreen.set_pressed_no_signal(fullscreen)
-	$MenuLayer/SettingsPopup/Options/Pause.set_value_no_signal(resolution_pause)
-	$MenuLayer/SettingsPopup/Options/SpeedLabel.text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
+	_options().get_node("Fullscreen").set_pressed_no_signal(fullscreen)
+	_options().get_node("Pause").set_value_no_signal(resolution_pause)
+	_options().get_node("SpeedLabel").text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
+	apply_window_mode(fullscreen)
+
+## Pencere modunda pencereyi ekranın kullanılabilir alanına sığdırır ve ortalar.
+func apply_window_mode(fullscreen: bool) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if fullscreen:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		return
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	var screen: int = DisplayServer.window_get_current_screen()
+	var usable: Rect2i = DisplayServer.screen_get_usable_rect(screen)
+	var target: Vector2i = window_size_for(usable.size)
+	DisplayServer.window_set_size(target)
+	DisplayServer.window_set_position(usable.position + (usable.size - target) / 2)
+
+## 16:9 oranı korunur; ekranın %90'ını aşmaz.
+static func window_size_for(usable: Vector2i) -> Vector2i:
+	var scale: float = minf(1.0, minf(float(usable.x) * 0.9 / float(WINDOW_SIZE.x), float(usable.y) * 0.9 / float(WINDOW_SIZE.y)))
+	return Vector2i(roundi(float(WINDOW_SIZE.x) * scale), roundi(float(WINDOW_SIZE.y) * scale))
+
+## Kaydırıcılar sürüklenirken diske her adımda yazılmaz; kısa gecikmeyle tek kayıt yapılır.
+func _queue_save() -> void:
+	if is_instance_valid(save_timer) and save_timer.is_inside_tree():
+		save_timer.start()
+	else:
+		_save_settings()
+
+func flush_settings() -> void:
+	if is_instance_valid(save_timer) and not save_timer.is_stopped():
+		save_timer.stop()
+		_save_settings()
 
 func _save_settings() -> void:
 	var config := ConfigFile.new()
-	config.set_value("display", "fullscreen", $MenuLayer/SettingsPopup/Options/Fullscreen.button_pressed)
+	config.set_value("display", "fullscreen", _options().get_node("Fullscreen").button_pressed)
 	config.set_value("game", "resolution_pause", resolution_pause)
 	config.set_value("game", "reduced_motion", reduced_motion)
 	config.set_value("audio", "music", music_volume)
 	config.set_value("audio", "effects", effects_volume)
-	config.save("user://settings.cfg")
+	config.set_value("game", "guide_seen", guide_seen)
+	config.save(SETTINGS_PATH)
 
 func _set_fullscreen(enabled: bool) -> void:
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED)
-	_save_settings()
+	apply_window_mode(enabled)
+	_queue_save()
 
 func _set_resolution_pause(value: float) -> void:
 	resolution_pause = clampf(value, 0.1, 1.0)
-	$MenuLayer/SettingsPopup/Options/SpeedLabel.text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
-	_save_settings()
+	_options().get_node("SpeedLabel").text = "Komutlar arası bekleme: %.2f sn" % resolution_pause
+	_queue_save()
 
 func _refresh_route_preview() -> void:
 	if is_instance_valid(board_focus):
-		board_focus.enabled = not resolving and not game_over and game_layer.visible
+		board_focus.enabled = not resolving and not game_over and game_layer.visible and not modal_open()
 		if not board_focus.enabled:
 			board_focus.clear()
 	if not is_instance_valid(route_overlay):
@@ -403,6 +486,7 @@ func show_menu() -> void:
 		game_audio.stop_all()
 	if is_instance_valid(victory_screen):
 		victory_screen.dismiss()
+	close_guide()
 	super.show_menu()
 	present_turn("planning")
 	_refresh_contract_tracking()
@@ -416,14 +500,17 @@ func _set_reduced_motion(enabled: bool) -> void:
 	reduced_motion = enabled
 	if is_instance_valid(board):
 		board.set_reduced_motion(enabled)
-	_save_settings()
+	_queue_save()
 
 func present_turn(phase: String, slot: int = -1) -> void:
 	if is_instance_valid(route_hint):
 		if phase == "command":
 			present_motor_progress(slot, 0)
 		elif phase == "wind":
-			route_hint.text = "RÜZGÂR   •   Çapa etkin" if ships[0].anchored else "RÜZGÂR   •   1 hücre sürüklenme"
+			if wind_dir == WIND_CALM:
+				route_hint.text = "SAKİN HAVA   •   Sürüklenme yok"
+			else:
+				route_hint.text = "RÜZGÂR   •   Çapa etkin" if ships[0].anchored else "RÜZGÂR   •   1 hücre sürüklenme"
 		else:
 			route_hint.text = ""
 	turn_phase = phase
@@ -448,7 +535,7 @@ func present_turn(phase: String, slot: int = -1) -> void:
 			title.text = "KOMUT %d / 3   •   UYGULANIYOR" % (slot + 1)
 		"wind":
 			title.text = "KOMUT %d / 3   •   RÜZGÂR AŞAMASI" % (slot + 1)
-			wind.get_node("Title").text = "RÜZGÂR İTİŞİ   •   UYGULANIYOR"
+			wind.get_node("Title").text = "SAKİN HAVA" if wind_dir == WIND_CALM else "RÜZGÂR İTİŞİ   •   UYGULANIYOR"
 			var highlight := preload("res://scripts/presentation.gd").panel(Color("19404a"), accent, 10)
 			highlight.set_border_width_all(2)
 			wind.add_theme_stylebox_override("panel", highlight)
@@ -463,10 +550,9 @@ func check_victory() -> bool:
 		return true
 	if not super.check_victory():
 		return false
-	for ship in ships:
-		if ship.coins >= TARGET_COINS:
-			victory_screen.show_result(ship)
-			break
+	close_settings()
+	close_guide()
+	victory_screen.show_result(last_winners)
 	return true
 
 func play_sound(kind: String) -> void:
@@ -474,7 +560,7 @@ func play_sound(kind: String) -> void:
 		game_audio.play_event(kind)
 
 func _refresh_audio_settings() -> void:
-	var options := $MenuLayer/SettingsPopup/Options
+	var options := _options()
 	options.get_node("Music").set_value_no_signal(music_volume)
 	options.get_node("Effects").set_value_no_signal(effects_volume)
 	options.get_node("MusicLabel").text = "Müzik: %d%%" % roundi(music_volume * 100.0)
@@ -485,12 +571,12 @@ func _refresh_audio_settings() -> void:
 func _set_music_volume(value: float) -> void:
 	music_volume = clampf(value, 0.0, 1.0)
 	_refresh_audio_settings()
-	_save_settings()
+	_queue_save()
 
 func _set_effects_volume(value: float) -> void:
 	effects_volume = clampf(value, 0.0, 1.0)
 	_refresh_audio_settings()
-	_save_settings()
+	_queue_save()
 
 func _bind_scene_controls() -> void:
 	$GameLayer/PilotCount.text = ("4" if start_with_four_ships else "3") + " PİLOT     /     12 ALTIN"
@@ -500,13 +586,17 @@ func _bind_scene_controls() -> void:
 		tile.pressed.connect(_on_command_pressed.bind(COMMANDS[i]))
 		tile.draw.connect(func() -> void: tile.modulate = Color(0.5, 0.6, 0.65) if tile.disabled else Color.WHITE)
 	for i in range(command_box.get_child_count()):
-		command_box.get_child(i).gui_input.connect(_on_slot_input.bind(i))
+		var slot: Control = command_box.get_child(i)
+		slot.focus_mode = Control.FOCUS_ALL
+		slot.gui_input.connect(_on_slot_input.bind(i))
 
 func _on_slot_input(event: InputEvent, slot: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if not resolving and not game_over and slot < player_queue.size():
-			player_queue.remove_at(slot)
-			refresh_ui()
+	var activate: bool = event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+	activate = activate or (event.is_action_pressed("ui_accept") and command_box.get_child(slot).has_focus())
+	if activate and not resolving and not game_over and slot < player_queue.size():
+		player_queue.remove_at(slot)
+		refresh_ui()
+		command_box.get_child(slot).accept_event()
 
 func present_motor_progress(slot: int, completed: int) -> void:
 	if not is_instance_valid(route_hint) or slot < 0 or slot >= player_queue.size():
@@ -514,3 +604,110 @@ func present_motor_progress(slot: int, completed: int) -> void:
 	var command: String = player_queue[slot]
 	var total: int = 2 if command == CMD_FORWARD_2 else (1 if command == CMD_FORWARD_1 else 0)
 	route_hint.text = "KOMUT %d   •   Kalan: %d motor adımı" % [slot + 1, maxi(0, total - completed)] if total > 0 else "KOMUT %d   •   %s" % [slot + 1, command]
+
+# --- Paneller ve klavye -----------------------------------------------------
+
+func modal_open() -> bool:
+	var settings_visible: bool = is_instance_valid(settings_layer) and settings_layer.visible
+	var guide_visible: bool = is_instance_valid(guide_layer) and guide_layer.visible
+	var result_visible: bool = is_instance_valid(victory_screen) and victory_screen.visible
+	return settings_visible or guide_visible or result_visible
+
+## Ayarlar maçı durdurmaz veya sıfırlamaz; açık panel arkadaki girdiyi gölgeyle engeller.
+func open_settings() -> void:
+	if not is_instance_valid(settings_layer) or (is_instance_valid(victory_screen) and victory_screen.visible):
+		return
+	close_guide()
+	settings_layer.show()
+	_refresh_route_preview()
+	_options().get_node("Close").grab_focus()
+
+func close_settings() -> void:
+	if not is_instance_valid(settings_layer) or not settings_layer.visible:
+		return
+	settings_layer.hide()
+	flush_settings()
+	_refresh_route_preview()
+
+func _on_settings_pressed() -> void:
+	if settings_layer.visible:
+		close_settings()
+	else:
+		open_settings()
+
+func open_guide() -> void:
+	if not is_instance_valid(guide_layer) or (is_instance_valid(victory_screen) and victory_screen.visible):
+		return
+	close_settings()
+	guide_layer.show()
+	_refresh_route_preview()
+	$GuideLayer/GuidePanel/Close.grab_focus()
+
+func close_guide() -> void:
+	if not is_instance_valid(guide_layer) or not guide_layer.visible:
+		return
+	guide_layer.hide()
+	_refresh_route_preview()
+
+func _on_shade_input(event: InputEvent, close: Callable) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		close.call()
+
+## Kısayollar odaklanmış düğmeden önce işlenir; böylece son tıklanan kart Enter ile tekrar basılmaz.
+## Odak bir program slotundaysa Enter o slotu kaldırır (slotun kendi girdisi).
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode in [KEY_ENTER, KEY_KP_ENTER] and _slot_has_focus():
+		return
+	if handle_shortcut(event):
+		get_viewport().set_input_as_handled()
+
+func _slot_has_focus() -> bool:
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	return focused != null and focused.get_parent() == command_box
+
+## Kısayollar: 1–6 komut, Enter başlat, Backspace geri al, Delete temizle, Esc ayarlar/kapat, F1 rehber.
+func handle_shortcut(event: InputEvent) -> bool:
+	if not event is InputEventKey or not event.pressed or event.echo:
+		return false
+	var key: Key = event.keycode
+	if key == KEY_ESCAPE:
+		if guide_layer.visible:
+			close_guide()
+		elif settings_layer.visible:
+			close_settings()
+		elif is_instance_valid(victory_screen) and victory_screen.visible:
+			return false
+		elif game_layer.visible:
+			open_settings()
+		else:
+			return false
+		return true
+	if key == KEY_F1:
+		if guide_layer.visible:
+			close_guide()
+		else:
+			open_guide()
+		return true
+	if modal_open() or not game_layer.visible:
+		return false
+	var command_index: int = COMMAND_KEYS.find(key)
+	if command_index < 0:
+		command_index = COMMAND_KEYPAD.find(key)
+	if command_index >= 0:
+		_on_command_pressed(COMMANDS[command_index])
+		return true
+	match key:
+		KEY_ENTER, KEY_KP_ENTER:
+			_on_execute_pressed()
+			return true
+		KEY_BACKSPACE:
+			_on_undo_pressed()
+			return true
+		KEY_DELETE:
+			_on_clear_pressed()
+			return true
+	return false
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_EXIT_TREE:
+		flush_settings()

@@ -52,6 +52,7 @@ func run() -> void:
 	await _test_turn_presentation()
 	await _test_victory_screen()
 	_test_audio()
+	await _test_release_features()
 
 	game.ships[0].coins = 15
 	verify(game.check_victory(), "Victory threshold")
@@ -148,12 +149,18 @@ func run() -> void:
 			verify(commands.size() == 3, "AI produces three commands")
 			var pos: Vector2i = ship.pos
 			var facing: int = ship.facing
+			var hp: int = ship.hp
+			var damage: int = 0
 			for command in commands:
-				var next: Dictionary = game._ai_transition(pos, facing, command, [])
-				verify(not next.is_empty(), "AI avoids static obstacles and wind damage")
-				if not next.is_empty():
-					pos = next.pos
-					facing = next.facing
+				var next: Dictionary = game.ai_simulate(pos, facing, hp, command)
+				pos = next.pos
+				facing = next.facing
+				hp = next.hp
+				damage += int(next.damage)
+			verify(hp > 0, "AI never plans a lethal route")
+			# Köşede rüzgâr duvara doğruysa Çapa dışındaki her komut 1 hasar verir; bot en fazla bunu kabul eder.
+			verify(damage <= 1, "AI accepts at most unavoidable damage from start cells")
+			verify(commands != [game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR], "AI does not stall a whole round at start")
 
 	game.setup_game()
 	game.player_queue.assign([game.CMD_FORWARD_1, game.CMD_LEFT, game.CMD_FORWARD_2])
@@ -176,11 +183,12 @@ func run() -> void:
 	verify(game.round_no == 2 and not game.resolving, "Complete round advances and unlocks input")
 	var original_motion: bool = game.reduced_motion
 	var original_pause: float = game.resolution_pause
-	var options = game.get_node("MenuLayer/SettingsPopup/Options")
+	var options = game._options()
 	var original_fullscreen: bool = options.get_node("Fullscreen").button_pressed
 	options.get_node("Fullscreen").button_pressed = not original_fullscreen
 	options.get_node("Pause").value = 0.65
 	options.get_node("ReduceMotion").button_pressed = not original_motion
+	game.flush_settings()
 	game._load_settings()
 	verify(game.reduced_motion == not original_motion and game.board.reduced_motion == not original_motion, "Reduced motion setting persists and applies")
 	verify(is_equal_approx(game.resolution_pause, 0.65), "Pace setting persists")
@@ -392,6 +400,7 @@ func _test_audio() -> void:
 	var original_effects: float = game.effects_volume
 	game._set_music_volume(0.23)
 	game._set_effects_volume(0.71)
+	game.flush_settings()
 	game._load_settings()
 	verify(is_equal_approx(sound.music_level, 0.23) and is_equal_approx(sound.effects_level, 0.71), "Independent audio levels persist")
 	verify(sound.music.playing and sound.music.stream.loop_mode == AudioStreamWAV.LOOP_FORWARD, "Gameplay starts looping music")
@@ -490,3 +499,148 @@ func _test_flight_guide() -> void:
 	game.show_menu()
 	verify(game.route_hint.text.is_empty(), "Menu clears progress text")
 	game._on_start_pressed()
+
+func _key(code: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.pressed = true
+	return event
+
+func _test_release_features() -> void:
+	# İlk açılış rehberi bir kez açılır, maçı başlatmaz/sıfırlamaz.
+	game.guide_seen = false
+	game.setup_game()
+	verify(game.guide_layer.visible and game.modal_open(), "First match opens the guide once")
+	var top_board_z: int = 0
+	for node in game.board.find_children("*", "CanvasItem", true, false):
+		top_board_z = maxi(top_board_z, node.z_index)
+	verify(game.guide_layer.z_index > top_board_z and game.settings_layer.z_index > top_board_z, "Panels draw above board pieces")
+	verify(game.handle_shortcut(_key(KEY_ESCAPE)) and not game.guide_layer.visible, "Esc closes the guide")
+	game.setup_game()
+	verify(not game.guide_layer.visible, "Guide does not reopen after it was seen")
+	verify(game.wind_dir == game.WIND_CALM and game.wind_label.text == game.CALM_NAME, "First round is calm")
+
+	# Klavye: 1–6 komut, Backspace geri al, Delete temizle, Enter başlat.
+	game.handle_shortcut(_key(KEY_1))
+	game.handle_shortcut(_key(KEY_KP_3))
+	game.handle_shortcut(_key(KEY_6))
+	verify(game.player_queue == [game.CMD_FORWARD_1, game.CMD_LEFT, game.CMD_ANCHOR], "Number keys pick commands")
+	game.handle_shortcut(_key(KEY_2))
+	verify(game.player_queue.size() == 3, "Fourth command is ignored")
+	game.handle_shortcut(_key(KEY_BACKSPACE))
+	verify(game.player_queue == [game.CMD_FORWARD_1, game.CMD_LEFT], "Backspace removes last command")
+	game.handle_shortcut(_key(KEY_DELETE))
+	verify(game.player_queue.is_empty(), "Delete clears program")
+	var tile: Button = game.get_node("GameLayer/RightPanel/CardsPanel/Forward1Tile")
+	tile.grab_focus()
+	for code in [KEY_6, KEY_6, KEY_6]:
+		game._input(_key(code))
+	game._input(_key(KEY_ENTER))
+	verify(game.resolving and game.player_queue.size() == 3, "Enter starts the plan even when a card has focus")
+	game.handle_shortcut(_key(KEY_1))
+	verify(game.player_queue.size() == 3 and game.player_queue[0] == game.CMD_ANCHOR, "Shortcuts are locked while resolving")
+
+	# Tur çözülürken Yeni Oyun güvenle yeni maç açar; eski tur yeni maça dokunmaz.
+	game._on_restart_pressed()
+	verify(not game.resolving and game.round_no == 1 and game.player_queue.is_empty(), "Restart during resolution opens a fresh match")
+	var fresh: Array = game.ships.map(func(ship: Dictionary): return ship.pos)
+	await create_timer(2.5).timeout
+	verify(game.round_no == 1 and game.ships.map(func(ship: Dictionary): return ship.pos) == fresh, "Cancelled round cannot touch the new match")
+	for button in get_nodes_in_group("command_buttons"):
+		verify(not button.disabled, "Restart unlocks command cards")
+
+	# Oyun içi ayarlar maçı durdurmaz ve arkadaki girdiyi engeller.
+	game.handle_shortcut(_key(KEY_4))
+	var snapshot: Array = game.ships.duplicate(true)
+	verify(game.handle_shortcut(_key(KEY_ESCAPE)) and game.settings_layer.visible, "Esc opens settings in a match")
+	verify(game.get_node("SettingsLayer/Shade").mouse_filter == Control.MOUSE_FILTER_STOP, "Settings shade blocks background clicks")
+	game.handle_shortcut(_key(KEY_1))
+	verify(game.player_queue == [game.CMD_RIGHT], "Open settings block command shortcuts")
+	game._set_resolution_pause(0.4)
+	game.handle_shortcut(_key(KEY_ESCAPE))
+	verify(not game.settings_layer.visible and game.ships == snapshot and game.player_queue == [game.CMD_RIGHT], "Closing settings keeps the match intact")
+	var cfg := ConfigFile.new()
+	cfg.load(game.SETTINGS_PATH)
+	verify(is_equal_approx(float(cfg.get_value("game", "resolution_pause", 0.0)), 0.4), "Closing settings flushes pending save")
+	game._set_resolution_pause(0.28)
+	game.flush_settings()
+	game.handle_shortcut(_key(KEY_F1))
+	verify(game.guide_layer.visible and not game.settings_layer.visible, "F1 opens guide in a match")
+	game.handle_shortcut(_key(KEY_F1))
+	verify(not game.guide_layer.visible, "F1 toggles guide closed")
+	game._on_clear_pressed()
+
+	# Pencere küçük ekranlara sığar ve 16:9 kalır.
+	for usable in [Vector2i(1366, 728), Vector2i(1280, 680), Vector2i(1920, 1040), Vector2i(3840, 2120)]:
+		var size: Vector2i = game.window_size_for(usable)
+		verify(size.x <= usable.x and size.y <= usable.y and size.x <= 1920, "Window fits usable area %s" % usable)
+		verify(absf(float(size.x) / float(size.y) - 16.0 / 9.0) < 0.01, "Window keeps 16:9 for %s" % usable)
+
+	# Uçuş kaydı sınırlı kalır.
+	for i in range(game.LOG_LIMIT + 40):
+		game.log_line("satır %d" % i)
+	verify(game.log_lines.size() == game.LOG_LIMIT and game.log_lines[-1] == "satır %d" % (game.LOG_LIMIT + 39), "Flight log keeps only recent lines")
+
+	# Eşitlik: önce altın, sonra kalan gövde; ikisi de eşitse ortak zafer.
+	game.setup_game()
+	game.ships[0].coins = 15
+	game.ships[0].hp = 2
+	game.ships[2].coins = 15
+	game.ships[2].hp = 3
+	verify(game.victory_winners().map(func(ship: Dictionary): return ship.id) == [3], "Tie on gold is broken by remaining hull")
+	game.ships[0].hp = 3
+	verify(game.victory_winners().map(func(ship: Dictionary): return ship.id) == [1, 3], "Equal gold and hull share the victory")
+	verify(game.check_victory() and game.victory_screen.heading.text == "ORTAK ZAFER", "Shared victory shown on results")
+	verify(game.victory_screen.rows[0].text.contains("KAZANAN") and game.victory_screen.rows[3].text.contains("KAZANAN"), "Both winners marked")
+	verify(not game.handle_shortcut(_key(KEY_ESCAPE)) and game.victory_screen.visible, "Esc does not dismiss results by accident")
+	game._on_restart_pressed()
+
+	# Kancalar eşzamanlı: karşı yönden çekilen hedef yerinde kalır.
+	fixture([Vector2i(2, 4), Vector2i(5, 4), Vector2i(8, 4)])
+	game.ships[0].facing = 1
+	game.ships[2].facing = 3
+	for ship in game.ships:
+		ship.queue = [game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR]
+	game.ships[0].queue = [game.CMD_HOOK, game.CMD_ANCHOR, game.CMD_ANCHOR]
+	game.ships[2].queue = [game.CMD_HOOK, game.CMD_ANCHOR, game.CMD_ANCHOR]
+	game.resolve_hooks(0)
+	verify(game.ships[1].pos == Vector2i(5, 4), "Opposing hooks cancel out")
+	game.ships[2].queue = [game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR]
+	game.resolve_hooks(0)
+	verify(game.ships[1].pos == Vector2i(4, 4), "Single hook pulls one cell")
+
+	# Düşen pilot turun kalanında hareket etmez ve rüzgârla sürüklenmez.
+	fixture([Vector2i(0, 4)])
+	game.ships[0].facing = 3
+	game.ships[0].hp = 1
+	game.ships[0].queue = [game.CMD_FORWARD_1, game.CMD_FORWARD_1, game.CMD_FORWARD_1]
+	game.resolving = true
+	game.resolve_simultaneous_step({1: Vector2i(-1, 0)}, "motor")
+	verify(game.ships[0].hp == game.MAX_HP and game.ships[0].downed and not game.can_act(game.ships[0]), "Downed pilot waits for the rest of the round")
+	var repaired: Vector2i = game.ships[0].pos
+	game.wind_dir = 1
+	await game.resolve_wind()
+	verify(game.ships[0].pos == repaired, "Downed pilot is not drifted by wind")
+	game.resolving = false
+
+	# Botlar köşede takılmaz; can 1 iken ölümcül rota seçmez.
+	game.setup_game()
+	game.wind_dir = 3
+	var corner: Dictionary = game.ships[0]
+	corner.human = false
+	var plan: Array[String] = game.plan_ai(corner)
+	verify(plan != [game.CMD_ANCHOR, game.CMD_ANCHOR, game.CMD_ANCHOR], "Bot leaves a corner against the wind")
+	corner.hp = 1
+	plan = game.plan_ai(corner)
+	var hp: int = corner.hp
+	var pos: Vector2i = corner.pos
+	var facing: int = corner.facing
+	for command in plan:
+		var next: Dictionary = game.ai_simulate(pos, facing, hp, command)
+		pos = next.pos
+		facing = next.facing
+		hp = next.hp
+	verify(hp > 0, "Bot on last hull avoids lethal moves")
+	corner.human = true
+	corner.hp = game.MAX_HP
+	game.setup_game()
