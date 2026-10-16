@@ -193,32 +193,11 @@ func _layout_grid_cells() -> void:
 			quad[2] - center,
 			quad[3] - center
 		])
-		var inner_quad := PackedVector2Array([
-			local_quad[0] * 0.94,
-			local_quad[1] * 0.94,
-			local_quad[2] * 0.94,
-			local_quad[3] * 0.94
-		])
-		var outline_points := PackedVector2Array([
-			local_quad[0], local_quad[1], local_quad[2], local_quad[3], local_quad[0]
-		])
 		cell_node.visible = true
 		cell_node.position = center
 		cell_node.scale = Vector2.ONE
 		cell_node.z_index = 0
-		var fill: Polygon2D = cell_node.get_node_or_null("Fill") as Polygon2D
-		var inner: Polygon2D = cell_node.get_node_or_null("InnerGlow") as Polygon2D
-		var outline: Line2D = cell_node.get_node_or_null("Outline") as Line2D
-		if fill != null:
-			fill.polygon = local_quad
-			fill.color = Color(0.35, 0.56, 0.59, 0.0)
-		if inner != null:
-			inner.polygon = inner_quad
-			inner.color = Color(0.24, 0.34, 0.36, 0.0)
-		if outline != null:
-			outline.points = outline_points
-			outline.width = 0.8
-			outline.default_color = Color(0.66, 0.78, 0.74, 0.13)
+		cell_node.set_footprint(local_quad)
 
 func add_ship(id: int, color: Color, cell: Vector2i) -> void:
 	if not tokens.has(id):
